@@ -1,0 +1,289 @@
+school_year,division_name,subject,test_level,pass_count,total_count,pass_rate
+2005-2006,Albemarle County,English:Reading,Grade 3,732,833,87.88
+2005-2006,Albemarle County,Mathematics,Grade 3,768,845,90.89
+2005-2006,Albemarle County,English:Reading,Grade 5,818,876,93.38
+2005-2006,Albemarle County,Mathematics,Grade 5,725,855,84.8
+2005-2006,Albemarle County,English:Reading,Grade 8,772,898,85.97
+2005-2006,Albemarle County,Mathematics,Grade 8,1358,1509,89.99
+2005-2006,Charlottesville City,English:Reading,Grade 3,218,281,77.58
+2005-2006,Charlottesville City,Mathematics,Grade 3,247,288,85.76
+2005-2006,Charlottesville City,English:Reading,Grade 5,194,249,77.91
+2005-2006,Charlottesville City,Mathematics,Grade 5,192,249,77.11
+2005-2006,Charlottesville City,English:Reading,Grade 8,177,300,59
+2005-2006,Charlottesville City,Mathematics,Grade 8,176,294,59.86
+2006-2007,Albemarle County,English:Reading,Grade 3,755,894,84.45
+2006-2007,Albemarle County,Mathematics,Grade 3,806,904,89.16
+2006-2007,Albemarle County,English:Reading,Grade 5,786,843,93.24
+2006-2007,Albemarle County,Mathematics,Grade 5,775,845,91.72
+2006-2007,Albemarle County,English:Reading,Grade 8,773,937,82.5
+2006-2007,Albemarle County,Mathematics,Grade 8,627,803,78.08
+2006-2007,Charlottesville City,English:Reading,Grade 3,206,258,79.84
+2006-2007,Charlottesville City,Mathematics,Grade 3,243,272,89.34
+2006-2007,Charlottesville City,English:Reading,Grade 5,201,245,82.04
+2006-2007,Charlottesville City,Mathematics,Grade 5,222,255,87.06
+2006-2007,Charlottesville City,English:Reading,Grade 8,152,269,56.51
+2006-2007,Charlottesville City,Mathematics,Grade 8,173,283,61.13
+2007-2008,Albemarle County,English:Reading,Grade 3,767,876,87.56
+2007-2008,Albemarle County,Mathematics,Grade 3,813,885,91.86
+2007-2008,Albemarle County,English:Reading,Grade 5,762,824,92.48
+2007-2008,Albemarle County,Mathematics,Grade 5,762,830,91.81
+2007-2008,Albemarle County,English:Reading,Grade 8,804,917,87.68
+2007-2008,Albemarle County,Mathematics,Grade 8,347,420,82.62
+2007-2008,Charlottesville City,English:Reading,Grade 3,255,297,85.86
+2007-2008,Charlottesville City,Mathematics,Grade 3,265,303,87.46
+2007-2008,Charlottesville City,English:Reading,Grade 5,191,245,77.96
+2007-2008,Charlottesville City,Mathematics,Grade 5,195,258,75.58
+2007-2008,Charlottesville City,English:Reading,Grade 8,177,272,65.07
+2007-2008,Charlottesville City,Mathematics,Grade 8,210,287,73.17
+2008-2009,Albemarle County,English:Reading,Grade 3,866,954,90.78
+2008-2009,Albemarle County,Mathematics,Grade 3,893,961,92.92
+2008-2009,Albemarle County,English:Reading,Grade 5,840,894,93.96
+2008-2009,Albemarle County,Mathematics,Grade 5,836,894,93.51
+2008-2009,Albemarle County,English:Reading,Grade 8,821,883,92.98
+2008-2009,Albemarle County,Mathematics,Grade 8,372,403,92.31
+2008-2009,Charlottesville City,English:Reading,Grade 3,236,270,87.41
+2008-2009,Charlottesville City,Mathematics,Grade 3,264,283,93.29
+2008-2009,Charlottesville City,English:Reading,Grade 5,197,232,84.91
+2008-2009,Charlottesville City,Mathematics,Grade 5,210,244,86.07
+2008-2009,Charlottesville City,English:Reading,Grade 8,193,247,78.14
+2008-2009,Charlottesville City,Mathematics,Grade 8,86,126,68.25
+2009-2010,Albemarle County,English:Reading,Grade 3,821,941,87.25
+2009-2010,Albemarle County,Mathematics,Grade 3,889,950,93.58
+2009-2010,Albemarle County,English:Reading,Grade 5,842,889,94.71
+2009-2010,Albemarle County,Mathematics,Grade 5,840,901,93.23
+2009-2010,Albemarle County,English:Reading,Grade 8,829,868,95.51
+2009-2010,Albemarle County,Mathematics,Grade 8,309,346,89.31
+2009-2010,Charlottesville City,English:Reading,Grade 3,223,263,84.79
+2009-2010,Charlottesville City,Mathematics,Grade 3,247,266,92.86
+2009-2010,Charlottesville City,English:Reading,Grade 5,195,259,75.29
+2009-2010,Charlottesville City,Mathematics,Grade 5,212,262,80.92
+2009-2010,Charlottesville City,English:Reading,Grade 8,189,226,83.63
+2009-2010,Charlottesville City,Mathematics,Grade 8,95,133,71.43
+2010-2011,Albemarle County,English:Reading,Grade 3,835,967,86.35
+2010-2011,Albemarle County,Mathematics,Grade 3,899,983,91.45
+2010-2011,Albemarle County,English:Reading,Grade 5,900,975,92.31
+2010-2011,Albemarle County,Mathematics,Grade 5,897,982,91.34
+2010-2011,Albemarle County,English:Reading,Grade 8,881,937,94.02
+2010-2011,Albemarle County,Mathematics,Grade 8,371,416,89.18
+2010-2011,Charlottesville City,English:Reading,Grade 3,265,302,87.75
+2010-2011,Charlottesville City,Mathematics,Grade 3,281,305,92.13
+2010-2011,Charlottesville City,English:Reading,Grade 5,188,249,75.5
+2010-2011,Charlottesville City,Mathematics,Grade 5,209,258,81.01
+2010-2011,Charlottesville City,English:Reading,Grade 8,187,237,78.9
+2010-2011,Charlottesville City,Mathematics,Grade 8,71,127,55.91
+2011-2012,Albemarle County,English:Reading,Grade 3,792,925,85.62
+2011-2012,Albemarle County,Mathematics,Grade 3,555,926,59.94
+2011-2012,Albemarle County,English:Reading,Grade 5,820,941,87.14
+2011-2012,Albemarle County,Mathematics,Grade 5,653,950,68.74
+2011-2012,Albemarle County,English:Reading,Grade 8,868,940,92.34
+2011-2012,Albemarle County,Mathematics,Grade 8,241,349,69.05
+2011-2012,Charlottesville City,English:Reading,Grade 3,266,296,89.86
+2011-2012,Charlottesville City,Mathematics,Grade 3,224,293,76.45
+2011-2012,Charlottesville City,English:Reading,Grade 5,215,251,85.66
+2011-2012,Charlottesville City,Mathematics,Grade 5,160,252,63.49
+2011-2012,Charlottesville City,English:Reading,Grade 8,181,222,81.53
+2011-2012,Charlottesville City,Mathematics,Grade 8,40,93,43.01
+2012-2013,Albemarle County,English:Reading,Grade 3,674,948,71.1
+2012-2013,Albemarle County,Mathematics,Grade 3,539,954,56.5
+2012-2013,Albemarle County,English:Reading,Grade 5,713,939,75.93
+2012-2013,Albemarle County,Mathematics,Grade 5,648,936,69.23
+2012-2013,Albemarle County,English:Reading,Grade 8,747,947,78.88
+2012-2013,Albemarle County,Mathematics,Grade 8,187,344,54.36
+2012-2013,Charlottesville City,English:Reading,Grade 3,223,291,76.63
+2012-2013,Charlottesville City,Mathematics,Grade 3,204,293,69.62
+2012-2013,Charlottesville City,English:Reading,Grade 5,170,262,64.89
+2012-2013,Charlottesville City,Mathematics,Grade 5,171,266,64.29
+2012-2013,Charlottesville City,English:Reading,Grade 8,165,251,65.74
+2012-2013,Charlottesville City,Mathematics,Grade 8,45,97,46.39
+2013-2014,Albemarle County,English:Reading,Grade 3,689,950,72.53
+2013-2014,Albemarle County,Mathematics,Grade 3,603,959,62.88
+2013-2014,Albemarle County,English:Reading,Grade 5,685,898,76.28
+2013-2014,Albemarle County,Mathematics,Grade 5,664,898,73.94
+2013-2014,Albemarle County,English:Reading,Grade 8,771,985,78.27
+2013-2014,Albemarle County,Mathematics,Grade 8,204,336,60.71
+2013-2014,Charlottesville City,English:Reading,Grade 3,230,314,73.25
+2013-2014,Charlottesville City,Mathematics,Grade 3,226,319,70.85
+2013-2014,Charlottesville City,English:Reading,Grade 5,177,247,71.66
+2013-2014,Charlottesville City,Mathematics,Grade 5,113,181,62.43
+2013-2014,Charlottesville City,English:Reading,Grade 8,149,224,66.52
+2013-2014,Charlottesville City,Mathematics,Grade 8,109,150,72.67
+2014-2015,Albemarle County,English:Reading,Grade 3,656,902,72.73
+2014-2015,Albemarle County,Mathematics,Grade 3,644,915,70.38
+2014-2015,Albemarle County,English:Reading,Grade 5,736,970,75.88
+2014-2015,Albemarle County,Mathematics,Grade 5,725,975,74.36
+2014-2015,Albemarle County,English:Reading,Grade 8,769,948,81.12
+2014-2015,Albemarle County,Mathematics,Grade 8,209,345,60.58
+2014-2015,Charlottesville City,English:Reading,Grade 3,261,315,82.86
+2014-2015,Charlottesville City,Mathematics,Grade 3,252,322,78.26
+2014-2015,Charlottesville City,English:Reading,Grade 5,172,254,67.72
+2014-2015,Charlottesville City,Mathematics,Grade 5,121,188,64.36
+2014-2015,Charlottesville City,English:Reading,Grade 8,168,227,74.01
+2014-2015,Charlottesville City,Mathematics,Grade 8,118,160,73.75
+2015-2016,Albemarle County,English:Reading,Grade 3,767,1013,75.72
+2015-2016,Albemarle County,Mathematics,Grade 3,748,1040,71.92
+2015-2016,Albemarle County,English:Reading,Grade 5,774,984,78.66
+2015-2016,Albemarle County,Mathematics,Grade 5,747,980,76.22
+2015-2016,Albemarle County,English:Reading,Grade 8,728,957,76.07
+2015-2016,Albemarle County,Mathematics,Grade 8,215,369,58.27
+2015-2016,Charlottesville City,English:Reading,Grade 3,238,339,70.21
+2015-2016,Charlottesville City,Mathematics,Grade 3,262,347,75.5
+2015-2016,Charlottesville City,English:Reading,Grade 5,180,268,67.16
+2015-2016,Charlottesville City,Mathematics,Grade 5,121,203,59.61
+2015-2016,Charlottesville City,English:Reading,Grade 8,163,243,67.08
+2015-2016,Charlottesville City,Mathematics,Grade 8,157,203,77.34
+2016-2017,Albemarle County,English:Reading,Grade 3,716,1011,70.82
+2016-2017,Albemarle County,Mathematics,Grade 3,721,1029,70.07
+2016-2017,Albemarle County,English:Reading,Grade 5,728,896,81.25
+2016-2017,Albemarle County,Mathematics,Grade 5,699,897,77.93
+2016-2017,Albemarle County,English:Reading,Grade 8,727,933,77.92
+2016-2017,Albemarle County,Mathematics,Grade 8,229,341,67.16
+2016-2017,Charlottesville City,English:Reading,Grade 3,276,382,72.25
+2016-2017,Charlottesville City,Mathematics,Grade 3,285,392,72.7
+2016-2017,Charlottesville City,English:Reading,Grade 5,200,282,70.92
+2016-2017,Charlottesville City,Mathematics,Grade 5,139,225,61.78
+2016-2017,Charlottesville City,English:Reading,Grade 8,164,233,70.39
+2016-2017,Charlottesville City,Mathematics,Grade 8,129,165,78.18
+2017-2018,Albemarle County,English:Reading,Grade 3,774,1098,70.49
+2017-2018,Albemarle County,Mathematics,Grade 3,749,1101,68.03
+2017-2018,Albemarle County,English:Reading,Grade 5,836,1056,79.17
+2017-2018,Albemarle County,Mathematics,Grade 5,802,1060,75.66
+2017-2018,Albemarle County,English:Reading,Grade 8,759,981,77.37
+2017-2018,Albemarle County,Mathematics,Grade 8,215,371,57.95
+2017-2018,Charlottesville City,English:Reading,Grade 3,228,363,62.81
+2017-2018,Charlottesville City,Mathematics,Grade 3,228,365,62.47
+2017-2018,Charlottesville City,English:Reading,Grade 5,192,310,61.94
+2017-2018,Charlottesville City,Mathematics,Grade 5,126,247,51.01
+2017-2018,Charlottesville City,English:Reading,Grade 8,157,247,63.56
+2017-2018,Charlottesville City,Mathematics,Grade 8,101,167,60.48
+2018-2019,Albemarle County,English:Reading,Grade 3,701,1004,69.82
+2018-2019,Albemarle County,Mathematics,Grade 3,797,1006,79.22
+2018-2019,Albemarle County,English:Reading,Grade 5,814,1040,78.27
+2018-2019,Albemarle County,Mathematics,Grade 5,853,1039,82.1
+2018-2019,Albemarle County,English:Reading,Grade 8,801,1012,79.15
+2018-2019,Albemarle County,Mathematics,Grade 8,231,349,66.19
+2018-2019,Charlottesville City,English:Reading,Grade 3,266,378,70.37
+2018-2019,Charlottesville City,Mathematics,Grade 3,286,380,75.26
+2018-2019,Charlottesville City,English:Reading,Grade 5,200,350,57.14
+2018-2019,Charlottesville City,Mathematics,Grade 5,106,264,40.15
+2018-2019,Charlottesville City,English:Reading,Grade 8,170,257,66.15
+2018-2019,Charlottesville City,Mathematics,Grade 8,113,188,60.11
+2020-2021,Albemarle County,English:Reading,Grade 3,467,673,69.39
+2020-2021,Albemarle County,Mathematics,Grade 3,425,684,62.13
+2020-2021,Albemarle County,English:Reading,Grade 5,449,614,73.13
+2020-2021,Albemarle County,Mathematics,Grade 5,385,609,63.22
+2020-2021,Albemarle County,English:Reading,Grade 8,191,251,76.1
+2020-2021,Albemarle County,Mathematics,Grade 8,11,63,17.46
+2020-2021,Charlottesville City,English:Reading,Grade 3,151,280,53.93
+2020-2021,Charlottesville City,Mathematics,Grade 3,138,281,49.11
+2020-2021,Charlottesville City,English:Reading,Grade 5,148,258,57.36
+2020-2021,Charlottesville City,Mathematics,Grade 5,83,259,32.05
+2020-2021,Charlottesville City,English:Reading,Grade 8,120,209,57.42
+2020-2021,Charlottesville City,Mathematics,Grade 8,3,54,5.56
+2021-2022,Albemarle County,English:Reading,Grade 3,664,1011,65.68
+2021-2022,Albemarle County,Mathematics,Grade 3,630,1023,61.58
+2021-2022,Albemarle County,English:Reading,Grade 5,682,953,71.56
+2021-2022,Albemarle County,Mathematics,Grade 5,607,968,62.71
+2021-2022,Albemarle County,English:Reading,Grade 8,763,1024,74.51
+2021-2022,Albemarle County,Mathematics,Grade 8,167,451,37.03
+2021-2022,Charlottesville City,English:Reading,Grade 3,229,328,69.82
+2021-2022,Charlottesville City,Mathematics,Grade 3,191,338,56.51
+2021-2022,Charlottesville City,English:Reading,Grade 5,147,286,51.4
+2021-2022,Charlottesville City,Mathematics,Grade 5,120,300,40
+2021-2022,Charlottesville City,English:Reading,Grade 8,161,300,53.67
+2021-2022,Charlottesville City,Mathematics,Grade 8,33,176,18.75
+2005-2006,Virginia,English:Reading,Grade 3,69583,82618,84.22
+2005-2006,Virginia,English:Reading,Grade 5,74729,85221,87.69
+2005-2006,Virginia,English:Reading,Grade 8,71350,90428,78.9
+2005-2006,Virginia,Mathematics,Grade 3,77023,85273,90.33
+2005-2006,Virginia,Mathematics,Grade 5,70694,84669,83.49
+2005-2006,Virginia,Mathematics,Grade 8,68246,89038,76.65
+2006-2007,Virginia,English:Reading,Grade 3,69595,86734,80.24
+2006-2007,Virginia,English:Reading,Grade 5,74534,86020,86.65
+2006-2007,Virginia,English:Reading,Grade 8,72524,91419,79.33
+2006-2007,Virginia,Mathematics,Grade 3,77835,87578,88.88
+2006-2007,Virginia,Mathematics,Grade 5,72440,83662,86.59
+2006-2007,Virginia,Mathematics,Grade 8,69548,90637,76.73
+2007-2008,Virginia,English:Reading,Grade 3,71511,85249,83.88
+2007-2008,Virginia,English:Reading,Grade 5,75159,84126,89.34
+2007-2008,Virginia,English:Reading,Grade 8,74150,88751,83.55
+2007-2008,Virginia,Mathematics,Grade 3,78163,87503,89.33
+2007-2008,Virginia,Mathematics,Grade 5,72254,81864,88.26
+2007-2008,Virginia,Mathematics,Grade 8,72740,87804,82.84
+2008-2009,Virginia,English:Reading,Grade 3,74452,86635,85.94
+2008-2009,Virginia,English:Reading,Grade 5,78312,85611,91.47
+2008-2009,Virginia,English:Reading,Grade 8,76268,87371,87.29
+2008-2009,Virginia,Mathematics,Grade 3,79501,89500,88.83
+2008-2009,Virginia,Mathematics,Grade 5,74371,82684,89.95
+2008-2009,Virginia,Mathematics,Grade 8,67543,79481,84.98
+2009-2010,Virginia,English:Reading,Grade 3,72130,86893,83.01
+2009-2010,Virginia,English:Reading,Grade 5,77819,85959,90.53
+2009-2010,Virginia,English:Reading,Grade 8,77896,86666,89.88
+2009-2010,Virginia,Mathematics,Grade 3,82658,89918,91.93
+2009-2010,Virginia,Mathematics,Grade 5,74565,82625,90.25
+2009-2010,Virginia,Mathematics,Grade 8,67489,77665,86.9
+2010-2011,Virginia,English:Reading,Grade 3,73972,89159,82.97
+2010-2011,Virginia,English:Reading,Grade 5,80558,90288,89.22
+2010-2011,Virginia,English:Reading,Grade 8,80629,89200,90.39
+2010-2011,Virginia,Mathematics,Grade 3,82968,90756,91.42
+2010-2011,Virginia,Mathematics,Grade 5,76466,85947,88.97
+2010-2011,Virginia,Mathematics,Grade 8,61864,75167,82.3
+2011-2012,Virginia,English:Reading,Grade 3,76636,89645,85.49
+2011-2012,Virginia,English:Reading,Grade 5,80957,90586,89.37
+2011-2012,Virginia,English:Reading,Grade 8,80767,90782,88.97
+2011-2012,Virginia,Mathematics,Grade 3,57584,90589,63.57
+2011-2012,Virginia,Mathematics,Grade 5,57622,85419,67.46
+2011-2012,Virginia,Mathematics,Grade 8,39305,65377,60.12
+2012-2013,Virginia,English:Reading,Grade 3,65644,91091,72.06
+2012-2013,Virginia,English:Reading,Grade 5,66260,90516,73.2
+2012-2013,Virginia,English:Reading,Grade 8,64509,91058,70.84
+2012-2013,Virginia,Mathematics,Grade 3,60120,92277,65.15
+2012-2013,Virginia,Mathematics,Grade 5,58529,84366,69.38
+2012-2013,Virginia,Mathematics,Grade 8,37900,61419,61.71
+2013-2014,Virginia,English:Reading,Grade 3,62029,90485,68.55
+2013-2014,Virginia,English:Reading,Grade 5,66084,90064,73.37
+2013-2014,Virginia,English:Reading,Grade 8,65034,92097,70.61
+2013-2014,Virginia,Mathematics,Grade 3,61642,92002,67
+2013-2014,Virginia,Mathematics,Grade 5,61942,84128,73.63
+2013-2014,Virginia,Mathematics,Grade 8,41020,61449,66.75
+2014-2015,Virginia,English:Reading,Grade 3,69242,92428,74.91
+2014-2015,Virginia,English:Reading,Grade 5,73114,92880,78.72
+2014-2015,Virginia,English:Reading,Grade 8,69576,92551,75.18
+2014-2015,Virginia,Mathematics,Grade 3,70418,94645,74.4
+2014-2015,Virginia,Mathematics,Grade 5,68189,86478,78.85
+2014-2015,Virginia,Mathematics,Grade 8,45879,62394,73.53
+2015-2016,Virginia,English:Reading,Grade 3,71322,94328,75.61
+2015-2016,Virginia,English:Reading,Grade 5,74774,92611,80.74
+2015-2016,Virginia,English:Reading,Grade 8,69288,92183,75.16
+2015-2016,Virginia,Mathematics,Grade 3,74466,96965,76.8
+2015-2016,Virginia,Mathematics,Grade 5,68516,86363,79.33
+2015-2016,Virginia,Mathematics,Grade 8,46131,63569,72.57
+2016-2017,Virginia,English:Reading,Grade 3,70190,94635,74.17
+2016-2017,Virginia,English:Reading,Grade 5,76811,94273,81.48
+2016-2017,Virginia,English:Reading,Grade 8,69708,92002,75.77
+2016-2017,Virginia,Mathematics,Grade 3,72286,96489,74.92
+2016-2017,Virginia,Mathematics,Grade 5,69440,87608,79.26
+2016-2017,Virginia,Mathematics,Grade 8,47863,64967,73.67
+2017-2018,Virginia,English:Reading,Grade 3,68509,94897,72.19
+2017-2018,Virginia,English:Reading,Grade 5,77890,97689,79.73
+2017-2018,Virginia,English:Reading,Grade 8,72979,94609,77.14
+2017-2018,Virginia,Mathematics,Grade 3,69242,95187,72.74
+2017-2018,Virginia,Mathematics,Grade 5,69106,90510,76.35
+2017-2018,Virginia,Mathematics,Grade 8,46627,65614,71.06
+2018-2019,Virginia,English:Reading,Grade 3,65091,92653,70.25
+2018-2019,Virginia,English:Reading,Grade 5,76263,97687,78.07
+2018-2019,Virginia,English:Reading,Grade 8,71545,94231,75.93
+2018-2019,Virginia,Mathematics,Grade 3,76395,92907,82.23
+2018-2019,Virginia,Mathematics,Grade 5,73444,90627,81.04
+2018-2019,Virginia,Mathematics,Grade 8,56006,73352,76.35
+2020-2021,Virginia,English:Reading,Grade 3,44048,72063,61.12
+2020-2021,Virginia,English:Reading,Grade 5,47247,71428,66.15
+2020-2021,Virginia,English:Reading,Grade 8,45132,65338,69.07
+2020-2021,Virginia,Mathematics,Grade 3,38351,72059,53.22
+2020-2021,Virginia,Mathematics,Grade 5,33384,66245,50.39
+2020-2021,Virginia,Mathematics,Grade 8,20884,49810,41.93
+2021-2022,Virginia,English:Reading,Grade 3,59653,88336,67.53
+2021-2022,Virginia,English:Reading,Grade 5,64650,89515,72.22
+2021-2022,Virginia,English:Reading,Grade 8,68094,95119,71.59
+2021-2022,Virginia,Mathematics,Grade 3,59496,89240,66.67
+2021-2022,Virginia,Mathematics,Grade 5,53906,84263,63.97
+2021-2022,Virginia,Mathematics,Grade 8,45484,79733,57.05

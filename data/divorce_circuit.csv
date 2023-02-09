@@ -1,0 +1,24 @@
+year,divorces,locality,fips,pop_wcc,locality2,divorce_rate
+2020,24178,Virginia,51,8646905,Virginia,2.796144979041634
+2021,26911,Virginia,51,8655608,Virginia,3.109082573979783
+2022,24176,Virginia,51,8696955,Virginia,2.7798235129421736
+2013,251,Albemarle,003,102559,Albemarle County,2.447371756744898
+2014,282,Albemarle,003,103330,Albemarle County,2.729120294203039
+2015,220,Albemarle,003,104221,Albemarle County,2.110898955105017
+2016,225,Albemarle,003,105338,Albemarle County,2.1359813172834117
+2017,317,Albemarle,003,106495,Albemarle County,2.976665571153575
+2018,249,Albemarle,003,108202,Albemarle County,2.3012513631910685
+2019,334,Albemarle,003,109987,Albemarle County,3.0367225217525706
+2020,261,Albemarle,003,112801,Albemarle County,2.313809274740472
+2021,314,Albemarle,003,114424,Albemarle County,2.7441795427532685
+2022,289,Albemarle,003,115495,Albemarle County,2.5022728256634483
+2013,42,Charlottesville,540,46303,Charlottesville City,0.9070686564585447
+2014,33,Charlottesville,540,47539,Charlottesville City,0.6941668945497381
+2015,54,Charlottesville,540,48385,Charlottesville City,1.1160483620956907
+2016,33,Charlottesville,540,49037,Charlottesville City,0.6729612333544058
+2017,16,Charlottesville,540,49707,Charlottesville City,0.3218862534451888
+2018,54,Charlottesville,540,50183,Charlottesville City,1.076061614490963
+2019,65,Charlottesville,540,50694,Charlottesville City,1.2822030220538918
+2020,91,Charlottesville,540,51056,Charlottesville City,1.7823566280162957
+2021,125,Charlottesville,540,51079,Charlottesville City,2.4471896474089156
+2022,85,Charlottesville,540,51278,Charlottesville City,1.6576309528452746
