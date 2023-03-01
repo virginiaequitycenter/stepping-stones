@@ -2,10 +2,15 @@
 # Updated 2023-01-15
 # Contributor: Michele Claibourn
 # Generate child poverty estimates
+#
 # Based on Census Small Area Income and Poverty Estimates
 # https://www.census.gov/programs-surveys/saipe/data/datasets.html
 # Charlottesville, Albemarle, State
 #
+# Choose State and County Estimates
+# Copy link for Virginia: 
+# https://www2.census.gov/programs-surveys/saipe/datasets/2021/2021-state-and-county/est21-va.txt
+# 
 # Proposed Citation: 
 # U.S. Census Bureau, "SAIPE State and County Estimates for 2021."  
 # https://www.census.gov/programs-surveys/saipe/data/datasets.html
