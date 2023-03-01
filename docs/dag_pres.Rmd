@@ -1,0 +1,126 @@
+---
+title: "Updating Stepping Stones"
+subtitle: "City of Charlottesville Data Analysis Group"
+author: "Michele Claibourn, UVA Equity Center"
+output: 
+  ioslides_presentation:
+    logo: images/EquityCenter-Logo_Typed_Black.png
+    widescreen: true
+date: "2023-03-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+# Background 
+
+<div style="text-align:right;"><img src="https://media.giphy.com/media/rNMpJJWecPOiIfGfVw/giphy.gif" width="250"></div>
+
+## [The Equity Center](https://virginiaequitycenter.org/)
+<div class="columns-2">
+**Mission:** Tangibly redress racial and economic inequity in university communities by advancing a transformative approach to the fundamental research mission.
+
+**Vision:** Universities that serve local communities by bringing rich research resources to bear on the work of redressing poverty and racial inequality and equip students to lead in building a just society.
+
+
+![](images/westmain.png){width=85%}
+</div>
+
+
+## Democratization of Data
+
+The [Democratization of Data Initiative](https://virginiaequitycenter.org/democratization-data) centers community-driven partnership to provide advocates as well as civic-and private-sector leaders with data and metrics, contextualized analysis, interactive maps and data visualizations, and narrative storytelling as a resource in pursuit of equity throughout the region.
+
+[![](images/cvlcovid.png){width=25%}](https://virginiaequitycenter.github.io/cvilleequity_covid/SIP/) [![](images/vec.png){width=33%}](https://virginiaequitycenter.shinyapps.io/va-evictors-catalog/) [![](images/cville_landsat.png){width=33%}](https://virginiaequitycenter.shinyapps.io/climate-app/)
+
+## Public Interest Data: Ethics & Practice
+
+<div align="center">
+[![](images/pid_hex2.png){width=10%}](https://pidep23.mclaibourn.org/) a class in [![](images/batten_logo.png){width=33%}](https://batten.virginia.edu/)
+</div>
+
+**Course goals**
+
+* Make progress on projects that advance social justice and policy understanding in collaboration with community partners.
+* Practice working with data to answer pressing questions, including finding, cleaning, and understanding data; exploring, analyzing, modeling data; visualizing, contextualizing, and communicating data; with care and humility and respect for the affected partners and communities throughout.
+* Develop experience in data workflows that support ethical data science, including processes for working collaboratively, openly, inclusively, and reproducibly.
+
+
+## Stepping Stones Report
+
+Steppings Stones: A Report on Community Well-Being of Children and Families in the Charlottesville/Albemarle Area
+
+<div align="center">
+[![](images/stepstonescover.png){width=25%}](https://www.charlottesville.gov/1623/Stepping-Stones-Report)
+</div>
+
+* Produced by the City of Charlottesville Department of Human Services
+* A compilation of ~ 40 measures to track community and youth well-being
+* Began as a project of the [Commission for Children and Families](https://www.cvillepedia.org/Commission_on_Children_and_Families) in 2000
+
+
+# Principles
+
+How do we enact equity and ethics in our data work?
+
+## Open Knowledge
+
+* Open (authoritative) sources when possible
+    - Challenges of making ad hoc data requests; mediated sources no longer available
+    - Generalizability to other places
+    - Example: VDSS reports on [foster care](https://www.dss.virginia.gov/geninfo/reports/children/fc.cgi)
+    - Example: VSS [CPS reports](https://cpsaccountability.dss.virginia.gov/index-historical-reports.html)
+* Open software ![](images/heartR.gif){width=10%}; with learning curve ![](images/breakR.gif){width=10%}
+* Open access, ideally online (in multiple places) and in printed form
+
+
+## Reproducibility and Reuse
+<div class="columns-2">
+Shared on [GitHub](https://github.com/virginiaequitycenter/stepping-stones/)
+
+* Generate processes that are repeatable, preferably by a computer (via scripting); examples [VDSS](https://github.com/virginiaequitycenter/stepping-stones/blob/main/code/children_fostercare.R), [VDH](https://github.com/virginiaequitycenter/stepping-stones/blob/main/code/low_birth_weight.R)
+* Generate proceses that are understandable, preferably by a human (via commenting), examples [VDOE](https://github.com/virginiaequitycenter/stepping-stones/blob/main/code/ontime_grad_rates.R), [SAIPE](https://github.com/virginiaequitycenter/stepping-stones/blob/main/code/child_poverty.R)
+
+![https://xkcd.com/242/](https://imgs.xkcd.com/comics/the_difference.png){width=55%}
+</div>
+
+## Transparency and Documentation
+<div class="columns-2">
+Facilitate validation
+
+* Re-collection of past data when possible; example [BOE](https://github.com/virginiaequitycenter/stepping-stones/blob/main/code/voter_reg.R)
+* Redundancy for data that requires manual curation; example [DCV reports](https://github.com/virginiaequitycenter/stepping-stones/blob/main/code/compare_alcohol_arrests.R)
+* Documentation of choices for checking by others
+
+![https://xkcd.com/1421/](https://imgs.xkcd.com/comics/future_self.png){width=55%}
+</div>
+
+## Data don't speak for themselves
+
+Who's view is communicated in the presentation of the data? (an aside)
+
+[![](images/wp_coviddeaths_race.png){width=45%}](https://www.washingtonpost.com/health/2022/10/19/covid-deaths-us-race/) [![](images/pew_coviddeaths_party.png){width=45%}](https://www.pewresearch.org/politics/2022/03/03/the-changing-political-geography-of-covid-19-over-the-last-two-years/)
+
+## Contextualization
+
+Some categories we're working to address for each measure...
+
+* Why is this important?
+* How is this measured?
+* Source of the data
+* Description of trend
+* Further considerations (data settings)
+* Who is this data about?
+
+## Next steps
+
+* Students submit their final drafts tomorrow!
+* Equity Center team will check, integrate, complete
+* A smaller student team will begin work of generating a selection of measures disaggregated by race
+* DHS will work with us to convene a set of stakeholders for pre-release review and feedback
+
+# Thank you!
+
+<div style="text-align:right;"><img src="https://media.giphy.com/media/l0IyjeA5mmMZjhyPm/giphy.gif" width="250"></div>
+
