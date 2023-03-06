@@ -1,0 +1,463 @@
+---
+title: "Stepping Stones Project"
+author: "Amruta, Mary Katherine, Owayne"
+date: "2023-02-23"
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r, include=FALSE}
+# Load libraries
+library(tidyverse)
+library(scales) 
+library(ggthemes)
+library(janitor)
+
+# Reading in/prepping data ----
+# Pre-collected variables
+# Child Poverty Rates
+child_pov <- read_csv("https://raw.githubusercontent.com/virginiaequitycenter/stepping-stones/main/data/child_pov.csv")
+# Average Per capita income
+per_cap_income <- read_csv("https://raw.githubusercontent.com/virginiaequitycenter/stepping-stones/main/data/per_cap_income.csv")
+
+# Collected variables
+# Infant Health
+infant_health <- read_csv("data/births_to_mothers_with_less_than_12th_grade_CVL_ABL_VA.csv")
+
+# Youth Unemployment
+youth_unemployment <- read_csv("data/youth_unemployment.csv")
+
+# PALS-Kindergarten
+read_intv <- read_csv("data/pals_kindergarten.csv")
+
+# Average Daily Attendance
+average_daily_attendance <- read_csv("data/average_daily_attendance.csv")
+```
+
+```{r}
+# Data prep
+
+per_cap_income <- clean_names(per_cap_income)
+
+# Use ifelse to identify codes with county names
+child_pov <-  mutate(child_pov, county_names = ifelse(county_fips == "000", "Virginia",
+                       ifelse(county_fips == "003", "Albemarle",
+                              ifelse(county_fips == "540", "Charlottesville", "Unknown"))))
+
+read_intv  <- read_intv %>%
+   mutate (Percent = Percent*100)
+```
+
+### Finance-Children below poverty level (%)	{.tabset .tabset-pills}
+
+#### Figure 
+```{r}
+
+child_pov %>% 
+  ggplot(aes(x = year, y = pct_child_pov, color = county_names)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = 2000:2021, # identify axis breaks to label
+                     name = "") +
+  scale_y_continuous(limits = c(0, 30),
+                     labels = label_percent(scale = 1),
+                     breaks = seq(0, 30, 5)) +
+ #geom_text(aes(label = round(pct_child_pov,1)),
+           # size = 2, nudge_y = 0.75) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A")) +
+  labs(title = "Child Poverty Rates",
+       subtitle = "Percent of Children Living under the Poverty Line",
+       caption = "Source: U.S. Census Bureau, SAIPE State and County Estimates for 2021.
+       https://www.census.gov/programs-surveys/saipe/data/datasets.html", 
+       x = "", y = "", color = "") +
+  theme_few() +
+  theme(legend.position = "bottom", 
+        axis.text = element_text(size = 9),
+        axis.text.x = element_text (angle=45, vjust = 1, hjust = 1))
+```
+
+#### About 
+
+**Why is this Important?** 
+
+Living in families with incomes below the poverty line can affect children’s access to vital resources in their development. Families below the poverty line are more likely to be food insecure which means they may not have access to food required for an active, healthy life. Furthermore, they may not have access to stable living or high quality education resources or face higher rates of absenteeism due to needing to work or care for family members. Finally, children may lack access to stable living conditions or quality drinking water. These conditions can cause physical and mental impacts in both the short- and long-term.
+
+**How we Measure this Variable**
+
+This variable is measured as a percentage of families with incomes below the yearly poverty level out of all families. In 2022, the federal poverty level for a family of four is $27,750 for a family of four.^2^
+
+**Further Considerations** 
+
+Impacts of historical and structural racism cause Black and Latinx families to have disproportionately higher rates of incomes below the poverty line. 
+
+**Source of the Measure** 
+
+ U.S. Census Bureau, [SAIPE State and County Estimates for 2021](https://www.census.gov/programs-surveys/saipe/data/datasets.html)
+
+**Trend**
+
+This data shows relatively stable levels of child poverty within communities, with Charlottesville remaining between 20 and 24 percent, Albemarle between 8 and 12 percent, and the State of Virginia between 10 and 15 percent in the period of 2002 to 2021. All localities slightly incline until 2013 and 2014 before slightly declining until 2021. The expansion of [child tax credit to address COVID-19 sharply reduced child poverty](https://www.cbpp.org/research/federal-tax/stimulus-payments-child-tax-credit-expansion-were-critical-parts-of-successful) and kept and estimated 3.7 million children out of poverty. However this effect was reversed after the Child Tax Credit payments were discontinued in December 2021 which led to a [significant increase in children living in poverty rates by 4.9 percentage points](https://static1.squarespace.com/static/610831a16c95260dbd68934a/t/620ec869096c78179c7c4d3c/1645135978087/Monthly-poverty-January-CPSP-2022.pdf). This effect disproportionately affected Latinx and Black children by 7.1 percentage points and 5.9 percentage points, respectively. However, we do not have data beyond 2021 to illustrate this effect. 
+
+
+### Finance-Average per capita income 	{.tabset .tabset-pills}
+
+#### Figure 1
+```{r}
+# Cleaning label names for graph
+per_cap_income <- per_cap_income %>% 
+  mutate(geo_name = recode(geo_name,
+                          "Charlottesville, VA (Metropolitan Statistical Area) *" = "Charlottesville"))
+
+per_cap_income %>% 
+  ggplot(aes(x = year, y = adj_pci, color = geo_name)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = 2000:2021, 
+                     name = "") +
+   scale_y_continuous(limits = c(20000, 80000),
+                      labels = label_dollar(scale = 1),
+                     breaks = seq(20000, 80000, 10000)) +
+  scale_color_manual(values = c("#E7A342", "#5AB48A")) +
+  labs(title = "Average Per Capita Income",
+       subtitle = "Per capita Income Adjusted for Inflation",
+       caption = "Source: Bureau of Economic Analysis
+     https://www.bea.gov/data/economic-accounts/regional", 
+       x = "", y = "", color = "") +
+  theme_few() +
+ theme(legend.position = "bottom", 
+        axis.text = element_text(size = 9),
+        axis.text.x = element_text (angle=45, vjust = 1, hjust = 1))
+
+```
+
+
+#### Figure 2
+```{r}
+per_cap_income <- per_cap_income %>% 
+  mutate(geo_name = recode(geo_name,
+                          "Charlottesville, VA (Metropolitan Statistical Area) *" = "Charlottesville"))
+
+per_cap_income %>% 
+  ggplot(aes(x = year, y = pci, color = geo_name)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = 2000:2021, # identify axis breaks to label
+                     name = "") +
+  scale_y_continuous(limits = c(20000, 80000),
+                     labels = label_dollar(scale = 1),
+                     breaks = seq(20000, 80000, 10000)) +
+  scale_color_manual(values = c("#E7A342", "#5AB48A")) +
+  labs(title = "Average Per Capita Income",
+       subtitle = "Per capita Income not Adjusted for Inflation",
+       caption = "Source: Bureau of Economic Analysis
+     https://www.bea.gov/data/economic-accounts/regional", 
+       x = "", y = "", color = "") +
+  theme_few() +
+  theme(legend.position = "bottom", 
+        axis.text = element_text(size = 9),
+        axis.text.x = element_text (angle=45, vjust = 1, hjust = 1))
+```
+
+#### About 
+
+**Why is this Important?** 
+
+The Average per capita is used as a measure to “evaluate the standard of living and quality of life of the population”^1^. This metric may be useful because being able to evaluate the standard of living and quality of life can provide a better understanding of other important demographics such as education levels, nutrition, and access to quality healthcare. 
+
+**How we Measure this Variable**
+
+Average per capita income is measured in dollars and represents by the total sum of the income in an area by the total population.  This calculation distributes the average income across both working populations and populations that do not work or generate income, such as children. The source did not specifically include data on average per-capita income for Albemarle County. Deeply intertwined urban regions don't seem to be separated out in the government database. As a result, Charlottesville MSA values on average per capita income represent the data from the combined regions of Charlottesville and Albemarle. It is adjusted for year-to-year inflation.The first graph shows this value when it is adjusted for year-to-year inflation. The second graphic depicts this value without adjusting for year-to-year inflation.
+
+**Further Considerations** 
+
+Average per capita income may have limitations in its ability though as it does not account for income inequality, as a result of this, a location of interest can either look richer or poorer than it really is depending on which way income is skewed. Inflation can have an impact on average per capita income, making it challenging to evaluate historical changes in economic prosperity with accuracy. Consumers' purchasing power is reduced by inflation, which also restricts income growth. As a result, per capita income tends to overestimate a population's income.
+
+**Source of the Measure** 
+
+[U.S. Bureau of Economic Analysis](https://www.bea.gov/data/economic-accounts/regional)
+
+**Trend**
+
+Between 2002, and 2021, the average per capita income of Charlottesville and Virginia increased. In 2002, the average per capita income for the Charlottesville MSA and the state of Virginia was around $40,000. These steadily increased before dipping in 2008 and 2009 in response to the  2008 recession before continuing to increase.  After 2011, Charlottesville’s average per capita income began to increase at a faster rate than the state of Virginia. By 2021, the average per capita income was around $60,000 in Charlottesville, and around $50,000 in Virginia.
+
+
+### Variable 1: Infant health-Births to mothers with less than a 12th grade education 	{.tabset .tabset-pills}
+
+#### Figure 
+
+```{r}
+infant_health %>% 
+ ggplot(aes(x = year, y = percent, color = location))+
+  geom_line()+
+  geom_point()+
+  theme_few()+
+ # scale_y_continuous(breaks = seq(5, 30, 5), labels = label_percent(scale = 1), name = "")+
+   scale_y_continuous(limits = c(0, 30), name ="",
+                     labels = label_percent(scale = 1),
+                     breaks = seq(0, 30, 5)) +
+  scale_x_continuous(breaks = seq(2000, 2020), name = "")+
+  theme(legend.position = "bottom", legend.title = element_blank(),
+        axis.text = element_text(size = 9),
+        axis.text.x = element_text (angle=45, vjust = 1, hjust = 1)) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A")) +
+   #scale_color_manual(values = c("#C0C0C0", "#FFA500", "#000080"))+
+  geom_vline(xintercept = c(2008, 2008), linetype = 9, color = "#000000")+
+  annotate("text", x = c(2009, 2009), y = 22, size = 2.5, hjust = 0,
+           label = "In 2008 FDA lowers OTC\nEmergency Contraceptive\nAge to 17 Years Old")+
+  labs(title = "Birth to Mothers With Less Than 12th-grade Education",
+       subtitle = "Percent of Mothers Giving Birth",
+       caption = "Source: Kids Count Data Center,\nBirths to mothers with less than 12th grade education in Virginia,\nhttps://datacenter.kidscount.org/rawdata.axd?ind=3257&loc=48")
+    
+
+```
+
+#### About
+
+**Why is this important?** 
+
+Research shows that characteristics of a child’s family are correlated with outcomes in health, education, and later life achievement. These children are more likely to be categorized as low income or have incomes below the federal poverty rate. Education disparities for these children include that they are less likely to be enrolled in prekindergarten, meet proficient reading and math standards in the eighth grade, or graduate high school on time. Children with mothers with less than a 12th grade education are less likely to be covered by health insurance, and more likely to be low-birth rate and face higher rates of infant mortality.^3^ Parents' education level is correlated with a child's long-term health and academic outcomes.
+
+**Further Considerations** 
+
+Measures of the percentage of children are used to advocate for increasing maternal education as a strategy to improve child outcomes. One meta analysis found that while there is a causal link between maternal education and child health and education outcomes, these links are not as strong in analyses that address confounding variables that may also affect education and health.^4^
+
+**Source of the Measure** 
+
+Kids Count Data Center, [Births to mothers with less than 12th grade education in Virginia](https://datacenter.kidscount.org/rawdata.axd?ind=3257&loc=48)
+
+**Trend** 
+
+Overall, between 2000 and 2020, the percent of mothers with less than a 12th grade education decreased. Charlottesville had the highest percentage in 2000 at just below 20% and Albemarle had the lowest at around 10% with Virginia between at 15%. In 2008, the FDa lowered over-the-counter emergency contraceptive access to 17 years old, and there is a corresponding decrease in the proportion of births to mothers with less than a 12th grade education. In 2020, Charlottesville, Albemarle, and Virginia all have measures around 10%. 
+
+
+### Variable 2: Youth Unemployment	{.tabset .tabset-pills}
+
+#### Figure 1
+
+```{r}
+# Cleaning label names for graph
+youth_unemployment <- youth_unemployment %>% 
+  mutate(name = recode(name,
+                          "Albemarle County, Virginia" = "Albemarle",
+                          "Charlottesville city, Virginia" = "Charlottesville"))
+
+youth_unemployment%>% 
+  ggplot(aes(x = year, y = unemployment_rate, color = name)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = 2010:2021,
+                     name = "") +
+  scale_y_continuous(limits = c(0, 45),
+                     labels = label_percent(scale = 1),
+                     breaks = seq(0, 45, 5)) +
+  #geom_text(aes(label = round(unemployment_rate,1)),
+           # size = 2, nudge_y = 0.75) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A")) +
+  labs(title = "Youth Unemployment Rate", 
+       subtitle = "The Percentage of Youth that are Unemployed",
+       caption = "Source: U.S. Census Bureau,American Community Survey, 5-Year Estimates\nTable B23001 https://data.census.gov/table?q=b23001&g=0500000US51003,51540", 
+       x = "", y = "", color = "") +
+  theme_few() +
+  theme(legend.position = "bottom", 
+        axis.text = element_text(size = 9),
+        axis.text.x = element_text (angle=45, vjust = 1, hjust = 1))
+```
+
+
+#### Figure 2
+
+```{r, warning=FALSE}
+youth_unemployment <- youth_unemployment %>% 
+  mutate(name = recode(name,
+                          "Albemarle County, Virginia" = "Albemarle",
+                          "Charlottesville city, Virginia" = "Charlottesville"))
+
+youth_unemployment%>% 
+ggplot(aes(x = year, y = laborforce_rate, color = name)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = 2010:2021,
+                     name = "")  +
+  scale_y_continuous(limits = c(0, 45),
+                     labels = label_percent(scale = 1),
+                     breaks = seq(0, 45, 5)) +
+  #geom_text(aes(label = round(laborforce_rate,1)),
+           # size = 2, nudge_y = 0.75) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A")) +
+  labs(title = "Youth Laborforce Participation Rate", 
+       subtitle = "The Percentage of Youth that are in the Laborforce",
+       caption = "Source: U.S. Census Bureau,American Community Survey, 5-Year Estimates\nTable B23001 https://data.census.gov/table?q=b23001&g=0500000US51003,51540",
+       x = "", y = "", color = "") +
+  theme_few() +
+  theme(legend.position = "bottom", 
+        axis.text = element_text(size = 9),
+        axis.text.x = element_text (angle=45, vjust = 1, hjust = 1))
+```
+
+#### About
+
+**Why is this important?** 
+
+Measuring youth unemployment indicates how much harder it is for young people to get a job compared to adult workers. High rates of youth unemployment can negatively affect economic growth and development in a community because of social repercussions when youth feel left out or excluded, leading to anxiety and lack of hope for the future.^5^
+
+**How we Measure this Variable**
+
+Youth unemployment is measured as the number of 15-24 year olds who are unemployed as a percentage of the total labor force in this age range. People who are unemployed are measured as those who have reported that they do not have a job, but are ready to work and have been seeking employment within the last 4 weeks.^6^
+
+**Further Considerations**
+
+Due to historic and systemic racism, youth unemployment is generally higher for people of color, Black youth, and young Black men.  In addition, unemployment rates do not include discouraged workers who have searched for a job in the last year, but given up because they do not believe there are available jobs that they qualify for. Furthermore, this statistic does not describe the quality of employment and the rate at which youth feel like they are underemployed or underpaid in their jobs.^7^ 
+
+**Source of the Measure** 
+
+U.S. Census Bureau,American Community Survey, 5-Year Estimates, [Table B23001](https://data.census.gov/table?q=b23001&g=0500000US51003,51540)
+
+**Trend **
+
+Between 2010 and 2021, the overall rates of youth unemployment declined. Virginia had the highest rates of unemployment in 2010 at around 21% and this increased until 2013, before steadily decreasing to around 15% in 2021. Abemarle had just under 20% youth unemployment in 2010, with a sharp decline between 2013 and 2014. By 2021, Albemarle had around 10% youth unemployment. Charlottesville had around 10% youth unemployment in 2010. This rate is highly variable and unstable throughout the period, but returned to about 8% by 2021. 
+
+### Variable 3: Kindergarten children identified for reading intervention services 	{.tabset .tabset-pills}
+
+#### Figure 
+
+```{r, warning=FALSE}
+read_intv %>% 
+  ggplot(aes(x = year, y = Percent, color = location)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = 2009, linetype = 9, color = "#000000") +
+ annotate("text", x = c(2009, 2009), y = 22, size = 2.5, hjust = 0, 
+           label = "  Illuminate Education was founded") +
+  scale_x_continuous(breaks = seq(2000, 2021, 1)) +
+  scale_y_continuous(limits = c(0, 30),
+                     breaks = seq(0,30, 5),
+                    labels = label_percent(scale = 1)) + 
+  #scale_color_few(palette = "Medium",  name = "") +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A")) +
+  theme_few() +
+  theme(legend.position = "bottom", legend.title = element_blank(),
+        axis.text=element_text(size=9),
+        axis.text.x = element_text(angle=45, vjust=1, hjust=1)) +
+  labs(title = "Kindergartners Needing Reading Intervention", 
+       subtitle = "Percent of Kindergartners Screened",
+       caption = "Source: Kids Count Data Center, Fall PALS-K\n before and after 2015/16 in Virginia\n https://datacenter.kidscount.org/rawdata.axd?ind=10181&loc=48\n https://datacenter.kidscount.org/rawdata.axd?ind=3254&loc=48", 
+       x = "", y = "") 
+```
+
+#### About
+
+**Why is this important?** 
+
+Virginia screens all incoming kindergartners with a Phonological Awareness Literacy screening (PALS) which is a tool to understand school readiness. Teachers can use this screening to provide differentiated, targeted instruction to meet students needs.^8^ 
+
+**How do we measure this? **
+
+This proportion is measured as the percentage of kindergarten students that are screened.
+
+**Further Considerations**
+
+Historic and structural inequity cause disparities in opportunity for students by race and socioeconomic status which impact students’ later learning and achievement. Early intervention is one mechanism to identify and combat disparities from widening as students enter kindergarten.
+
+**Source of the Measure** 
+
+Virginia Department of Education, [Superintendent's Annual Report, Table 8 Number of Days Taught, ADA, ADM. 2002-2022](https://www.doe.virginia.gov/data-policy-funding/data-reports/statistics-reports/superintendent-s-annual-report)
+
+**Trend**
+
+In 2003, the proportion of Kindergartners needing reading intervention was the highest at around 26% in Charlottesville, around 20% in Virginia, and about 16% in Albemarle County. There is more variation year-to-year differences in the Charlottesville and Virginia rates than the Virginia rate. PALS office which is now a division of Illuminate Education was created in 2009, which might explain the convergence of rates after 2009 by standardizing the process of early detection and the provision of instructional resources. Virginia steadily declines to around 12% before starting to increase again in 2014. In 2020, Albemarle had the highest proportion of Kindergartners identified for reading intervention at 20%, then Charlotteville at 18%, and Virginia at around 16%.  
+
+### Variable 4: Average Daily Attendance 	{.tabset .tabset-pills}
+
+#### Figure 
+
+```{r}
+average_daily_attendance %>% 
+  ggplot(aes(x = year, y = pct_att_total, color = name)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = 2020, linetype = 9, color = "#000000") +
+  annotate("text", x = 2020, y = 92, size = 2.5, hjust = 0, 
+           label = " Schools close due to\n COVID-19 pandemic") +
+  scale_y_continuous(limits = c(90, 100),
+                     breaks = 90:100,
+                     labels = label_percent(scale = 1)) +
+  scale_x_continuous(breaks = seq(2008, 2022, 1)) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A")) +
+  #scale_color_few(palette = "Medium", name = "") +
+  theme_few() +
+  theme(legend.position = "bottom", legend.title = element_blank(),
+        axis.text=element_text(size=9), 
+         axis.text.x = element_text(angle=45, vjust=1, hjust=1)) +
+  labs(title = "Average Daily Attendance", 
+       subtitle = "Public School Daily Attendance Averages",
+       caption = "Source: Virginia Department of Education, Superintendent's Annual Report,\n Table 8 Number of Days Taught, ADA, ADM 2002-2022.\n https://www.doe.virginia.gov/data-policy-funding/data-reports/\n statistics-reports/superintendent-s-annual-report"  , 
+       x = "", y = "") 
+```
+
+#### About 
+
+**Why is this important?** 
+
+Consistent school attendance is associated with higher student academic success because it is difficult to build knowledge and skills if many students are frequently absent. 
+
+**How do we measure this?**
+
+This is the average of the daily attendance at public schools in the area. 
+
+**Further Considerations**
+
+This rate shows the number of students in the entire school who show up, but does not provide any information about individual students who may be chronically absent, or missing more than 10% of the school year. While overall attendance may be high, there may be a small number of students who make up a large portion of the absences and be in need of extra support.
+
+
+**Source of the Measure**
+
+[Virginia Department of Education, Superintendent's Annual Report, Table 8 Number of Days Taught, ADA, ADM. 2002-2022](https://www.doe.virginia.gov/data-policy-funding/data-reports/statistics-reports/superintendent-s-annual-report)
+
+**Trend**
+
+Beginning in 2008-2018, Albemarle has generally constant Average public school attendance that remains around 96% vehicle Charlottesville’s fluctuates between 95 and 96%. While Virginia started at 96% in 2008, it remained around 95% through 2019. In 2020, all three localities see an increase in attendance as public schools close and transition online due to the COVID-19 Pandemic. In 2022, in-person school reopened, and there was a sharp decrease between 2021 and 2022. In 2022, attendance levels are around 94% for Albemarle and 93% for Charlottesville and Virginia Public Schools. 
+
+
+### Variable 5: Sexually Transmitted Infections (STI's in Youth) 	{.tabset .tabset-pills}
+
+#### Figure 
+
+#### About 
+
+**Why is this important?** 
+
+Measuring rates of youth STI’s is important because special efforts  are needed to increase education and awareness to reduce STI transmission. Nationwide, the rates of STI’s have been climbing since 2013, not as a result of sexual behavior patterns but due to lack of awareness and restricted access to healthcare. Furthermore, the CDC estimates that youth ages 15-24 account for almost half of the 26 million new sexually transmitted infections that occurred in the United States in 2018.
+
+**How do we measure this?**
+
+This measure is an aggregate of the number of new cases of syphilis, gonorrhea, chlamydia, and HIV per 1,000 residents ages 10-19. The number of cases is based on an incidence rate, which means that the case only counts when it is first reported. For HIV, the new case will count in the first year it is diagnosed, but not in the following years, even though someone still has the condition and is receiving treatment. 
+
+**Further Considerations**
+
+The CDC calls for improved sex education to teach young people about sexual health and infection-prevention techniques; however, these interventions may not reach all populations due to health care access through family insurance plans and stigma against STI’s.
+
+**Source of the Measure**
+
+Virginia Department of Health.
+
+**Trend**
+
+### References
+1. https://www.investopedia.com/terms/i/income-per-capita.asp#:~:text=Per%20capita%20income%20is%20used,of%20life%20of%20the%20population
+2. https://www.healthcare.gov/glossary/federal-poverty-level-fpl/
+3. https://files.eric.ed.gov/fulltext/ED558149.pdf
+4. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6519047/
+5. https://www.mercycorps.org/blog/youth-unemployment-global-crisis#:~:text=Having%20a%20significant%20amount%20of,of%20hope%20for%20the%20future.
+6. https://data.oecd.org/unemp/youth-unemployment-rate.htm
+7. https://www.americanprogress.org/article/the-high-cost-of-youth-unemployment/#:~:text=The%20ratio%20of%20youth%20unemployment,compared%20to%20an%20adult%20worker.
+8. https://vkrponline.org/virginia-kindergarten-readiness-program-2/how-it-works/the-assessments/literacy-pals/

@@ -40,7 +40,7 @@ glimpse(nohs_cvlalb)
 ## Issues: structure of "data" and "time_frame" columns 
 
 nohs_cvlalb <- nohs_cvlalb %>% 
-  mutate(percent = as.numeric(data),
+  mutate(percent = as.numeric(data) *100,
          year = as.numeric(time_frame)) %>% 
   select(year, location, percent)
 
