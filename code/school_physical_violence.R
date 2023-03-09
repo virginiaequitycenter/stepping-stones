@@ -1,6 +1,14 @@
-# Stepping Stones
-# Reports of physical violence in schools
-# Based on Discipline, Crime, and Violence Reports, 2018-2021
+# Stepping Stones Data: Weapons Offenses in Schools ----
+# Updated 2023-03-09
+# Contributor: Michele Claibourn
+# Acquire data from Discipline, Crime, and Violence Reports
+# https://www.doe.virginia.gov/data-policy-funding/data-reports/data-collection/special-education
+# Charlottesville, Albemarle, State
+#
+# Proposed Citation
+# Virginia Department of Education, "Discipline, Crime, and Violence Reports" 2006-2021.
+# https://www.doe.virginia.gov/data-policy-funding/data-reports/data-collection/special-education
+
 
 # libraries ----
 library(tidyverse)
@@ -65,5 +73,44 @@ dcv_va <- dcv_data %>%
 ## bind state and localities ----
 dcv1821 <- bind_rows(dcv_sum, dcv_va)
 
+### create (single) year
+dcv1821 <- dcv1821 %>% 
+  mutate(year = as.numeric(str_sub(school_year, 6,9)))
+
+
+# Pull in student count data ----
+# Downloaded previously, team 1
+students <- read_csv("datadownloads/fall_membership_statistics_team1.csv") %>% 
+  clean_names()
+
+# locality totals
+stud_cvlalb <- students %>% 
+  filter(division_name %in% c("Albemarle County", "Charlottesville City")) %>% 
+  select(school_year, division = division_name, students = total_count) %>% 
+  mutate(division = ifelse(division == "Albemarle County", "Albemarle", "Charlottesville"))
+
+# state totals
+stud_va <- students %>% 
+  group_by(school_year) %>% 
+  summarize(students = sum(total_count)) %>% 
+  mutate(division = "Virginia")
+
+# bind locality and state totals together
+students <- bind_rows(stud_cvlalb, stud_va) %>% 
+  rename(division_name = division)
+
+
+# Join weapons offense and student counts ----
+df_students <- dcv1821 %>% 
+  left_join(students)
+
+# and generate the rate 
+df_students <- df_students %>% 
+  mutate(rate = (count/students)*1000)
+
+# have a peek
+ggplot(df_students, aes(x = year, y = rate, color = division_name, group = division_name)) + geom_line()
+
+
 # save file to date ----
-write_csv(dcv1821, "data/school_physical_violence.csv")
+write_csv(df_students, "data/school_physical_violence.csv")
