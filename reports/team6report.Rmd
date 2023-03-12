@@ -1,0 +1,334 @@
+---
+title: "Team Six Variables"
+author: "Vani Agarwal, Connor Eads, Maria Morrissey, Melinda Wong" 
+date: "2023-02-21"
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(janitor)
+library(readxl)
+
+```
+
+## Introduction
+
+This report visualizes 7 metrics of well-being in Charlottesville, Albermarle and statewide in Virginia. These metrics are the number of divorces, share of registered voters, percent of births to mothers with less than a 12th grade education, percent of cost-burdened renters, rate of weapons possession incidents in schools, rate of juvenile delinquency judgments, and rate of underage alcohol arrests. This breadth of metrics provides insights into family, community, health, housing, and discipline characteristics. Our goal is to make future reports easier to generate by documenting our measurement methods and making publicly available our data.
+
+## Family Characteristics
+
+### Divorce {.tabset}
+
+#### Trend
+
+```{r divorce vis}
+divorce <- read_csv("../data/divorce_circuit.csv")
+divorce_vdh <- read_csv("../data/divorce_vdh.csv")
+
+# Clean data: select only necessary variables, add column identifying source, rename columns, clean names
+divorce <- divorce %>% select('year', 'locality', 'divorce_rate') %>% 
+  cbind(rep('Circuit Court', nrow(divorce)))
+colnames(divorce) <- c('year', 'locality', 'divorce_rate', 'source')
+
+divorce_vdh <- divorce_vdh %>% select('year', 'locality', 'divorce_rate') %>% 
+  cbind(rep('VDH', nrow(divorce_vdh)))
+colnames(divorce_vdh) <- c('year', 'locality', 'divorce_rate', 'source')
+
+divorce_vdh$locality <- str_replace(divorce_vdh$locality, "Charlottesville City", "Charlottesville")
+divorce_vdh$locality <- str_replace(divorce_vdh$locality, "Albemarle County", "Albemarle")
+
+# Join VDH and Circuit Court data
+divorce_combined <- full_join(divorce, divorce_vdh)
+
+#Graphic
+ggplot(divorce_combined, aes(x = year, y = divorce_rate, color = locality, linetype = source)) +
+  geom_point()+ 
+  geom_line()+ 
+  labs(title = "Processed Divorce Rate in Circuit Court", subtitle = "From 2000 to 2022", caption = "The dotted lines represent data from the Virginia Department of Health (VDH) for each locality from 2000-2018. \n The solid lines represent data from Virginia Judicial System Caseload Statistical Information from 2013-2022.", colour = "Localities", linetype = "Source") +
+  scale_x_continuous("Year", breaks = divorce_combined$year) +
+  scale_y_continuous("Number of Processed Divorces (#/1,000)", limits = c(0,5)) +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"), 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1), 
+        text = element_text(size = 10, family = "Times New Roman"), 
+        panel.background = element_rect("white"), 
+        panel.grid = element_line("lightgrey"),panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A"))
+```
+
+#### About
+
+***Why is this important:*** Divorce impacts not only the individuals who are receiving the divorce, but their dependents, income, and assets. Additionally, while divorce rates can indicate household instability, they often represent the ability of a spouse to leave a dangerous household which is important in a larger understanding of community wellbeing.
+
+***Further Considerations:*** Although important, this measure is limited because divorce can be processed outside of the circuit court with the aid of religious institutions or by other means. A finalized divorce is also limited by the formality and finality of the decision whereas family dynamics can look drastically different even without a divorce that is processed in the circuit court. Furthermore, it is important to remember that this data was collected in a moment of pain, and we need to consider that before making normative judgments on whether the trend we see is "good" or "bad" because the reasons for getting a divorce are complicated and nuanced.
+
+***Trend:*** Generally, we don't see very strong trends in divorce rates across different localities. We did see a slight increase in 2021 in all three counties which could be COVID-related. Some potential explanations include court delays during the pandemic's peak in 2020, or difficulties maintaining a marriage after pandemic restrictions were lifted.
+
+***How do we measure this?:***The number of divorces processed in circuit court was collected for each locality from 2000-2022. To calculate the number of divorces per 1,000 persons, the [U.S. Department of Health and Human Services,](https://wonder.cdc.gov/wonder/help/bridged-race.html) CDC's population data was used for each year and locality population estimates.
+
+***Data Source:*** The number of divorces processed in circuit court was collected for each locality from the [Virginia Judicial System's Caseload Statistical Information from 2000-2022.](https://www.vacourts.gov/courtadmin/aoc/judpln/csi/home.html)
+
+***Note:*** the Virginia Department of Health (VDH) reported total divorces and annulments granted for each locality from 2000-2018. These numbers differ from the Virginia Judicial System's reporting likely due to differences in data collection. Because the VDH has not reported data after 2018, circuit court data was used at the primary metric, but VDH data is available on the next tab for comparison.
+
+***Files on Github:*** <https://github.com/virginiaequitycenter/stepping-stones/tree/main/data>
+
+## Community Characteristics
+
+### Registered Voters {.tabset}
+
+#### Trend
+
+```{r voter vis}
+voters <- read_csv("../data/vote_reg.csv")
+
+ggplot(voters, aes(x = year, y = reg_rate, color = locality)) +
+  geom_point() + 
+  geom_line() + 
+  labs(title = "Percent of Residents Registered to Vote", subtitle = "From 2000 to 2021", caption = "Source:  Virginia Department of Elections \n Each dotted line represents a presidential election.", colour = "Localities") +
+  scale_x_continuous("Year", labels = as.character(voters$year), breaks = voters$year) + 
+  scale_y_continuous("Percent of Adults Registered to Vote (%)", labels = scales::percent, limits = c(0.6,1)) +
+  geom_vline(xintercept = 2008, linetype = 'dotdash') +
+  geom_vline(xintercept = 2016, linetype = 'dotdash') +
+  geom_vline(xintercept = 2020, linetype = 'dotdash') +
+  geom_vline(xintercept = 2004, linetype = 'dotdash') +
+  geom_vline(xintercept = 2000, linetype = 'dotdash') +
+  geom_vline(xintercept = 2012, linetype = 'dotdash') +
+  annotate("text", x = 2001.5, y = .95, label = "Presidential \n Election", fontface = "bold", size = 2.7) +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"), 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1), 
+        text = element_text(size = 10, family = "Times New Roman"), 
+        panel.background = element_rect("white"), panel.grid = element_line("lightgrey"),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A"),
+                     labels=c('Albemarle', 'Charlottesville', 'Virginia'))
+```
+
+#### About
+
+***Why is this important:*** The share of adults who are registered voters is essential in understanding individuals in the communities ability and interest in participating in the political process.
+
+***Further Considerations:*** Although this measure tells us who is registered, it is important to also think about who is not registered and why. Particularly in the context of historical barriers to voter registration along racial lines, this measure alone cannot explain the many reasons an individual may not be registered to vote.
+
+***Trend:*** The share of individuals who are registered to vote has been growing consistently over time, however, in Charlottesville specifically 10% of residents are still not registered to vote. Charlottesville has maintained a lower voter registration rate than Virginia and Albermarle indicating that Charlottesville residents might be particularly affected by racist barriers to voter registration.
+
+***How do we measure this?:***The share of registered votes was pulled from the Virginia Department of Elections for 2000-2021. To calculate voter registration as a percentage of all adults, we used population data collected for each locality by the [U.S. Department of Health and Human Services,](https://wonder.cdc.gov/wonder/help/bridged-race.html) CDC, in the "Bridged-Race Population Estimates, United States July 1st resident population by state, county, age, sex, bridged-race, and Hispanic origin." 1990-2020 database.
+
+***Data Source:*** The number of registered voters in the localities of Charlottesville, Albemarle County, and all of Virginia were pulled from the [Virginia Department of Elections website for 2000-2021](https://www.elections.virginia.gov/resultsreports/registration-statistics/)
+
+***Files on Github:*** <https://github.com/virginiaequitycenter/stepping-stones/tree/main/data>
+
+## Health
+
+### Births to Mothers without a High School Degree {.tabset}
+
+#### Trend
+
+```{r birth vis}
+
+births <- read_csv("../data/births_mothers_nohs.csv")
+
+ggplot(births, aes(x = year, y = percent, color = location)) +
+  geom_point()+ 
+  geom_line()+ 
+  labs(title ="Births to Mothers w/ Less Than a 12th Grade Education", subtitle ='From 2000 to 2020', caption = "Source: Annie E. Casey Foundation’s Kids Count Data Center" , x = "Year", y = "Percent of live births", colour = "Localities") + 
+  scale_x_continuous("Year", labels = as.character(births$year), breaks = births$year) + 
+  scale_y_continuous("Percent of All Live Births (%)", breaks = seq(0,30,5), labels = scales::label_percent(scale = 1), limits = c(0,30)) +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"), 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1), 
+        text = element_text(size = 10, family = "Times New Roman"), 
+        panel.background = element_rect("white"), 
+        panel.grid = element_line("lightgrey"),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A"))
+```
+
+#### About
+
+***Why is this important:*** After childbirth, both the mothers and children have lower completion rates of a high school education or equivalent. Additionally, mothers often face serious health conditions or complications that limit their ability to receive a high school degree. Finally, this measure offers insight (although not complete insight) into the ability of residents to plan pregnancy.
+
+***Further Considerations:*** While this measure offers insight into youth health, it does not demonstrate the multitude of factors behind why individuals become pregnant without finishing a 12th-grade education or track the outcomes and lives of the mothers and their children within Charlottesville, Albemarle, or Virginia.
+
+***Trend:*** The share of live births to mothers without a high school diploma has been decreasing since 2008 in all three localities. In 2009, The Obama administration transferred \$114.5 million in funds from the Community-based Abstinence Education Program to support evidence-based sex education programs across the country, however, it is unclear how much of the declining in births is due to this program.
+
+***How do we measure this?:*** The number of births to mothers with less than a 12th-grade education is divided by the total number of live births within that locality to get the share of births to mothers will less than a 12th-grade education.
+
+***Data Source:*** This data was collected from the [Annie E. Casey Foundation's Kids Count Data Center](https://datacenter.kidscount.org/data/tables/3257-births-to-mothers-with-less-than-12th-grade-education) under reports called "Births to mothers with less than 12th-grade education in Virginia."
+
+***Files on Github:*** <https://github.com/virginiaequitycenter/stepping-stones/tree/main/data>
+
+## Housing
+
+### Overburdened Renters {.tabset}
+
+#### Trend
+
+```{r rent vis}
+
+rent <- read_csv("../data/rent_burdened.csv")
+
+ggplot(rent, aes(x = year, y = percent_over_30, color = NAME)) +
+  geom_point() + 
+  geom_line() + 
+  labs(title ="Percentage of Renters Paying More Than 30% of Income on Rent", subtitle ='From 2000 to 2021', caption = "Source: American Community Survey via tidycensus from 2009-2021" , x = "Year", y = "Percent of Renters") + 
+  scale_x_continuous("Year", labels = as.character(rent$year), breaks = rent$year) + 
+  scale_y_continuous("Percent of Renters (%)", breaks = seq(0.3,0.6, 0.05), labels = scales::percent, limits = c(0.4,0.6)) +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"), 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1), 
+        text = element_text(size = 10, family = "Times New Roman"), 
+        panel.background = element_rect("white"), 
+        panel.grid = element_line("lightgrey"),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  scale_color_manual('Localities',
+                     values = c("#B23B6B", "#E7A342", "#5AB48A"),
+                     labels=c('Albemarle', 'Charlottesville', 'Virginia'))
+```
+
+#### About
+
+***Why is this important:*** The percentage of renters who are paying more than 30% of their income for housing is an important indicator for measuring the rental burden. According to the U.S. Department of Housing and Urban Development, households who pay more than 30% of their income for housing are "cost-burdened" and "may have difficulty affording necessities such as food, clothing, transportation, and medical care." Knowing the percentage of renters in Charlottesville and Albemarle who are cost-burdened is important in understanding overall housing affordability as well as how much income individuals have to spend on other essentials for health and well-being.
+
+***Further Considerations:*** However, it is important to note that this metric does not fully explain a household's financial status. A single adult and households with children may both spend the same percentage of their income on housing, but spending on their basic expenditures is vastly different. Additionally, some households may choose to live in lower-quality housing to reduce costs which still has consequences for their wellbeing, but quality of housing is not reflected in this measure.
+
+***Trend:*** This data was collected after 2009. Albermarle county has seen fluctuations in the share of overburdened renters, but has generally remained below 44%. However, Charlottesville City saw a decline in overburdened renters until 2017 after which the measure started to increase. Charlottesville city has nearly 6 percentage points more overburdened renters than Virginia overall. It is unclear what could be causing these disparities.
+
+***How do we measure this?:*** Data on the number of renters in the locality, as well as the number of renters who were paying more than 30% of their income in rent, were pulled from census data. Then to calculate the share of overburdened renters, these two values were divided.
+
+***Data Source:*** All of the data for this measure across each locality was collected from the American Community Survey via tidycensus from 2009-2021.
+
+***Files on Github:*** <https://github.com/virginiaequitycenter/stepping-stones/tree/main/data>
+
+## Discipline
+
+### Weapons Possession in School {.tabset}
+
+#### Trend
+
+```{r weapons vis}
+weapons <- read_csv("../data/school_weapons_dcv.csv")
+
+ggplot(weapons, aes(x = year, y = rate, color = division)) +
+  geom_point() + 
+  geom_line() + 
+  labs(title ="Weapons Possession Incidents in School", subtitle = "From 2007 to 2021", caption = "Source: Virginia Department of Education’s Incidents of Discipline, Crime, and Violence (DCV)", x = "Year", y = "Number of  Weapon Possessions (#/1,000 Students", colour = "Localities") + 
+  scale_x_continuous("Year", labels = as.character(weapons$year), breaks = weapons$year) + 
+  geom_vline(xintercept = 2013) +
+  geom_vline(xintercept = 2017) +
+  geom_segment(aes(x = 2013, y = 2.35, xend = 2017, yend = 2.35), color = "black") +
+  annotate("text", x = 2015, y = 2.6, label = "Missing Data 2014-2016", fontface = "bold", size = 2.7) +
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"), 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1), 
+        text = element_text(size = 10, family = "Times New Roman"), 
+        panel.background = element_rect("white"), 
+        panel.grid = element_line("lightgrey"),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A"),
+                     labels=c('Albemarle', 'Charlottesville', 'Virginia'))
+```
+
+#### About
+
+***Why is this important:*** This measure provides insight into student safety and outcomes. Although this measure cannot capture the complex reasons why a student feels safe at school, it does demonstrate recorded incidents where weapons were present at a school and can be useful to track recorded safety concerns.
+
+***Further Considerations:*** This measure captures a moment in time, but does not provide information about what occurred before or after the event. We cannot understand how a student accessed a weapon, why they brought it to school, and what they intended to do with the weapon. This measure also does not represent the events after the weapon was found. It does not represent the disciplinary outcomes of the student only telling us that some disciplinary measure was taken. It does not demonstrate how the disciplinary outcome may affect student safety and success.
+
+***Trend:*** Incidence of weapon possession in schools has declined over time. The data available has a gap from 2014 to 2016, however, the downward trend began before the data gap and continued after. It is unclear whether this decline is a result of policies that reduced a child's need and ability to carry a weapon or a result of increased surveillance in schools.
+
+***How do we measure this?:*** First, we collected the number of students who were disciplined for weapon possession within a school year. Then, using data on total student enrollment, we were able to calculate the incident rate per 1,000 students. This data does not capture weapon possession if the weapon was not found by administrators.
+
+***Data Source:*** This measure was collected from the [Virginia Department of Education's Incidents of Discipline, Crime, and Violence (DCV) reports](https://www.doe.virginia.gov/data-policy-funding/data-reports/data-collection/special-education), which are collected from each school district and published online as statutorily required. The DCV reports also include total student enrollment for each year, which was used to calculate the incident rate per 1,000 students.
+
+***Files on Github:*** <https://github.com/virginiaequitycenter/stepping-stones/tree/main/data>
+
+## Conduct in Community
+
+### Juvenile Delinquency Judgments {.tabset}
+
+#### Trend
+
+```{r delinquency vis}
+delinquency <- read_csv("../data/juvenile_delinquency.csv") 
+
+ggplot(delinquency, aes(x = year, y = rate, color = locality)) +
+  geom_point()+ 
+  geom_line()+ 
+  labs(title ="Juvenile Delinquency Judgments for Youth Aged 10-17", subtitle = "From 2018 to 2022", caption = "Source: Virginia Judicial System’s Caseload Statistical Information", x = "Year", y = "Juvenile Delinquency Judgements (#/1,000)", colour = "Localities") + 
+  scale_x_continuous("Year", labels = as.character(delinquency$year), breaks = delinquency$year) + 
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"), 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1), 
+        text = element_text(size = 10, family = "Times New Roman"), 
+        panel.background = element_rect("white"), 
+        panel.grid = element_line("lightgrey"),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A"),
+                     labels=c('Albemarle', 'Charlottesville', 'Virginia'))
+```
+
+#### About
+
+***Why is this important:*** This measure tracks the conduct and resulting consequences for youths within Albemarle, Charlottesville, and Virginia. A delinquent judgment may be passed if an individual committed any act designated as a crime under Virginia or local law including all felonies and misdemeanors before their 18th birthday. According to Virginia Code § 16.1-278.8, juveniles found to be delinquent may undergo probation, substance abuse treatment, face fines, lose their driver's license, be required to participate in a public service project, pay restitution, have transferred legal custody and/or a number of other outcomes. Juvenile delinquency judgments do not include the reason for the judgment, but nevertheless, this is an extremely disruptive incident in a juvenile's life.
+
+***Further Considerations:*** This measure captures a moment of pain and extreme turmoil in a child's life. This measure does not offer insight into the circumstances which led to a juvenile delinquency judgment, nor does it indicate outcomes after the child completes their sentence. This measure is a simplistic rendering of an incredibly complex set of circumstances that led to a crime, a court trial, and sentencing. It does not tell us who is being disproportionally hurt by this process nor the trauma that the child endured while committing the crime and being tried.
+
+***Trend:*** While there is not a clear increase or decrease in juvenile delinquency judgments, Charlottesville has maintained a higher rate of judgments compared to Albermarle County. It is unclear what could be leading to this disparity.
+
+***How do we measure this?:*** This data is measured by the number of judgments per 1,000 individuals aged 10-17 in the locality. This means that a value of 50 indicates that 50 out of every 1,000 10-17-year-old residents in the locality has received a juvenile delinquency judgment.
+
+***Data Source:***Juvenile delinquency judgments were retrieved from the [Virginia Judicial System's Caseload Statistical Information website](https://www.vacourts.gov/courtadmin/aoc/judpln/csi/home.html) from 2018-2020.
+
+***Files on Github:*** <https://github.com/virginiaequitycenter/stepping-stones/tree/main/data>
+
+### Underage Alcohol Arrests {.tabset}
+
+#### Trend
+
+```{r alchohol vis}
+alcohol <- read_csv("../data/arrests_alcoholrelated.csv")
+
+ggplot(alcohol, aes(x = year, y = arr_rate, color = locality)) +
+  geom_point()+ 
+  geom_line()+ 
+  labs(title ="Alcohol Arrests for Youth Aged 10-17", x = "Year", y=" Number of Alcohol Arrests (#/1,000)", subtitle = "From 1999 to 2021", caption = "Source: Virginia State Police Data Analysis and Reporting Team (Crime in Virginia Publications 1999-2021)", colour = "Localities") + 
+  scale_x_continuous("Year", labels = as.character(alcohol$year), breaks = alcohol$year) + 
+  theme_bw() +
+  theme(plot.title = element_text(face = "bold"), 
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1), 
+        text = element_text(size = 10, family = "Times New Roman"), 
+        panel.background = element_rect("white"), 
+        panel.grid = element_line("lightgrey"),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A"))
+```
+
+#### About
+
+***Why is this important:*** The measure offers insight into the rates at which juvenile individuals are facing legal challenges for violating liquor laws or ordinances. These include all laws or ordinances prohibiting the manufacture, sale, purchase, transportation, possession, or use of alcoholic beverages.
+
+***Further Considerations:*** It is important to note that this measure cannot serve as a proxy for the rates of underage drinking or substance abuse among juveniles in these localities as the vast majority of underage consumption of alcohol does not result in an arrest. Additionally, the legal drinking age in Virginia is 21, but individuals who are 18-21 were not included as they were not juveniles. It is unclear if these trends show high rates of underage drinking or high rates of surveillance which result in arrests for underage drinking.
+
+***Trend:*** The rate of alcohol arrests for individuals 10-17 has been trending downward since 1999. However, Albermarle county has seen a higher rate of alcohol-related arrests compared to Charlottesville, and also saw a period of time between 2006 and 2011 where the rate was increasing. It is also unique that Charlottesville is seeing lower rates of alcohol arrests than Albermarle county, as on other measures of juvenile interactions with the criminal justice system Charlottesville typically faces higher rates that Albermarle County. It is unclear what could be causing these disparities.
+
+***How do we measure this?:*** This data represents the number of alcohol-related arrests for individuals aged 10-17 per 1,000 residents. Notably, this is for every 1,000 residents both under and over the age of 17, so we might imagine a more concerning trend if we were measuring alcohol arrests for every 1,000 individuals aged 10-17. Additionally, because we are measuring arrests for residents 10-17, we are not measuring underage alcohol arrests.
+
+***Data Source:*** Underage alcohol arrests were retrieved from the annual "Crime in Virginia Publications" from 1999-2021 as published by the Virginia State Police Data Analysis and Reporting Team.
+
+***Files on Github:*** <https://github.com/virginiaequitycenter/stepping-stones/tree/main/data>

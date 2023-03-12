@@ -1,0 +1,564 @@
+---
+title: 'Stepping Stones: Team 2'
+author: "Katherine Driebe, Michael Lutton, Ramya Tella"
+date: "2/26/2023"
+output: 
+  html_document:
+      toc: true
+      toc_depth: 4
+      toc_float: true
+      code_folding: hide
+
+---
+
+```{r setup, include=FALSE }
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  message = FALSE, 
+  warning = FALSE)
+```
+
+```{r load packages, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggthemes)
+library(janitor)
+```
+
+## Community Characteristics {.tabset} 
+
+### Students with limited English
+```{r English learners, message=FALSE, warning=FALSE, echo=FALSE}
+englishlearners_all <- read.csv("../data/english_language_learners.csv")
+
+```
+
+```{r}
+englishlearners_all%>%
+ggplot(aes(x = school_year, y = pct_english_learners, color = locality, group=locality)) +
+  geom_line() +
+  geom_point() + 
+  theme_minimal() +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A")) +
+  scale_y_continuous(limits = c(0, 16),
+                     labels = scales::label_percent(scale=1), 
+                     name = "Percent") + 
+  scale_x_discrete(name = "School Year") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") + 
+  labs(title= "Students with Limited English in Virginia Schools", 
+       caption ="Source: Virginia Department of Education, 2004-2023",x = "School Year", 
+       y = "Percent",
+       subtitle = "Percentage of students with liminited english in Virgina schools from 2004 to 2023",
+       color = "")
+
+
+```
+
+### About
+
+
+<br><center>**"We're losing talented kids from immigrant families who don't know their way around the American system."<br> - Chester E. Finn Jr**</center> 
+
+
+<br>An English Learner (EL) is a student who is not fully proficient in English and requires language-based accommodations to effectively learn during their K-12 education.
+
+* *Why is this important:* This data could help determine the needs of specific schools on a case-by-case basis and provide a basis for county and city-wide measures to address the needs of EL students. 
+
+* *How we measure this:* The Virginia Department of Education collects this data under the Fall Membership report every year. It provides one record per student enrolled in school for a range of indicators including spatial level, race and ethnicity characteristics, gender, disability, migrant status, and English learners.
+
+* *Further Consideration:* The data may be helpful when determining budgets for schools. Locations with a higher share of disadvantaged students may need more funding to adequately serve their students. Virginia has recorded low graduation rates for EL students which are influenced by a range of factors ranging from race and ethnicity to health indicators and household income. The decline in scores for EL students during the pandemic is steeper than that observed for students in reading, mathematics and science. The state has increased [financial support to EL students](https://thecommonwealthinstitute.org/research/changing-gears-addressing-virginias-persistent-lack-of-support-for-english-learner-students/) in recent years, providing $725 per individual student during the 2021-22 school year constitutive of a 13.5% supplemental allocation. Greater support to students could go a long way in improving outcomes and also accounting for the contextual socio-economic constraints of students. 
+
+* *Trends:* The percentage of ELs in Charlottesville has grown substantially between 2003-2023. Albemarle follows closely behind and does not show any significant decrease in EL percentages except for a 2% fall in 2009-10. The state percentages are much lower in comparison to Albemarle and Charlottesville which may be indicative of the need to understand what the additional contributing factors may be, especially those concerning socio-economic factors and the availability of support to local students.  
+
+* *Who is this data about:* This data includes twelve-year-old Donat, who was excited to go home after his first day at an American Middle school but instead of boarding a bus, he was taken to the administration office as he was never added to the bus list. As time passed and the administration was unable to reach his parents, Donat began to cry. Donat was just beginning to learn English. “As a sixth-grader, (missing the bus) probably would have made me cry alone,” Cayton, an administrator at the school, said later. “But I, also, in sixth grade, had enough English to communicate with people to fully understand that you’re OK. To him, there's just a big problem,” she says. A year before, Donat was walking to school in a Tanzanian refugee camp he was born in after his family fled the civil war in the Democratic Republic of Congo. He wasn’t familiar with buses. [Newly arrived students learn English, a new culture in Virginia schools](https://www.pilotonline.com/news/education/vp-nw-exchange-english-learners-students-20220611-3s75r6kudja7njlueqocxinmxa-story.html) 
+
+
+* *Data Source:* Virginia Department of Education, Fall Membership Statistics, 2003-2023.
+
+
+
+
+## Family Characteristics {.tabset} 
+
+### Income Burdened Homeowners 
+```{r}
+homeowners <- read_csv("../data/homeowner_burden.csv")
+
+homeowners %>%
+ggplot(aes(x = year, y = pct_burden, color = NAME, group=NAME)) +
+  geom_line() +
+  geom_point() + 
+  theme_minimal() +
+  geom_vline(xintercept = 2020, linetype = 2, color = "black") +
+  annotate("text", x = 2015.5, y = 29, size = 2.7, hjust = 0, color = "black", 
+           label =
+"CARES Act allowed mortage borrowers
+to temporarily suspend or decrease 
+their payments for around three to 
+six months to mitigate the impacts of
+the pandemic, this program ends
+July, 2021") +
+     scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A")) +
+  scale_y_continuous(limits = c(10, 40),
+                     labels = scales::label_percent(scale=1), 
+                     name = "Percent") + 
+  scale_x_continuous(name = "Year") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") + 
+  labs(title = "Distribution of Income Burdened Homeowners",
+       caption ="Source: ACS 2010-2021", 
+       x = "Year", y = "Percentage of Income Burdened Homeowners",
+       subtitle = "Homeowners Paying More than 30% of Income for Housing in Charlottesville and Albemarle",
+       color = "") 
+```
+
+### About 
+
+<br><center>**"The Bank of Mom and Dad has become increasingly important,” Chief Economist Koch said. “Their children and grandchildren simply can’t afford to get into the market."<br> - James Koch**</center> 
+
+
+,<br>To be considered at a safe level for housing, less than thirty percent of homeowners' gross pay, which is what employees earn before taxes and other benefits are deducted from their wages. If homeowners pay more than thirty percent of their income on housing, experts recommend finding a less expensive option to maintain finical security.   
+
+* *Why is this important:* This data gives viewers insight into what share of the population is considered “cost-burdened,” meaning that impacted individuals will have to start considering tradeoffs between housing and other necessary goods and services like healthcare, food, clothing, and transportation. 
+
+* *How we measure this:* This is measured in the percentage of individuals who spend thirty percent of their annual income on their mortgage. 
+
+* *Further Consideration:* Data on this variable sheds light on how affordable housing is for homeowners and has implications for cities that hope to maintain their current population, housing markets that might shift in terms of supply and demand if homeowners cannot afford their homes, and even public health. While being cost-burdened may push many homeowners to struggle to keep up with home payments, it also impedes the most likely way for them to build wealth through homeownership. People at different levels of government could utilize this data to find trends in who is cost-burdened and where they reside and ultimately create ways to reduce the share of the population that is cost-burdened. It is also worth noting that [Virginia Housing](https://www.virginiamortgagerelief.com/) announced the Mortgage Relief Program for homeowners affected by the pandemic and facing financial hardship owing to a range of factors that include but are not limited to unemployment and loss of income. 
+
+* *Trends:* In 1960, the median home value was about twice the homeowner's income; currently, home prices are over four times a household's annual income. Even though family roles have changed and the number of women joining the workforce has drastically increased, the price of owning a house has increased significantly faster than families' income. In 2001 the annual median income for a Virginian family was 86,200 dollars while the median home price had risen to 352,000 dollars. Recent reports have shown that one-third of homeowners in areas such as Hampton Roads and Virginia Beach spent more than 30% of their income on housing. In Fairfax Country, homes cost 4.8 times homeowners' annual income.This is represented in the steady increase in the percent of income burdened house owners in Virginia. The increase after the beginning of the pandemic could stem from a greater number of people working from home and wanting more space. 
+
+* *Who is this data about:* This problem does not just impact current homeowners, but future ones. Ellie and her husband, Zach, have been looking for months to purchase a home to start a family. Ellie is a nurse and student, and Zach teaches computer science and astronomy at a local high school. The couple has been shocked by the prices in Virginia. The median home price in Virginia rose from 305,000 to 375,000 in less than three years. Ellie really wants a home that feels right to raise a family in. “A house that, if we want to stay there for 15 years, great,” she said. “But I’m trying to lower my expectations because some people’s idea of a starter home nowadays is not a starter home.” [Scrimp, scroll, square off: First-time housebuyers in Virginia face rising prices and fierce competition](https://www.vpm.org/news/2022-11-11/scrimp-scroll-square-off-first-time-homebuyers-in-virginia-face-rising-prices)
+
+
+* *Data Source:* U.S Census, 2012-2017, American Community Survey, 2010-2021.
+
+
+## Discipline in School{.tabset}
+
+### Alcohol and Drug offenses in Virginia Schools
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+DCV_reports <- read.csv("../data/school_alcdrugs_dcv.csv")
+# generate percent (instead of rate)
+DCV_reports <- DCV_reports %>% 
+  mutate(percent = (alcdrug/students)*100)
+```
+
+```{r}
+ggplot(DCV_reports, aes(x = school_year, y=percent)) +
+  geom_col(position = "dodge", fill = "#B23B6B") +
+  geom_text(aes(label = paste0(round(percent, digits= 1),"%")), colour = "black", size = 2,
+    vjust = -1.5, position = position_dodge(.9))+
+  facet_wrap(~division) +
+  scale_x_discrete(labels = scales::label_wrap(1)) +
+  labs(title = "Distribution of Alcohol and Drug Offenses",
+       caption ="Source: SAIPE State and County Estimates for 2012-2017, ACS 2009-2021", 
+       x = "Year", y = "Percentage of Income Burdened Homeowners",
+       subtitle = "The percentage of alcohol and drug offenses in Charlottesville, Albemarle and Virginia from 2006 to 2021",
+       color = "")+
+   scale_y_continuous(limits = c(0, 1),
+                     labels = scales::label_percent(scale=1), 
+                     name = "Percent")+
+  theme(axis.text=element_text(size=8, angle =30, hjust = 0.9, vjust = 0.8),
+        legend.text=element_text(size=6))
+
+```
+
+
+### About 
+Virginia mandates that students should not possess, use, and/or distribute alcohol or other drugs on school property, school buses, or during school activities. The use of alcohol and drugs can have significant adverse effects on students' long-term health and academic success. Creating a space prioritizing health and drug-fee living can keep youth from the influences of alcohol, tobacco, and drug use. [Alcohol, Drug & Tobacco Use](https://www.doe.virginia.gov/programs-services/student-services/prevention-strategies-programs/alcohol-drug-tobacco-use)
+
+* *Why is this important:* This data provides insights into the recorded student offenses relating to the possession of alcohol and drugs in Virginia. This is important to understand as it relates to involvement with law enforcement officers, student health, and school safety. 
+
+* *How we measure this:* This is measured in the percentage of reported drug and alcohol offenses. These offenses can often lead to expulsion or suspensions.   
+
+* *Further Consideration:* This data provides information on the nature of the offense and originating school division which may point to further correlations between the incidence of offenses and the wider socio-economic context of school divisions, relating to household income, race and ethnicity, health parameters, gender characteristics, and school completion. Recent efforts have moved disciplinary actions away from criminal, exclusionary framings to restorative, inclusionary framings, an example of which is the Student Behavior and Administrative Response (2021). It has also called attention to the debate over tight and loose disciplinary policies. The latter may give teachers greater room to exercise their judgment in determining the best course of action for offending students.
+
+
+* *Trends:* Though the percentage of alcohol and drug offenses is low (less then one percent), drug consumption remains a significant concern for Virginia officials. Mre than 8.3 million potentially deadly fentanyl in Maryland and Virginia in 2022. The number of youth overdoes on fentanyl has become concerning. In 2022, in Montogmery Country alone, among twenty-one years old and younger, there were forty-eight reported overdoses.[DEA collaborating with school systems to raise awareness on fentanyl amid youth overdoses](https://www.wusa9.com/article/news/local/virginia/dea-warning-parents-about-the-dangers-of-fentanyl-as-more-fake-pills-are-seized/65-4aebcae1-52f7-4dea-b43f-e9b6943a7206)
+
+
+
+
+* *Who is this data about:* This data is about individual students caught in possession of controlled or illicit substances, whether alcohol or drugs. One such student is Patrick Lundvick, who struggled with poverty and ended up selling drugs to stay afloat. They decided to drop out and build an organization for people who grew up like them, in poverty with a relatively low level of opportunity. While Patrick was not convicted of possessing drugs in school, the data represents individuals with similar struggles. His organization hopes to reduce the number of people who have to endure the harms of poverty. [From Drug Dealing To Diploma, A Teen's Struggle](https://www.npr.org/2011/07/25/138540864/from-drug-dealing-to-diploma-a-teens-struggle)
+ 
+
+* *Data Source:* Safe Schools Information Resource, 2017-2020.
+
+
+## Family Characteristics {.tabset} 
+
+### Child Abuse/Neglect Refferals  
+```{r}
+CPS <- read.csv("../data/child_welfare_reports.csv")
+CPS <- CPS%>%
+  mutate (year=as.character(year))
+
+ggplot(CPS, aes(x = year, y = cps_rate)) +
+  geom_col(position = "dodge", fill = "#B23B6B") +
+  geom_text(aes(label = paste0(round(cps_rate, digits= 1),"%")), colour = "white", size = 3, angle=90,
+    hjust = 1, position = position_dodge(.9))+
+  facet_wrap(~locality) +
+  scale_x_discrete(labels = scales::label_wrap(1)) +
+  labs(title = "Distribution of Incidents Reported to Child Protective Services",
+       caption="Source: Safe Schools Information Resource, 2017-2020", 
+       x = "Year", y = "CPS Rate",
+       subtitle = "The percentage of incidents reported to Child Protective Services (CPS) in Virginia from 2009 to 2020",
+       color = "")+
+   scale_y_continuous(limits = c(0, 55),
+                      labels = scales::label_percent(scale=1), 
+                     name = "Percent")+
+  theme(axis.text=element_text(size=8, angle =30, hjust = 0.9, vjust = 0.8),
+        legend.text=element_text(size=6))
+```
+
+
+### About 
+
+* *Why is this important:* Child abuse and neglect investigations are conducted by Child Protective Services in response to allegations of neglect or abuse. It is important to track the rate of neglect/abuse among children and analyze trends
+
+* *How we measure this:* The data examines the number of childhood neglect/abuse referrals for various counties in Virginia. Most CPS referrals are made for “neglect” rather than abuse. Determining Neglect can be very subjective. 
+
+* *Further Consideration:* This data can be utilized to create or advocate for neglect/abuse prevention strategies to minimize the amount of childhood trauma. If this were to occur, the amount of childhood neglect/abuse investigations would hypothetically decrease. It’s also likely that the number of substantiated child neglect or abuse cases would decrease alongside investigations. It should be considered that drivers of childhood neglect can be increased during periods of financial stress. The data starts in 2009, soon after the beginning of the Great Recession, and the referral rate may trend downward due to financial stress being decreased as families become more financially stable and the recession wanes.
+
+
+
+* *Trends:* There has been a downward trend in the amount of childhood neglect/abuse investigations from 2009 to 2020. Similarly, the rates of substantiated cases are trending somewhat down. In 2020, there was a large decrease in referrals. Tools like the Child Tax Credit and stimulus checks decreased poverty rates on a national level and may have lowered the incidence of neglect among children and families. [Federal Economic Stimulus Projected to Cut Poverty in 2021, Though Poverty May Rise as Benefits Expire](https://aspe.hhs.gov/sites/default/files/documents/452493535752b7b9e60f7406d6a40a7b/poverty-projections-2021-2022-rb.pdf) Many CPS referrals are made by educational professionals in schools, and COVID-19 caused schools to close. Since schools shut down as a response to the COVID-19 pandemic, referrals via educational professionals may have decreased. Poverty has consistently been linked to the definition of neglect commonly used in child welfare. [Fourth National Incidence Study of Child Abuse and Neglect](https://cap.law.harvard.edu/wp-content/uploads/2015/07/sedlaknis.pdf) The significantly lower percentage of referrals and Albermale county may be because Albemarle county has a 7.0% poverty rate, while the poverty rate of Charlottesville is approximately 23.1%.  [U.S. Census Bureau Quick Facts: Ablemarle County](https://www.census.gov/quickfacts/albemarlecountyvirginia)  [U.S. Census Bureau Quick Facts: Charlottesville](https://www.census.gov/quickfacts/fact/table/charlottesvillecityvirginia/RTN130217)    
+
+
+  
+
+
+* *Who is this data about:* Dorothy Roberts, a professor at the University of Pennsylvania with extensive experience researching the child welfare system, describes the history of child abuse and neglect investigations and how they’ve impacted marginalized communities, such as African Americans, who remain overrepresented in child abuse and neglect investigations.[Dorthy Roberts Tried to Warn Us](https://nymag.com/intelligencer/2022/09/dorothy-roberts-tried-to-warn-us.html)  
+
+* *Data Source:* Virginia Child Protection and Accountability System Historical and Other Reports (2009-2019).
+
+## Infant Health {.tabset} 
+
+### Mothers With Access to Prenatal Care in Virginia 
+
+```{r prenatal care 1, echo=FALSE, message=FALSE, warning=FALSE}
+prenatal_care <- read_csv("../data/prenatal_first_trimester.csv") #data/Late or No Prenatal Care.csv
+
+prenatal_care <- prenatal_care %>%
+  mutate (percent_access_to_prenatal_care = 100 - late_no_prenatal_to_birthrates) %>%
+  mutate (year = as.character(year))
+```
+
+
+```{r}
+prenatal_care %>%
+ggplot(aes(x = year, y = percent_access_to_prenatal_care, color = locality, group=locality)) +
+  geom_line() +
+  geom_point() + 
+  theme_minimal() +
+  geom_vline(xintercept = "2010", linetype = 2, color = "black") +
+  annotate("text", x = 5, y = 80, size = 3, hjust = 0, color = "black", 
+           label =
+"The first portion of the 
+Patient Protection and Affordable Care Act passed") +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A")) +
+  scale_y_continuous(limits = c(70, 100),
+                     labels = scales::label_percent(scale=1), 
+                     name = "Percent") + 
+  scale_x_discrete(name = "Year") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") + 
+  labs(title = "Mothers With Access to Prenatal Care", 
+  caption= "Source: Virginia Department of Education, 2002-2016, Virginia's Plan for Well Being, 2010-2020", 
+       x = "Year", y = "Percent",
+       subtitle = "The Percentage of Mothers With Access to Prenatal Care in Virginia from 2006 to 2020",
+       color = "") 
+```
+
+
+```{r}
+
+ggplot(prenatal_care, aes(x = year, y = percent_access_to_prenatal_care)) +
+  geom_col(position = "dodge", fill = "#B23B6B") +
+  geom_text(aes(label = paste0(round(percent_access_to_prenatal_care, digits= 1),"%")), colour = "white", size = 3, angle=90,
+    hjust = 1, position = position_dodge(.9))+
+  facet_wrap(~locality) +
+  scale_x_discrete(labels = scales::label_wrap(1)) +
+  labs(title = "Mothers With Access to Prenatal Care", 
+  caption= "Source: Virginia Department of Education, 2002-2016, Virginia's Plan for Well Being, 2010-2020", 
+       x = "Year", y = "Percent",
+       subtitle = "The Percentage of Mothers With Access to Prenatal Care in Virginia from 2006 to 2020",
+       color = "")+
+   scale_y_continuous(limits = c(0, 100),
+                      labels = scales::label_percent(scale=1), 
+                     name = "Percent")+
+  theme(axis.text=element_text(size=8, angle =30, hjust = 0.9, vjust = 0.8),
+        legend.text=element_text(size=6))
+```
+
+### About 
+Prenatal care is the health care that individuals receive while pregnant allowing those who are pregnant to take care of themselves and their babies best.  
+
+* *Why is this important:*  Increasing the number of individuals who receive prenatal care may be costly. However, the initiative in the long-term could be cost-effective by preventing more severe health issues during pregnancies. Research has demonstrated that prenatal care dramatically reduces the negative effect of substances during pregnancy, including decreasing the risks of low birth weight and prematurity [Substance Abuse Reporting and Pregnancy: The Role of the Obstetrician](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2011/01/substance-abuse-reporting-and-pregnancy-the-role-of-the-obstetrician-gynecologist#:~:text=Studies%20indicate%20that%20prenatal%20care,birth%20weight%20and%20prematurity%209.)
+
+
+* *How we measure this:* This is measured in the percentage mothers who received prenatal care based on the percentage of live births.  
+  
+
+* *Further Consideration:* Increasing the number of individuals who receive prenatal care may be costly. However, the initiative in the long-term could be cost-effective by preventing more severe health issues during pregnancies. Research has demonstrated that prenatal care dramatically reduces the negative effect of substances during pregnancy, including decreasing the risks of low birth weight and prematurity. [Substance Abuse Reporting and Pregnancy: The Role of the Obstetrician](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2011/01/substance-abuse-reporting-and-pregnancy-the-role-of-the-obstetrician-gynecologist#:~:text=Studies%20indicate%20that%20prenatal%20care,birth%20weight%20and%20prematurity%209.) 
+
+* *Trends:*  After the passage of the Affordable Care Act (ACE), the rate of uninsured new mothers decreased by forty-one percent nationally. The ACE also improved the quality of coverage of prenatal care by requiring coverage for maternity and newborn care, securing over 13 million people with maternity services. [Building on the ACA: Administrative Actions to Improve Maternal Health](https://www.americanprogress.org/article/building-aca-administrative-actions-improve-maternal-health/)
+However, prenatal care is still a major issue within the state, “several dozen Virginia counties have been designated as maternity care deserts due to the lack of essential serves,” states Carol Sakala the director for maternal health at the National Partnership for Women and Families. A top complaint among at-risk communities across the state is a lack of coordinated care and trained professionals. Data reveals that from 2018 to 2020, Virginia’s maternal mortality rate has doubled. In 2018 there was 37.1 death per 100,00 cases within a year of pregnancy; now, there is 86.6 death per 100,000 cases.[As maternal mortality rates rise in Virginia, health officials launch interviews into deaths, 2022](https://www.virginiamercury.com/2022/09/27/as-maternal-mortality-rates-rise-in-virginia-health-officials-launch-interviews-into-deaths/)  
+
+ 
+
+
+* *Who is this data about:* Pregnant individuals with or without the ability to access prenatal care. The Hear Her public campaign, conducted by the CDC, has in-depth interviews with mothers describing their experience navigating medical systems and discussing what prenatal care they received or wish they received. One such mother interviewed, named Allyson Felix, described the importance of receiving prenatal care. Allyson was diagnosed at 32 weeks pregnant with a rare and life-threatening pregnancy complication called severe preeclampsia. In her interview, she emphasizes that reproductive risks related to pregnancy can be scary and that, in her case, access to care saved her life. [Allyson Felix's Story](https://www.cdc.gov/hearher/allysonfelix/index.html) 
+
+* *Data Source:* The Virginia Department of Health, “Maternal & Child Health”, 2006-2017,https://www.vdh.virginia.gov/data/maternal-child-health/. “Virginia Health Plan", 2010-2020,  https://virginiawellbeing.com/virginia-community-health-improvement-data-portal/vdh-assessment/
+
+
+## Education {.tabset}
+
+### English SOL Pass Rate-Grade 3
+
+```{r}
+#load data from Github and filter for English Grade 3 and Grade 5 
+eng_solpass_grade3 <- read_csv("../data/sol_pass.csv") %>%
+  filter(subject == "English:Reading") %>%
+  filter(test_level == "Grade 3")
+
+eng_solpass_grade5 <- read_csv("../data/sol_pass.csv") %>%
+  filter(subject == "English:Reading") %>%
+  filter(test_level == "Grade 5")
+
+eng_solpass_grade8 <- read_csv("../data/sol_pass.csv") %>%
+  filter(subject == "English:Reading") %>%
+  filter(test_level == "Grade 8")
+
+ggplot(filter(eng_solpass_grade3),
+aes(x = school_year, y = pass_rate, color = division_name, group=division_name))  +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+    geom_vline(xintercept = "2010-2011", linetype = 2, color = "black") +
+  annotate("text", x = 3.2, y = 55, size = 2.7, hjust = 0, color = "black", 
+           label =
+"Revision of the 2003 
+English Standards
+of Learing") +
+  geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
+  annotate("text", x = "2012-2013", y = 92, size = 2.7, hjust = 0, color = "black", 
+           label =
+"Statewide transition to an online 
+English Standards of Learing test 
+that was more rigorous and based 
+on the Common Core") +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = "2019-2020", y = 92, size = 2.7, hjust = 0, color = "black", 
+           label =
+"English Standards of 
+Learing canceled 
+because of the 
+COVID-19 pandemic") +
+  geom_vline(xintercept = "2017-2018", linetype = 2, color = "black") +
+  annotate("text", x = 9.3, y = 55, size = 2.7, hjust = 0, color = "black", 
+           label =
+ "Revision of the 2010 
+ English Standards of Learing") +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A"))+
+  scale_x_discrete(labels = scales::label_wrap(1)) +
+  scale_y_continuous(limits = c(50, 100),
+                     labels = scales::label_percent(scale=1), 
+                     name = "Percent")+
+  labs(title = "Academic English Reading Achievement of Grade 3 Students", 
+       caption ="Source: Virginia Department of Education Data 2005-2021", 
+       x = "School Year", y = "Pass Percentage",
+       subtitle = "The percentage of grade 3 students who passed the English Reading SOL in Charlottesville, Albemarle and the State of Virginia from 2005 to 2022",
+       color = "") +
+   theme(legend.position = "top",
+        legend.title = element_blank(),
+        axis.text=element_text(size=8, angle =30, hjust = 0.9, vjust = 0.8),
+        legend.text=element_text(size=6))
+```
+
+```{r}
+
+ggplot(eng_solpass_grade3, aes(x = school_year, y = pass_rate)) +
+  facet_wrap(~division_name)+
+  geom_col(position = "dodge", fill = "#B23B6B") +
+  geom_text(aes(label = paste0(round(pass_rate, digits= 1),"%")), colour = "white", size = 3, angle=90,
+    hjust = 1, position = position_dodge(.9))+
+  scale_x_discrete(labels = scales::label_wrap(1)) +
+  labs(title = "Academic English Reading Achievement of Grade 3 Students", 
+       caption ="Source: Virginia Department of Education Data 2005-2021", 
+       x = "School Year", y = "Pass Percentage",
+       subtitle = "The percentage of grade 3 students who passed the English Reading SOL in Charlottesville, Albemarle and the State of Virginia from 2005 to 2022",
+       color = "")+
+   scale_y_continuous(limits = c(0, 100),
+                      labels = scales::label_percent(scale=1), 
+                     name = "Percent")+
+  theme(axis.text=element_text(size=8, angle =30, hjust = 0.9, vjust = 0.8),
+        legend.text=element_text(size=6),
+        axis.text.x =element_text(angle=70))
+```
+
+
+### English SOL Pass Rate-Grade 5
+```{r}
+ggplot(filter(eng_solpass_grade5),
+   aes(x = school_year, y = pass_rate, color = division_name, group=division_name))  +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+    geom_vline(xintercept = "2010-2011", linetype = 2, color = "black") +
+  annotate("text", x = 3.2, y = 55, size = 2.7, hjust = 0, color = "black", 
+           label =
+"Revision of the 2003 
+English Standards
+of Learing") +
+  geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
+  annotate("text", x = "2012-2013", y = 92, size = 2.7, hjust = 0, color = "black", 
+           label =
+"Statewide transition to an online 
+English Standards of Learing test 
+that was more rigorous and based 
+on the Common Core") +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = "2019-2020", y = 92, size = 2.7, hjust = 0, color = "black", 
+           label =
+"English Standards of 
+Learing canceled 
+because of the 
+COVID-19 pandemic") +
+  geom_vline(xintercept = "2017-2018", linetype = 2, color = "black") +
+  annotate("text", x = 9.2, y = 55, size = 2.7, hjust = 0, color = "black", 
+           label =
+  "Revision of the 2010 
+ English Standards of Learing") +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A"))+
+  scale_x_discrete(labels = scales::label_wrap(1)) +
+  scale_y_continuous(limits = c(50, 100),
+                     labels = scales::label_percent(scale=1), 
+                     name = "Percent")+
+  labs(title = "Academic English Reading Achievement of Grade 5 Students", 
+       caption ="Source: Virginia Department of Education Data 2005-2021", 
+       x = "School Year", y = "Pass Percentage",
+       subtitle = "The percentage of grade 5 students who passed the English Reading SOL in Charlottesville, Albemarle and the State of Virginia from 2005 to 2022",
+       color = "") +
+   theme(legend.position = "top",
+        legend.title = element_blank(),
+        axis.text=element_text(size=8, angle =30, hjust = 0.9, vjust = 0.8),
+        legend.text=element_text(size=6))
+
+```
+
+```{r}
+ggplot(eng_solpass_grade5, aes(x = school_year, y = pass_rate)) +
+  facet_wrap(~division_name)+
+  geom_col(position = "dodge", fill = "#B23B6B") +
+  geom_text(aes(label = paste0(round(pass_rate, digits= 1),"%")), colour = "white", size = 3, angle=90,
+    hjust = 1, position = position_dodge(.9))+
+  scale_x_discrete(labels = scales::label_wrap(1)) +
+  labs(title = "Academic English Reading Achievement of Grade 5 Students", 
+       caption ="Source: Virginia Department of Education Data 2005-2021", 
+       x = "School Year", y = "Pass Percentage",
+       subtitle = "The percentage of grade 5 students who passed the English Reading SOL in Charlottesville, Albemarle and the State of Virginia from 2005 to 2022",
+       color = "")+
+   scale_y_continuous(limits = c(0, 100),
+                      labels = scales::label_percent(scale=1), 
+                     name = "Percent")+
+  theme(axis.text=element_text(size=8, angle =30, hjust = 0.9, vjust = 0.8),
+        legend.text=element_text(size=6),
+        axis.text.x =element_text(angle=70))
+```
+
+
+### English SOL Pass Rate-Grade 8
+
+
+```{r}
+ggplot(filter(eng_solpass_grade8),
+       aes(x = school_year, y = pass_rate, color = division_name, group=division_name))  +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+    geom_vline(xintercept = "2010-2011", linetype = 2, color = "black") +
+  annotate("text", x = 3.2, y = 55, size = 2.7, hjust = 0, color = "black", 
+           label =
+"Revision of the 2003 
+English Standards
+of Learing") +
+  geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
+  annotate("text", x = "2012-2013", y = 92, size = 2.7, hjust = 0, color = "black", 
+           label =
+"Statewide transition to an online 
+English Standards of Learing test 
+that was more rigorous and based 
+on the Common Core") +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = "2019-2020", y = 92, size = 2.7, hjust = 0, color = "black", 
+           label =
+"English Standards of 
+Learing canceled 
+because of the 
+COVID-19 pandemic") +
+  geom_vline(xintercept = "2017-2018", linetype = 2, color = "black") +
+  annotate("text", x = 9.2, y = 55, size = 2.7, hjust = 0, color = "black", 
+           label =
+  "Revision of the 2010 
+ English Standards of Learing") +
+  scale_color_manual(values = c("#B23B6B", "#E7A342", "#5AB48A"))+
+  scale_x_discrete(labels = scales::label_wrap(1)) +
+  scale_y_continuous(limits = c(50, 100),
+                     labels = scales::label_percent(scale=1), 
+                     name = "Percent")+
+  labs(title = "Academic English Reading Achievement of Grade 8 Students", 
+       caption ="Source: Virginia Department of Education Data 2005-2021", 
+       x = "School Year", y = "Pass Percentage",
+       subtitle = "The percentage of grade 8 students who passed the English Reading SOL in Charlottesville, Albemarle and the State of Virginia from 2005 to 2022",
+       color = "") +
+   theme(legend.position = "top",
+        legend.title = element_blank(),
+        axis.text=element_text(size=8, angle =30, hjust = 0.9, vjust = 0.8),
+        legend.text=element_text(size=6))
+```
+
+```{r}
+ggplot(eng_solpass_grade8, aes(x = school_year, y = pass_rate)) +
+  facet_wrap(~division_name)+
+  geom_col(position = "dodge", fill = "#B23B6B") +
+  geom_text(aes(label = paste0(round(pass_rate, digits= 1),"%")), colour = "white", size = 3, angle=90,
+    hjust = 1, position = position_dodge(.9))+
+  scale_x_discrete(labels = scales::label_wrap(1)) +
+  labs(title = "Academic English Reading Achievement of Grade 8 Students", 
+       caption ="Source: Virginia Department of Education Data 2005-2021", 
+       x = "School Year", y = "Pass Percentage",
+       subtitle = "The percentage of grade 8 students who passed the English Reading SOL in Charlottesville, Albemarle and the State of Virginia from 2005 to 2022",
+       color = "")+
+   scale_y_continuous(limits = c(0, 100),
+                      labels = scales::label_percent(scale=1), 
+                     name = "Percent")+
+  theme(axis.text=element_text(size=8, angle =30, hjust = 0.9, vjust = 0.8),
+        legend.text=element_text(size=6),
+        axis.text.x =element_text(angle=70))
+
+```
+
+### About
+
+<br><center>**"Education, then, beyond all other divides of human origin, is a great equalizer of conditions of men—the balance wheel of the social machinery."<br> - Horace Mann**</center> 
+
+<br>This data examines Standards of Learning (SOL) test data specific to Grade 3, 5, and 8 students to offer a comparative outlook on pass percentages at the scale of the county - Charlottesville and Albemarle, and the state of Virginia. 
+
+* *Why is this important:* The English Reading SOL evaluates whether students have met the Board of Education’s learning goals in English. For students, these standards outline the goals of the curriculum taught at each grade level and in each subject and promote career and college readiness. Virginia schools use student pass rates on the SOLs to determine a school’s accreditation status. The SOLs are higher stakes for the schools evaluated on their ability to educate. 
+
+
+* *Further Consideration:*  A lack of reading proficiency has lasting impacts on student academic success, degree attainment, and future earnings. Studies have revealed that minorities, including economically disadvantaged, disabled, Black, and Hispanic students score disproportionately lower than their peers on the English Reading SOL in Virginia. These trends have only greatened after the pandemic. A majority of these gaps stem from a lack of opportunities. Thirty percent of all students enrolled in Charlottesville public schools are Black, yet white children are four times as likely to be in gifted programs. Trinity, a student enrolled in a predominantly black school, explains how she was denied when she tried to enroll in higher-level courses while her peer, Zyahnna, who goes to a school close to the University of Virginia in a predominantly white neighborhood, was able to take dozens of college-level course. Not only are the opportunities provided by these schools different, but the school zoning in Charlottesville has remended relatively the same since Jim Crow.[Reading Outcomes and Equity in Virginia](https://virginiaequitycenter.github.io/vaequity-reading/), [‘You Are Still Black’: Charlottesville’s Racial Divide Hinders Students](https://www.nytimes.com/2018/10/16/us/charlottesville-riots-black-students-schools.html)
+
+
+
+* *Trends:* There is a significant achievement gap between Charlottesville and Albemarle Country English Standard test scores among 5th and 8th graders but not among 3rd graders.  A potential cause for this gap may come from “flight” from public middle schools in Charlottesville to private ones. Charlottesville public school families with resources are more likely to transfer their children to private schools instead of sending them to Walker Upper Elementary (5th-6th grade) or Buford Middle (7th-8th) during middle school years. This behavior follows a national trend but in a more significant way. The change in achievement may relate to the overall population of students changing between elementary and middle school. The Code of Virginia requires a review every seven years of Virginia’s Standards of Learning every seven years. The significant drop in test scores in the 2012-2013 school year may result from the transition of common core requirements, which are significantly more rigorous than the prior requirements. The COVID-19 pandemic is likely responsible for the decrease in SOL passing rates after the 2019-2020 school year. Between school closures, declines in enrollment, fewer retakes, and more flexible “opt-out” policies since the pandemic's beginning, a decline in passing rates reflects the disruptions in school policies. 
+
+
+* *How we measure this:* This is measured by the percentage of students from each grade passing the English Reading SOL. The test consists of approximately forty to sixty questions, and to pass the assessment, students must receive a minimum score of 400. 
+
+
+* *Who is this data about:* This data includes Walker Upper Elementary School a school in Charlottesville that serves children in 5th and 6th grade. The school just released its 2022-2023 [Walker Art Gallary.](http://charlottesvilleschools.org/walker/walker-art-gallery/)
+
+
+
+* *Data Source:* Virginia Department of Education, 2002-2017,https://schoolquality.virginia.gov/download-data.

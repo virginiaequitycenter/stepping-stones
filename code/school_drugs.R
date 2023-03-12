@@ -690,13 +690,15 @@ students <- bind_rows(stud_cvlalb, stud_va)
 df_students <- df %>% 
   left_join(students)
 
-# have a peek
-df_students %>% 
+## Create alcohol+drug total and percent (and numeric year)
+df_students <- df_students %>% 
   mutate(year = str_sub(school_year, 6,9),
          year = as.numeric(year),
          alcdrug = alc+drug,
-         rate = (alcdrug/students)*1000) %>% 
-  ggplot(aes(x = year, y = rate, color = division, group = division)) + 
+         rate = (alcdrug/students)*1000)
+
+# have a peek
+ggplot(df_students, aes(x = year, y = rate, color = division, group = division)) + 
   geom_point() +
   geom_line() +
   scale_x_continuous(breaks = 2006:2021)
@@ -704,5 +706,4 @@ df_students %>%
 
 # Save data ----
 write_csv(df_students, "data/school_alcdrugs_dcv.csv")
-
 
