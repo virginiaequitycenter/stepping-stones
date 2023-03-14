@@ -23,3 +23,7 @@ The data folder contains all of the proccessed data as csv files. These are avai
 ## Report folder
 
 Currently, this contains the R markdown files that produce the interim reports from the class projects. 
+
+## Other stuff
+
+The classexamples folder contains a few files we used as the class was learning to work with the data. The docs folder contains the slides for a presentation about this work given to the City of Charlottesville's Data Analysis Group, focusing on how the class (and the Equity Center) sought to enact some key principles of equity in our process. It can be viewed [here](https://virginiaequitycenter.github.io/stepping-stones/dag_pres.html).
