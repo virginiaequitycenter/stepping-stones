@@ -10,12 +10,17 @@
 # Virginia State Police, Data Analysis and Reporting Team, "Crime in Virginia." 1999-2021.
 # https://vsp.virginia.gov/sections-units-bureaus/bass/criminal-justice-information-services/uniform-crime-reporting/
 
-# manually entered from reports
+# manually entered from Crime in Virginia reports
 # Charlottesville and Albemarle Tables: NIBRS Agency Crime Overview
-# sum driving under the influence, liquor law violations, drunkeness
+#   sum driving under the influence, liquor law violations, drunkeness
 # Statewide Tables: Number of Arrestees by Offense & Age Range
-# sum driving under the influence, liquor law violations, drunkeness
+#   sum driving under the influence, liquor law violations, drunkeness
 
+# from https://va.beyond2020.com/va_public/Browse/browsetables.aspx
+# Number of Group B Arrestees by Age by Arrest Offense
+# choose Albemarle or Charlottesville or Virginia (Jurisdiction by Geography)
+# choose year (2017 to 2021)
+#   sum driving under the influence, liquor law violations, drunkeness
 
 # Libraries ----
 library(tidyverse)
