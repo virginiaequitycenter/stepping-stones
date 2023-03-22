@@ -141,3 +141,49 @@ pop_va <- left_join(pop_tot, pop_18over) %>%
 pop_data <- bind_rows(pop_cvlalb, pop_va)
 
 write_csv(pop_data, "data/pop_data_cdc.csv")
+
+
+# Child Population by Race ----
+
+# From CDC Wonder: https://wonder.cdc.gov/wonder/help/bridged-race.html
+# 1990-2020 Request
+# For Charlottesville, Albemarle
+#.  Group Results by: County, Yearly, Race, Age
+#.  Select: States; Virginia - Albemarle, Charlottesville
+#.  Select: ages <1 through 17; all years, all races, all ethnicities, all genders
+#   Send and Export
+# For State
+#.  Group Results by: Yearly, Race, Age
+#.  Select: States; Virginia
+#.  Select: ages <1 through 17; all years, all races, all ethnicities, all genders
+#   Send and Export
+
+cdc_state <- read_tsv("datadownloads/Bridged-Race Population Estimates 1990-2020_virginia.txt")
+cdc_albcvl <- read_tsv("datadownloads/Bridged-Race Population Estimates 1990-2020_cvlalb.txt")
+
+# Generate charlottesville and albemarle population numbers ----
+cdc_albcvl <- cdc_albcvl %>% 
+  clean_names()
+
+pop_17under_race_cvlalb <- cdc_albcvl %>% 
+  filter(is.na(notes)) %>% 
+  group_by(county, county_code, yearly_july_1st_estimates, race) %>% 
+  summarize(pop_17under = sum(population)) %>% 
+  select(locality = county, fips = county_code, year = yearly_july_1st_estimates, 
+         race, pop_17under)
+
+# Generate state population numbers ----
+cdc_state <- cdc_state %>% 
+  clean_names()
+
+pop_17under_race_va <- cdc_state %>% 
+  filter(is.na(notes)) %>% 
+  group_by(yearly_july_1st_estimates, race) %>% 
+  summarize(pop_17under = sum(population)) %>% 
+  mutate(fips = 51, locality = "Virginia") %>% 
+  select(locality, fips, year = yearly_july_1st_estimates, race, pop_17under)
+
+# Combine and save ----
+pop_17under_race <- bind_rows(pop_17under_race_cvlalb, pop_17under_race_va)
+
+write_csv(pop_17under_race, "data/pop_17under_race_data_cdc.csv")
