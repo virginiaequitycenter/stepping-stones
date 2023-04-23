@@ -1,16 +1,44 @@
-division_name,division_number,school_year,population,inschool,longterm,modified,shortterm,total,rate
-Albemarle County Public Schools,2,2016-17,13790,31,1,36,532,600,43.50978970268311
-Albemarle County Public Schools,2,2017-18,13928,52,1,17,495,565,40.56576680068926
-Albemarle County Public Schools,2,2018-19,13994,86,0,17,462,565,40.374446191224806
-Albemarle County Public Schools,2,2019-20,14404,100,1,31,230,362,25.13190780338795
-Albemarle County Public Schools,2,2020-21,13499,1,0,0,13,14,1.037113860285947
-Charlottes ville City Public Schools,104,2016-17,4471,22,1,0,177,200,44.73272198613286
-Charlottes ville City Public Schools,104,2017-18,4527,32,0,0,157,189,41.74950298210735
-Charlottes ville City Public Schools,104,2018-19,4559,45,1,0,192,238,52.20443079622724
-Charlottes ville City Public Schools,104,2019-20,4547,35,0,0,172,207,45.524521662634704
-Charlottes ville City Public Schools,104,2020-21,4261,0,0,0,1,1,0.2346866932644919
-Virginia,0,2016-17,1286844,3848,2592,934,69080,76454,59.412018861649116
-Virginia,0,2017-18,1291359,5590,2692,1080,68687,78049,60.43942854001095
-Virginia,0,2018-19,1289239,8305,2443,1162,68755,80665,62.56791797331604
-Virginia,0,2019-20,1296887,6273,1641,346,52584,60844,46.91542131272809
-Virginia,0,2020-21,1251583,941,84,33,5300,6358,5.079966730132959
+division_name,division_number,school_year,population,longterm,modified,shortterm,total,rate,source,division
+Albemarle County,2,2016-17,13790,1,36,532,569,41.26178390137781,ssir,Albemarle County
+Albemarle County,2,2017-18,13928,1,17,495,513,36.83228029867892,ssir,Albemarle County
+Albemarle County,2,2018-19,13994,0,17,462,479,34.228955266542805,ssir,Albemarle County
+Albemarle County,2,2019-20,14404,1,31,230,262,18.189391835601224,ssir,Albemarle County
+Albemarle County,2,2020-21,13499,0,0,13,13,0.9630342988369509,ssir,Albemarle County
+Charlottesville City,104,2016-17,4471,1,0,177,178,39.81212256765824,ssir,Charlottesville City
+Charlottesville City,104,2017-18,4527,0,0,157,157,34.68080406450188,ssir,Charlottesville City
+Charlottesville City,104,2018-19,4559,1,0,192,193,42.33384514147839,ssir,Charlottesville City
+Charlottesville City,104,2019-20,4547,0,0,172,172,37.82713877281724,ssir,Charlottesville City
+Charlottesville City,104,2020-21,4261,0,0,1,1,0.2346866932644919,ssir,Charlottesville City
+Virginia,0,2016-17,1286844,2592,934,69080,72606,56.421757415817304,ssir,Virginia
+Virginia,0,2017-18,1291359,2692,1080,68687,72459,56.110655518720975,ssir,Virginia
+Virginia,0,2018-19,1289239,2443,1162,68755,72360,56.12613332361183,ssir,Virginia
+Virginia,0,2019-20,1296887,1641,346,52584,54571,42.078454021051954,ssir,Virginia
+Virginia,0,2020-21,1251583,84,33,5300,5417,4.328118870262699,ssir,Virginia
+Albemarle County,2,2016-17,13790,NA,NA,NA,549,39.81145757795504,prior,Albemarle County
+Albemarle County,2,2015-16,13767,NA,NA,NA,474,34.430159076051424,prior,Albemarle County
+Albemarle County,2,2014-15,13680,NA,NA,NA,502,36.69590643274854,prior,Albemarle County
+Albemarle County,2,2013-14,13420,NA,NA,NA,382,28.464977645305513,prior,Albemarle County
+Albemarle County,2,2012-13,13263,NA,NA,NA,576,43.42908844152907,prior,Albemarle County
+Albemarle County,2,2011-12,13104,NA,NA,NA,912,69.5970695970696,prior,Albemarle County
+Albemarle County,2,2010-11,13212,NA,NA,NA,669,50.63578564940963,prior,Albemarle County
+Albemarle County,2,2009-10,13035,NA,NA,NA,1260,96.66283084004603,prior,Albemarle County
+Albemarle County,2,2008-09,12815,NA,NA,NA,1460,113.92898946547015,prior,Albemarle County
+Albemarle County,2,2007-08,12793,NA,NA,NA,1418,110.84186664582194,prior,Albemarle County
+Albemarle County,2,2006-07,12735,NA,NA,NA,1544,121.24067530427953,prior,Albemarle County
+Albemarle County,2,2005-06,12766,NA,NA,NA,1563,122.43459188469372,prior,Albemarle County
+Albemarle County,2,2004-05,12420,NA,NA,NA,1680,135.2657004830918,prior,Albemarle County
+Albemarle County,2,2003-04,12547,NA,NA,NA,1734,138.20036662150315,prior,Albemarle County
+Charlottesville City,104,2016-17,4471,NA,NA,NA,183,40.93044061731156,prior,Charlottesville City
+Charlottesville City,104,2015-16,4377,NA,NA,NA,267,61.00068540095956,prior,Charlottesville City
+Charlottesville City,104,2014-15,4356,NA,NA,NA,348,79.88980716253444,prior,Charlottesville City
+Charlottesville City,104,2013-14,4340,NA,NA,NA,295,67.97235023041475,prior,Charlottesville City
+Charlottesville City,104,2012-13,4236,NA,NA,NA,346,81.68083097261568,prior,Charlottesville City
+Charlottesville City,104,2011-12,4175,NA,NA,NA,640,153.29341317365268,prior,Charlottesville City
+Charlottesville City,104,2010-11,4030,NA,NA,NA,767,190.32258064516128,prior,Charlottesville City
+Charlottesville City,104,2009-10,4014,NA,NA,NA,906,225.7100149476831,prior,Charlottesville City
+Charlottesville City,104,2008-09,4055,NA,NA,NA,1126,277.6818742293465,prior,Charlottesville City
+Charlottesville City,104,2007-08,4081,NA,NA,NA,961,235.48149963244302,prior,Charlottesville City
+Charlottesville City,104,2006-07,4226,NA,NA,NA,1518,359.2049219119735,prior,Charlottesville City
+Charlottesville City,104,2005-06,4331,NA,NA,NA,1554,358.80858924036016,prior,Charlottesville City
+Charlottesville City,104,2004-05,4383,NA,NA,NA,1276,291.1248003650468,prior,Charlottesville City
+Charlottesville City,104,2003-04,4416,NA,NA,NA,1072,242.75362318840578,prior,Charlottesville City
