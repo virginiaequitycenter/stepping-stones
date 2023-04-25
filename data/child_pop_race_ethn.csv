@@ -1,0 +1,352 @@
+GEOID,NAME,year,pop_count,race,total_count,pop_percent,group,ethn
+51003,"Albemarle County, Virginia",2009,16326,white,20237,0.80674012946583,race,NA
+51003,"Albemarle County, Virginia",2010,16823,white,21289,0.7902203015641881,race,NA
+51003,"Albemarle County, Virginia",2011,16651,white,21354,0.7797602322749836,race,NA
+51003,"Albemarle County, Virginia",2012,16611,white,21447,0.7745139180304937,race,NA
+51003,"Albemarle County, Virginia",2013,16683,white,21569,0.773471185497705,race,NA
+51003,"Albemarle County, Virginia",2014,16573,white,21633,0.7660980908796746,race,NA
+51003,"Albemarle County, Virginia",2015,16589,white,21700,0.7644700460829493,race,NA
+51003,"Albemarle County, Virginia",2016,16725,white,21721,0.7699921734726762,race,NA
+51003,"Albemarle County, Virginia",2017,16805,white,21738,0.7730701996503818,race,NA
+51003,"Albemarle County, Virginia",2018,16839,white,21734,0.7747768473359713,race,NA
+51003,"Albemarle County, Virginia",2019,16986,white,21723,0.7819361966579201,race,NA
+51003,"Albemarle County, Virginia",2020,16541,white,21863,0.7565750354480172,race,NA
+51003,"Albemarle County, Virginia",2021,16536,white,22417,0.7376544586697595,race,NA
+51540,"Charlottesville city, Virginia",2009,3730,white,6719,0.5551421342461675,race,NA
+51540,"Charlottesville city, Virginia",2010,3252,white,6402,0.5079662605435802,race,NA
+51540,"Charlottesville city, Virginia",2011,3435,white,6368,0.5394158291457286,race,NA
+51540,"Charlottesville city, Virginia",2012,3589,white,6498,0.5523237919359802,race,NA
+51540,"Charlottesville city, Virginia",2013,3695,white,6531,0.5657632828050835,race,NA
+51540,"Charlottesville city, Virginia",2014,3948,white,6784,0.5819575471698113,race,NA
+51540,"Charlottesville city, Virginia",2015,4064,white,6907,0.5883885912842044,race,NA
+51540,"Charlottesville city, Virginia",2016,4176,white,7084,0.5894974590626765,race,NA
+51540,"Charlottesville city, Virginia",2017,4295,white,7263,0.5913534352196063,race,NA
+51540,"Charlottesville city, Virginia",2018,4450,white,7385,0.6025727826675694,race,NA
+51540,"Charlottesville city, Virginia",2019,4467,white,7368,0.6062703583061889,race,NA
+51540,"Charlottesville city, Virginia",2020,4307,white,7321,0.5883076082502391,race,NA
+51540,"Charlottesville city, Virginia",2021,4332,white,7314,0.5922887612797375,race,NA
+51,Virginia,2009,1194418,white,1831470,0.652163562602718,race,NA
+51,Virginia,2010,1176064,white,1840077,0.6391384708357313,race,NA
+51,Virginia,2011,1173227,white,1843927,0.6362654269935849,race,NA
+51,Virginia,2012,1173393,white,1848713,0.6347080374292818,race,NA
+51,Virginia,2013,1176806,white,1856014,0.6340501741904964,race,NA
+51,Virginia,2014,1177225,white,1862284,0.6321404254130949,race,NA
+51,Virginia,2015,1175650,white,1864668,0.6304875720503597,race,NA
+51,Virginia,2016,1173615,white,1865556,0.6290966339257572,race,NA
+51,Virginia,2017,1167212,white,1866274,0.625423705200844,race,NA
+51,Virginia,2018,1161193,white,1867427,0.6218144002416158,race,NA
+51,Virginia,2019,1154736,white,1865699,0.6189294200189849,race,NA
+51,Virginia,2020,1120554,white,1868597,0.5996766558011171,race,NA
+51,Virginia,2021,1104801,white,1892752,0.5837008757618536,race,NA
+51003,"Albemarle County, Virginia",2009,2123,black,20237,0.1049068537826753,race,NA
+51003,"Albemarle County, Virginia",2010,2337,black,21289,0.10977500117431538,race,NA
+51003,"Albemarle County, Virginia",2011,2441,black,21354,0.1143111360869158,race,NA
+51003,"Albemarle County, Virginia",2012,2255,black,21447,0.10514291043036322,race,NA
+51003,"Albemarle County, Virginia",2013,2156,black,21569,0.09995827344800408,race,NA
+51003,"Albemarle County, Virginia",2014,2055,black,21633,0.09499375953404521,race,NA
+51003,"Albemarle County, Virginia",2015,2088,black,21700,0.09622119815668202,race,NA
+51003,"Albemarle County, Virginia",2016,2201,black,21721,0.10133050964504396,race,NA
+51003,"Albemarle County, Virginia",2017,2393,black,21738,0.1100837243536664,race,NA
+51003,"Albemarle County, Virginia",2018,2520,black,21734,0.11594736357780436,race,NA
+51003,"Albemarle County, Virginia",2019,2425,black,21723,0.11163283156101828,race,NA
+51003,"Albemarle County, Virginia",2020,2300,black,21863,0.10520056716827517,race,NA
+51003,"Albemarle County, Virginia",2021,1915,black,22417,0.08542623901503324,race,NA
+51540,"Charlottesville city, Virginia",2009,1970,black,6719,0.2931983926179491,race,NA
+51540,"Charlottesville city, Virginia",2010,2174,black,6402,0.3395813808184942,race,NA
+51540,"Charlottesville city, Virginia",2011,2121,black,6368,0.33307160804020103,race,NA
+51540,"Charlottesville city, Virginia",2012,2220,black,6498,0.34164358264081257,race,NA
+51540,"Charlottesville city, Virginia",2013,2145,black,6531,0.32843362425355993,race,NA
+51540,"Charlottesville city, Virginia",2014,2120,black,6784,0.3125,race,NA
+51540,"Charlottesville city, Virginia",2015,2025,black,6907,0.2931808310409729,race,NA
+51540,"Charlottesville city, Virginia",2016,1918,black,7084,0.2707509881422925,race,NA
+51540,"Charlottesville city, Virginia",2017,1914,black,7263,0.2635274679884345,race,NA
+51540,"Charlottesville city, Virginia",2018,1973,black,7385,0.2671631685849695,race,NA
+51540,"Charlottesville city, Virginia",2019,2015,black,7368,0.2734799131378936,race,NA
+51540,"Charlottesville city, Virginia",2020,2000,black,7321,0.2731867231252561,race,NA
+51540,"Charlottesville city, Virginia",2021,1889,black,7314,0.2582718074924802,race,NA
+51,Virginia,2009,399313,black,1831470,0.21802868733858594,race,NA
+51,Virginia,2010,404860,black,1840077,0.2200234011946239,race,NA
+51,Virginia,2011,403543,black,1843927,0.21884977008308898,race,NA
+51,Virginia,2012,399873,black,1848713,0.2162980408532855,race,NA
+51,Virginia,2013,394664,black,1856014,0.21264063740898506,race,NA
+51,Virginia,2014,390180,black,1862284,0.20951691578728057,race,NA
+51,Virginia,2015,387952,black,1864668,0.2080541951704003,race,NA
+51,Virginia,2016,382085,black,1865556,0.20481025495884336,race,NA
+51,Virginia,2017,380586,black,1866274,0.20392825490790742,race,NA
+51,Virginia,2018,375959,black,1867427,0.20132460331782714,race,NA
+51,Virginia,2019,373575,black,1865699,0.20023326377941994,race,NA
+51,Virginia,2020,370122,black,1868597,0.1980748122789451,race,NA
+51,Virginia,2021,371765,black,1892752,0.19641506124415667,race,NA
+51003,"Albemarle County, Virginia",2009,31,aian,20237,0.0015318476058704354,race,NA
+51003,"Albemarle County, Virginia",2010,112,aian,21289,0.005260932876133214,race,NA
+51003,"Albemarle County, Virginia",2011,136,aian,21354,0.006368830195747869,race,NA
+51003,"Albemarle County, Virginia",2012,101,aian,21447,0.004709283349652632,race,NA
+51003,"Albemarle County, Virginia",2013,146,aian,21569,0.006768973990449256,race,NA
+51003,"Albemarle County, Virginia",2014,89,aian,21633,0.004114084962788333,race,NA
+51003,"Albemarle County, Virginia",2015,47,aian,21700,0.002165898617511521,race,NA
+51003,"Albemarle County, Virginia",2016,46,aian,21721,0.0021177662170249988,race,NA
+51003,"Albemarle County, Virginia",2017,56,aian,21738,0.0025761339589658663,race,NA
+51003,"Albemarle County, Virginia",2018,72,aian,21734,0.003312781816508696,race,NA
+51003,"Albemarle County, Virginia",2019,56,aian,21723,0.002577912811305989,race,NA
+51003,"Albemarle County, Virginia",2020,84,aian,21863,0.003842107670493528,race,NA
+51003,"Albemarle County, Virginia",2021,139,aian,22417,0.00620065129143061,race,NA
+51540,"Charlottesville city, Virginia",2009,25,aian,6719,0.00372079178449174,race,NA
+51540,"Charlottesville city, Virginia",2010,51,aian,6402,0.007966260543580132,race,NA
+51540,"Charlottesville city, Virginia",2011,39,aian,6368,0.006124371859296482,race,NA
+51540,"Charlottesville city, Virginia",2012,18,aian,6498,0.002770083102493075,race,NA
+51540,"Charlottesville city, Virginia",2013,22,aian,6531,0.0033685499923442044,race,NA
+51540,"Charlottesville city, Virginia",2014,0,aian,6784,0,race,NA
+51540,"Charlottesville city, Virginia",2015,0,aian,6907,0,race,NA
+51540,"Charlottesville city, Virginia",2016,49,aian,7084,0.00691699604743083,race,NA
+51540,"Charlottesville city, Virginia",2017,61,aian,7263,0.008398733305796503,race,NA
+51540,"Charlottesville city, Virginia",2018,80,aian,7385,0.010832769126607989,race,NA
+51540,"Charlottesville city, Virginia",2019,31,aian,7368,0.004207383279044517,race,NA
+51540,"Charlottesville city, Virginia",2020,38,aian,7321,0.005190547739379866,race,NA
+51540,"Charlottesville city, Virginia",2021,0,aian,7314,0,race,NA
+51,Virginia,2009,5751,aian,1831470,0.0031401005749479927,race,NA
+51,Virginia,2010,6167,aian,1840077,0.003351490182204332,race,NA
+51,Virginia,2011,5626,aian,1843927,0.003051096925203655,race,NA
+51,Virginia,2012,5181,aian,1848713,0.002802490164779498,race,NA
+51,Virginia,2013,4748,aian,1856014,0.00255817035862876,race,NA
+51,Virginia,2014,4118,aian,1862284,0.0022112631585730212,race,NA
+51,Virginia,2015,4359,aian,1864668,0.0023376815604708185,race,NA
+51,Virginia,2016,4449,aian,1865556,0.002384811820175862,race,NA
+51,Virginia,2017,4167,aian,1866274,0.002232791112130373,race,NA
+51,Virginia,2018,4458,aian,1867427,0.0023872419109287808,race,NA
+51,Virginia,2019,4654,aian,1865699,0.0024945074205431853,race,NA
+51,Virginia,2020,4102,aian,1868597,0.0021952298970832128,race,NA
+51,Virginia,2021,4924,aian,1892752,0.0026015029966947596,race,NA
+51003,"Albemarle County, Virginia",2009,714,asian,20237,0.03528190937391906,race,NA
+51003,"Albemarle County, Virginia",2010,664,asian,21289,0.031189816337075484,race,NA
+51003,"Albemarle County, Virginia",2011,621,asian,21354,0.029081202584995785,race,NA
+51003,"Albemarle County, Virginia",2012,703,asian,21447,0.032778477176295055,race,NA
+51003,"Albemarle County, Virginia",2013,760,asian,21569,0.035235755018776946,race,NA
+51003,"Albemarle County, Virginia",2014,870,asian,21633,0.040216336153099434,race,NA
+51003,"Albemarle County, Virginia",2015,871,asian,21700,0.040138248847926265,race,NA
+51003,"Albemarle County, Virginia",2016,928,asian,21721,0.042723631508678236,race,NA
+51003,"Albemarle County, Virginia",2017,1028,asian,21738,0.0472904591038734,race,NA
+51003,"Albemarle County, Virginia",2018,1101,asian,21734,0.050657955277445474,race,NA
+51003,"Albemarle County, Virginia",2019,941,asian,21723,0.04331814206140957,race,NA
+51003,"Albemarle County, Virginia",2020,1041,asian,21863,0.047614691487901935,race,NA
+51003,"Albemarle County, Virginia",2021,1074,asian,22417,0.04791006825177321,race,NA
+51540,"Charlottesville city, Virginia",2009,191,asian,6719,0.028426849233516894,race,NA
+51540,"Charlottesville city, Virginia",2010,242,asian,6402,0.037800687285223365,race,NA
+51540,"Charlottesville city, Virginia",2011,183,asian,6368,0.028737437185929648,race,NA
+51540,"Charlottesville city, Virginia",2012,211,asian,6498,0.0324715297014466,race,NA
+51540,"Charlottesville city, Virginia",2013,280,asian,6531,0.04287245444801715,race,NA
+51540,"Charlottesville city, Virginia",2014,269,asian,6784,0.039652122641509434,race,NA
+51540,"Charlottesville city, Virginia",2015,261,asian,6907,0.037787751556392066,race,NA
+51540,"Charlottesville city, Virginia",2016,314,asian,7084,0.04432523997741389,race,NA
+51540,"Charlottesville city, Virginia",2017,339,asian,7263,0.04667492771581991,race,NA
+51540,"Charlottesville city, Virginia",2018,352,asian,7385,0.04766418415707515,race,NA
+51540,"Charlottesville city, Virginia",2019,361,asian,7368,0.0489956568946797,race,NA
+51540,"Charlottesville city, Virginia",2020,417,asian,7321,0.0569594317716159,race,NA
+51540,"Charlottesville city, Virginia",2021,403,asian,7314,0.0550998085862729,race,NA
+51,Virginia,2009,85001,asian,1831470,0.0464113526293087,race,NA
+51,Virginia,2010,96621,asian,1840077,0.052509215646953905,race,NA
+51,Virginia,2011,99823,asian,1843927,0.05413609107085042,race,NA
+51,Virginia,2012,102219,asian,1848713,0.05529197879822341,race,NA
+51,Virginia,2013,104926,asian,1856014,0.056532978738306934,race,NA
+51,Virginia,2014,107834,asian,1862284,0.057904164993094503,race,NA
+51,Virginia,2015,110174,asian,1864668,0.05908504892023674,race,NA
+51,Virginia,2016,111313,asian,1865556,0.059667466428239085,race,NA
+51,Virginia,2017,111900,asian,1866274,0.05995904138406258,race,NA
+51,Virginia,2018,112660,asian,1867427,0.06032899813486685,race,NA
+51,Virginia,2019,111854,asian,1865699,0.05995286485118982,race,NA
+51,Virginia,2020,121366,asian,1868597,0.06495033439527088,race,NA
+51,Virginia,2021,121920,asian,1892752,0.06441414406113426,race,NA
+51003,"Albemarle County, Virginia",2009,20,nhpi,20237,9.88288777980926e-4,race,NA
+51003,"Albemarle County, Virginia",2010,28,nhpi,21289,0.0013152332190333035,race,NA
+51003,"Albemarle County, Virginia",2011,0,nhpi,21354,0,race,NA
+51003,"Albemarle County, Virginia",2012,0,nhpi,21447,0,race,NA
+51003,"Albemarle County, Virginia",2013,0,nhpi,21569,0,race,NA
+51003,"Albemarle County, Virginia",2014,0,nhpi,21633,0,race,NA
+51003,"Albemarle County, Virginia",2015,0,nhpi,21700,0,race,NA
+51003,"Albemarle County, Virginia",2016,0,nhpi,21721,0,race,NA
+51003,"Albemarle County, Virginia",2017,0,nhpi,21738,0,race,NA
+51003,"Albemarle County, Virginia",2018,0,nhpi,21734,0,race,NA
+51003,"Albemarle County, Virginia",2019,0,nhpi,21723,0,race,NA
+51003,"Albemarle County, Virginia",2020,0,nhpi,21863,0,race,NA
+51003,"Albemarle County, Virginia",2021,0,nhpi,22417,0,race,NA
+51540,"Charlottesville city, Virginia",2009,0,nhpi,6719,0,race,NA
+51540,"Charlottesville city, Virginia",2010,0,nhpi,6402,0,race,NA
+51540,"Charlottesville city, Virginia",2011,0,nhpi,6368,0,race,NA
+51540,"Charlottesville city, Virginia",2012,0,nhpi,6498,0,race,NA
+51540,"Charlottesville city, Virginia",2013,0,nhpi,6531,0,race,NA
+51540,"Charlottesville city, Virginia",2014,0,nhpi,6784,0,race,NA
+51540,"Charlottesville city, Virginia",2015,11,nhpi,6907,0.0015925872303460258,race,NA
+51540,"Charlottesville city, Virginia",2016,11,nhpi,7084,0.0015527950310559005,race,NA
+51540,"Charlottesville city, Virginia",2017,9,nhpi,7263,0.0012391573729863693,race,NA
+51540,"Charlottesville city, Virginia",2018,12,nhpi,7385,0.0016249153689911983,race,NA
+51540,"Charlottesville city, Virginia",2019,25,nhpi,7368,0.0033930510314875138,race,NA
+51540,"Charlottesville city, Virginia",2020,0,nhpi,7321,0,race,NA
+51540,"Charlottesville city, Virginia",2021,0,nhpi,7314,0,race,NA
+51,Virginia,2009,1495,nhpi,1831470,8.162841870191704e-4,race,NA
+51,Virginia,2010,1295,nhpi,1840077,7.03774896376619e-4,race,NA
+51,Virginia,2011,1224,nhpi,1843927,6.638006819141973e-4,race,NA
+51,Virginia,2012,1384,nhpi,1848713,7.486289110316204e-4,race,NA
+51,Virginia,2013,1232,nhpi,1856014,6.637880964259968e-4,race,NA
+51,Virginia,2014,1152,nhpi,1862284,6.185952303730258e-4,race,NA
+51,Virginia,2015,982,nhpi,1864668,5.266353045153346e-4,race,NA
+51,Virginia,2016,1117,nhpi,1865556,5.987491128650118e-4,race,NA
+51,Virginia,2017,1137,nhpi,1866274,6.092352998541479e-4,race,NA
+51,Virginia,2018,1326,nhpi,1867427,7.100679169788163e-4,race,NA
+51,Virginia,2019,1321,nhpi,1865699,7.080456172190691e-4,race,NA
+51,Virginia,2020,1323,nhpi,1868597,7.080178337008997e-4,race,NA
+51,Virginia,2021,1111,nhpi,1892752,5.869760010820224e-4,race,NA
+51003,"Albemarle County, Virginia",2009,132,other,20237,0.006522705934674112,race,NA
+51003,"Albemarle County, Virginia",2010,205,other,21289,0.0096293860679224,race,NA
+51003,"Albemarle County, Virginia",2011,204,other,21354,0.009553245293621804,race,NA
+51003,"Albemarle County, Virginia",2012,335,other,21447,0.015619900219144868,race,NA
+51003,"Albemarle County, Virginia",2013,363,other,21569,0.016829709305021093,race,NA
+51003,"Albemarle County, Virginia",2014,486,other,21633,0.022465677437248647,race,NA
+51003,"Albemarle County, Virginia",2015,529,other,21700,0.024377880184331797,race,NA
+51003,"Albemarle County, Virginia",2016,650,other,21721,0.02992495741448368,race,NA
+51003,"Albemarle County, Virginia",2017,532,other,21738,0.02447327261017573,race,NA
+51003,"Albemarle County, Virginia",2018,455,other,21734,0.020934940645992453,race,NA
+51003,"Albemarle County, Virginia",2019,316,other,21723,0.014546793720940938,race,NA
+51003,"Albemarle County, Virginia",2020,454,other,21863,0.020765677171476926,race,NA
+51003,"Albemarle County, Virginia",2021,554,other,22417,0.024713387161529196,race,NA
+51540,"Charlottesville city, Virginia",2009,196,other,6719,0.02917100759041524,race,NA
+51540,"Charlottesville city, Virginia",2010,176,other,6402,0.027491408934707903,race,NA
+51540,"Charlottesville city, Virginia",2011,54,other,6368,0.008479899497487437,race,NA
+51540,"Charlottesville city, Virginia",2012,47,other,6498,0.007232994767620807,race,NA
+51540,"Charlottesville city, Virginia",2013,50,other,6531,0.007655795437145919,race,NA
+51540,"Charlottesville city, Virginia",2014,30,other,6784,0.004422169811320755,race,NA
+51540,"Charlottesville city, Virginia",2015,23,other,6907,0.0033299551179962355,race,NA
+51540,"Charlottesville city, Virginia",2016,47,other,7084,0.006634669678147939,race,NA
+51540,"Charlottesville city, Virginia",2017,52,other,7263,0.0071595759328101334,race,NA
+51540,"Charlottesville city, Virginia",2018,61,other,7385,0.008259986459038592,race,NA
+51540,"Charlottesville city, Virginia",2019,93,other,7368,0.012622149837133551,race,NA
+51540,"Charlottesville city, Virginia",2020,103,other,7321,0.01406911624095069,race,NA
+51540,"Charlottesville city, Virginia",2021,78,other,7314,0.01066447908121411,race,NA
+51,Virginia,2009,61804,other,1831470,0.03374557049801526,race,NA
+51,Virginia,2010,61046,other,1840077,0.033175785578538286,race,NA
+51,Virginia,2011,59860,other,1843927,0.03246332419884301,race,NA
+51,Virginia,2012,55297,other,1848713,0.029911078680141267,race,NA
+51,Virginia,2013,53760,other,1856014,0.028965298753134406,race,NA
+51,Virginia,2014,54826,other,1862284,0.029440192795513465,race,NA
+51,Virginia,2015,54719,other,1864668,0.029345170293049488,race,NA
+51,Virginia,2016,56972,other,1865556,0.03053888492224302,race,NA
+51,Virginia,2017,61524,other,1866274,0.03296622039421864,race,NA
+51,Virginia,2018,64487,other,1867427,0.034532541298803114,race,NA
+51,Virginia,2019,69246,other,1865699,0.03711531174106863,race,NA
+51,Virginia,2020,77116,other,1868597,0.04126946580776914,race,NA
+51,Virginia,2021,85213,other,1892752,0.04502068945112725,race,NA
+51003,"Albemarle County, Virginia",2009,891,multi,20237,0.044028265059050255,race,NA
+51003,"Albemarle County, Virginia",2010,1120,multi,21289,0.05260932876133214,race,NA
+51003,"Albemarle County, Virginia",2011,1301,multi,21354,0.06092535356373513,race,NA
+51003,"Albemarle County, Virginia",2012,1442,multi,21447,0.06723551079405045,race,NA
+51003,"Albemarle County, Virginia",2013,1461,multi,21569,0.06773610274004357,race,NA
+51003,"Albemarle County, Virginia",2014,1560,multi,21633,0.0721120510331438,race,NA
+51003,"Albemarle County, Virginia",2015,1576,multi,21700,0.07262672811059907,race,NA
+51003,"Albemarle County, Virginia",2016,1171,multi,21721,0.05391096174209291,race,NA
+51003,"Albemarle County, Virginia",2017,924,multi,21738,0.04250621032293679,race,NA
+51003,"Albemarle County, Virginia",2018,747,multi,21734,0.034370111346277724,race,NA
+51003,"Albemarle County, Virginia",2019,999,multi,21723,0.045988123187405056,race,NA
+51003,"Albemarle County, Virginia",2020,1443,multi,21863,0.06600192105383525,race,NA
+51003,"Albemarle County, Virginia",2021,2199,multi,22417,0.0980951956104742,race,NA
+51540,"Charlottesville city, Virginia",2009,607,multi,6719,0.09034082452745944,race,NA
+51540,"Charlottesville city, Virginia",2010,507,multi,6402,0.07919400187441425,race,NA
+51540,"Charlottesville city, Virginia",2011,536,multi,6368,0.08417085427135679,race,NA
+51540,"Charlottesville city, Virginia",2012,413,multi,6498,0.06355801785164666,race,NA
+51540,"Charlottesville city, Virginia",2013,339,multi,6531,0.051906293063849335,race,NA
+51540,"Charlottesville city, Virginia",2014,417,multi,6784,0.06146816037735849,race,NA
+51540,"Charlottesville city, Virginia",2015,523,multi,6907,0.07572028377008831,race,NA
+51540,"Charlottesville city, Virginia",2016,569,multi,7084,0.0803218520609825,race,NA
+51540,"Charlottesville city, Virginia",2017,593,multi,7263,0.08164670246454633,race,NA
+51540,"Charlottesville city, Virginia",2018,457,multi,7385,0.06188219363574814,race,NA
+51540,"Charlottesville city, Virginia",2019,376,multi,7368,0.051031487513572206,race,NA
+51540,"Charlottesville city, Virginia",2020,456,multi,7321,0.06228657287255839,race,NA
+51540,"Charlottesville city, Virginia",2021,612,multi,7314,0.08367514356029532,race,NA
+51,Virginia,2009,83688,multi,1831470,0.0456944421694049,race,NA
+51,Virginia,2010,94024,multi,1840077,0.051097861665571606,race,NA
+51,Virginia,2011,100624,multi,1843927,0.054570490046514854,race,NA
+51,Virginia,2012,111366,multi,1848713,0.060239745163256815,race,NA
+51,Virginia,2013,119878,multi,1856014,0.06458895245402244,race,NA
+51,Virginia,2014,126949,multi,1862284,0.06816844262207053,race,NA
+51,Virginia,2015,130832,multi,1864668,0.07016369670096768,race,NA
+51,Virginia,2016,136005,multi,1865556,0.07290319883187639,race,NA
+51,Virginia,2017,139748,multi,1866274,0.07488075170098281,race,NA
+51,Virginia,2018,147344,multi,1867427,0.07890214717897942,race,NA
+51,Virginia,2019,150313,multi,1865699,0.08056658657157452,race,NA
+51,Virginia,2020,174014,multi,1868597,0.09312548398611364,race,NA
+51,Virginia,2021,203018,multi,1892752,0.10726075048395141,race,NA
+51003,"Albemarle County, Virginia",2009,15421,NA,20237,0.762020062262193,ethn,nhwhite
+51003,"Albemarle County, Virginia",2010,15633,NA,21289,0.7343228897552727,ethn,nhwhite
+51003,"Albemarle County, Virginia",2011,15536,NA,21354,0.7275451905966095,ethn,nhwhite
+51003,"Albemarle County, Virginia",2012,15439,NA,21447,0.7198675805473959,ethn,nhwhite
+51003,"Albemarle County, Virginia",2013,15391,NA,21569,0.7135704019657843,ethn,nhwhite
+51003,"Albemarle County, Virginia",2014,15329,NA,21633,0.7085933527481163,ethn,nhwhite
+51003,"Albemarle County, Virginia",2015,15325,NA,21700,0.706221198156682,ethn,nhwhite
+51003,"Albemarle County, Virginia",2016,15359,NA,21721,0.7071037245062382,ethn,nhwhite
+51003,"Albemarle County, Virginia",2017,15341,NA,21738,0.7057226975802742,ethn,nhwhite
+51003,"Albemarle County, Virginia",2018,15218,NA,21734,0.700193245605963,ethn,nhwhite
+51003,"Albemarle County, Virginia",2019,15270,NA,21723,0.7029415826543295,ethn,nhwhite
+51003,"Albemarle County, Virginia",2020,15224,NA,21863,0.6963362758999222,ethn,nhwhite
+51003,"Albemarle County, Virginia",2021,15531,NA,22417,0.6928224115626533,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2009,3581,NA,6719,0.5329662152105968,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2010,3148,NA,6402,0.4917213370821618,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2011,3140,NA,6368,0.49309045226130654,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2012,3262,NA,6498,0.5020006155740228,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2013,3337,NA,6531,0.5109477874751187,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2014,3513,NA,6784,0.5178360849056604,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2015,3593,NA,6907,0.5201969016939337,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2016,3647,NA,7084,0.5148221343873518,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2017,3689,NA,7263,0.5079168387718573,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2018,3783,NA,7385,0.5122545700744753,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2019,3759,NA,7368,0.5101791530944625,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2020,3759,NA,7321,0.5134544461139189,ethn,nhwhite
+51540,"Charlottesville city, Virginia",2021,3760,NA,7314,0.5140825813508341,ethn,nhwhite
+51,Virginia,2009,1099600,NA,1831470,0.6003920348135651,ethn,nhwhite
+51,Virginia,2010,1072008,NA,1840077,0.5825886634091942,ethn,nhwhite
+51,Virginia,2011,1060243,NA,1843927,0.5749918516297011,ethn,nhwhite
+51,Virginia,2012,1051844,NA,1848713,0.5689601360514044,ethn,nhwhite
+51,Virginia,2013,1045440,NA,1856014,0.5632716132529173,ethn,nhwhite
+51,Virginia,2014,1038961,NA,1862284,0.557896110367699,ethn,nhwhite
+51,Virginia,2015,1032006,NA,1864668,0.553452947119809,ethn,nhwhite
+51,Virginia,2016,1026078,NA,1865556,0.5500118999376057,ethn,nhwhite
+51,Virginia,2017,1015812,NA,1866274,0.5442994972871079,ethn,nhwhite
+51,Virginia,2018,1006864,NA,1867427,0.5391718123385814,ethn,nhwhite
+51,Virginia,2019,999740,NA,1865699,0.535852782254801,ethn,nhwhite
+51,Virginia,2020,985479,NA,1868597,0.527389801011133,ethn,nhwhite
+51,Virginia,2021,986516,NA,1892752,0.5212072157366628,ethn,nhwhite
+51003,"Albemarle County, Virginia",2009,1111,NA,20237,0.05489944161684044,ethn,hisp
+51003,"Albemarle County, Virginia",2010,1541,NA,21289,0.07238479966179717,ethn,hisp
+51003,"Albemarle County, Virginia",2011,1647,NA,21354,0.07712840685585838,ethn,hisp
+51003,"Albemarle County, Virginia",2012,1746,NA,21447,0.0814099874108267,ethn,hisp
+51003,"Albemarle County, Virginia",2013,1853,NA,21569,0.08591033427604432,ethn,hisp
+51003,"Albemarle County, Virginia",2014,1900,NA,21633,0.08782878010447003,ethn,hisp
+51003,"Albemarle County, Virginia",2015,1980,NA,21700,0.0912442396313364,ethn,hisp
+51003,"Albemarle County, Virginia",2016,1997,NA,21721,0.09193867685649831,ethn,hisp
+51003,"Albemarle County, Virginia",2017,2059,NA,21738,0.09471892538411997,ethn,hisp
+51003,"Albemarle County, Virginia",2018,2109,NA,21734,0.09703690070856723,ethn,hisp
+51003,"Albemarle County, Virginia",2019,2123,NA,21723,0.09773051604290384,ethn,hisp
+51003,"Albemarle County, Virginia",2020,2099,NA,21863,0.09600695238530851,ethn,hisp
+51003,"Albemarle County, Virginia",2021,2157,NA,22417,0.09622161752241602,ethn,hisp
+51540,"Charlottesville city, Virginia",2009,446,NA,6719,0.06637892543533264,ethn,hisp
+51540,"Charlottesville city, Virginia",2010,495,NA,6402,0.07731958762886598,ethn,hisp
+51540,"Charlottesville city, Virginia",2011,515,NA,6368,0.08087311557788945,ethn,hisp
+51540,"Charlottesville city, Virginia",2012,504,NA,6498,0.07756232686980609,ethn,hisp
+51540,"Charlottesville city, Virginia",2013,516,NA,6531,0.07900780891134589,ethn,hisp
+51540,"Charlottesville city, Virginia",2014,536,NA,6784,0.07900943396226415,ethn,hisp
+51540,"Charlottesville city, Virginia",2015,571,NA,6907,0.08266975532068915,ethn,hisp
+51540,"Charlottesville city, Virginia",2016,656,NA,7084,0.09260304912478826,ethn,hisp
+51540,"Charlottesville city, Virginia",2017,740,NA,7263,0.10188627288999036,ethn,hisp
+51540,"Charlottesville city, Virginia",2018,777,NA,7385,0.1052132701421801,ethn,hisp
+51540,"Charlottesville city, Virginia",2019,799,NA,7368,0.10844191096634094,ethn,hisp
+51540,"Charlottesville city, Virginia",2020,800,NA,7321,0.10927468925010245,ethn,hisp
+51540,"Charlottesville city, Virginia",2021,809,NA,7314,0.11060978944490019,ethn,hisp
+51,Virginia,2009,174461,NA,1831470,0.09525736157294414,ethn,hisp
+51,Virginia,2010,185271,NA,1840077,0.10068654735644215,ethn,hisp
+51,Virginia,2011,195415,NA,1843927,0.10597762275838468,ethn,hisp
+51,Virginia,2012,204517,NA,1848713,0.11062669002706207,ethn,hisp
+51,Virginia,2013,212892,NA,1856014,0.11470387615610658,ethn,hisp
+51,Virginia,2014,221525,NA,1862284,0.11895339271561159,ethn,hisp
+51,Virginia,2015,228035,NA,1864668,0.12229254752052376,ethn,hisp
+51,Virginia,2016,234290,NA,1865556,0.1255872243985171,ethn,hisp
+51,Virginia,2017,242147,NA,1866274,0.12974890075090795,ethn,hisp
+51,Virginia,2018,249917,NA,1867427,0.13382959548084075,ethn,hisp
+51,Virginia,2019,256038,NA,1865699,0.13723435559540956,ethn,hisp
+51,Virginia,2020,259092,NA,1868597,0.138655900657017,ethn,hisp
+51,Virginia,2021,269411,NA,1892752,0.1423382461093688,ethn,hisp

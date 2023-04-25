@@ -442,6 +442,12 @@ votereg <- votereg %>%
   left_join(pop %>% select(year, pop_18over, fips_county),
             by = c("year" = "year", "fips" = "fips_county"))
 
+# ## fill in 2021 population with 2020 estimates
+# votereg <- votereg %>% 
+#   group_by(locality, fips) %>% 
+#   fill(pop_18over) %>% 
+#   ungroup()
+
 ## Create registration rate 
 votereg <- votereg %>% 
   mutate(reg_rate = voters/pop_18over)
@@ -460,3 +466,4 @@ ggplot(votereg, aes(x = year, y = reg_rate, color = locality)) +
 
 # Save ----
 write_csv(votereg, "data/vote_reg.csv")
+# votereg <- read_csv("data/vote_reg.csv")
