@@ -1,0 +1,490 @@
+---
+title: "Stepping Stone Report Draft 1"
+author: "Elizabeth Mitchell"
+date: "2023-04-26"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(scales)
+library(janitor)
+library(ggthemes)
+
+three_category_palette <- c("#B23B6B", "#5AB48A", "#E7A342")
+```
+
+## Introduction
+
+### Approach
+
+### Our Youth
+
+### Contributions
+
+## Education and Engagement
+
+### Standards of Learning
+
+#### Math, Grade 3, Grade 5, Grade 8 {.tabset}
+
+##### Trends
+
+###### Grade 3 Math
+```{r}
+# Read in data
+sols <- read_csv("../data/sol_pass.csv")
+miss2021 <- data.frame(division_name = c("Albemarle County", "Charlottesville City", "Virginia"),
+                       school_year = c("2019-2020", "2019-2020", "2019-2020"))
+
+# Grade 3 Plot
+sols %>% 
+  filter(subject == "Mathematics" & test_level == "Grade 3") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2011-2012", linetype = 2, color = "black") +
+  annotate("text", x = 7.2, y = 10, size = 3, hjust = 0, color = "black", 
+           label = 
+"Revised math standards 
+released by the VDOE") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Pass Rate") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+  
+```
+
+Source: Virginia Department of Education (VDOE). 2006 - 2021. https://p1pe.doe.virginia.gov/buildatable/testresults
+       
+###### Grade 5 Math
+```{r}
+sols %>% 
+  filter(subject == "Mathematics" & test_level == "Grade 5") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2011-2012", linetype = 2, color = "black") +
+  annotate("text", x = 7.2, y = 10, size = 3, hjust = 0, color = "black", 
+           label = 
+"Revised math standards 
+released by the VDOE") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Pass Rate") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+###### Grade 8 Math
+```{r}
+sols %>% 
+  filter(subject == "Mathematics" & test_level == "Grade 8") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2011-2012", linetype = 2, color = "black") +
+  annotate("text", x = 7.2, y = 10, size = 3, hjust = 0, color = "black", 
+           label = 
+"Revised math standards 
+released by the VDOE") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Pass Rate") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+##### About
+
+#### Reading, Grades 3, 5, and 8 {.tabset}
+
+##### Trends
+###### Grade 3 Reading
+```{r}
+# Read in data
+sols <- read_csv("../data/sol_pass.csv")
+miss2021 <- data.frame(division_name = c("Albemarle County", "Charlottesville City", "Virginia"),
+                       school_year = c("2019-2020", "2019-2020", "2019-2020"))
+
+# Grade 3 Reading Plot
+sols %>% 
+  filter(subject == "English:Reading" & test_level == "Grade 3") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
+  annotate("text", x = 8.2, y = 10, size = 3, hjust = 0, color = "black", 
+           label = 
+"Statewide transition to an online 
+English SOL test that was more 
+rigorous and based on the 
+Common Core") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Pass Rate") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+###### Grade 5 Reading
+```{r}
+# Grade 5 Reading Plot
+sols %>% 
+  filter(subject == "English:Reading" & test_level == "Grade 5") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
+  annotate("text", x = 8.2, y = 10, size = 3, hjust = 0, color = "black", 
+           label = 
+"Statewide transition to an online 
+English SOL test that was more 
+rigorous and based on the 
+Common Core") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Pass Rate") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+###### Grade 8 Reading
+```{r}
+# Grade 8 Plot
+sols %>% 
+  filter(subject == "English:Reading" & test_level == "Grade 8") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
+  annotate("text", x = 8.2, y = 10, size = 3, hjust = 0, color = "black", 
+           label = 
+"Statewide transition to an online 
+English SOL test that was more 
+rigorous and based on the 
+Common Core") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Pass Rate") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+##### About
+
+### Kindergarteners Identified for Reading Intervention Services {.tabset}
+
+#### Trends
+
+```{r}
+pals_kinder <- read_csv("../data/pals_kindergarten.csv")
+pals_kinder_u <- read_csv("../data/pals_kindergarten_updated.csv")
+
+pals_kinder_u %>%
+  ggplot(aes(x = school_year, y = percent, color = location, group = location)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 60),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Screened Students") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+#### About
+
+### Students Eligible for Special Education Services {.tabset}
+
+#### Trends
+
+```{r}
+sped_services <- read_csv("../data/sped_services.csv")
+
+sped_services %>% 
+  ggplot(aes(x = school_year, y = percent_sped, 
+             color = division_name, group = division_name)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 60),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### English Language-Learning Students {.tabset}
+
+#### Trends
+
+```{r}
+english_language_learners <- read_csv("../data/english_language_learners.csv")
+
+english_language_learners %>% 
+  ggplot(aes(x = school_year, y = pct_english_learners, color = locality, group=locality)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 60),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Percent Average Daily Attendance {.tabset}
+
+#### Trends
+```{r}
+average_daily_attendance <- read_csv("../data/average_daily_attendance.csv")
+
+average_daily_attendance %>% 
+  mutate(school_year = paste0(as.character(year-1), "-", as.character(year))) %>% 
+  ggplot(aes(x = school_year, y = pct_att_total, color = name, group = name)) +
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
+  annotate("text", x = 10.3, y = 65, size = 3, hjust = 0, color = "black", 
+           label = 
+"School closures for 
+COVID-19 Pandemic") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(50, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent Average Daily Attendance") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### On-Time Graduation Rates {.tabset}
+
+#### Trends
+```{r}
+graduation_rates <- read_csv("../data/graduation_rates.csv")
+
+graduation_rates %>%
+  mutate(school_year = as.character(cohort_year)) %>% 
+  ggplot(aes(x = school_year, y = graduation_rate, color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2013", linetype = 2, color = "black") +
+  annotate("text", x = 6.2, y = 55, size = 3, hjust = 0, color = "black", 
+           label = 
+"Charlottesville City Schools
+extend WALK program hours") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### High School Degree Attainment {.tabset}
+
+#### Trends
+```{r}
+hsdegree_attainment <- read_csv("../data/hsdegree_attainment.csv")
+
+hsdegree_attainment %>%
+  mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
+         locality = str_trim(locality),
+         survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
+  ggplot(aes(x = survey_period, y = pcthshigherE, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(40, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Residents") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Post-Secondary Enrollment {.tabset}
+
+#### Trends
+```{r}
+postsecondary_education <- read_csv("../data/postsecondary_education.csv")
+
+# ggplot(postsecondary_education, aes(x = year, y = percentany, color = locality)) +
+#   geom_line() +
+#   scale_y_continuous(limits = c(50,100))
+
+# pivot to stack 2 year and 4 year
+df_long <- postsecondary_education %>% 
+  mutate(enrolled4yr = enrolled4pub + enrolled4priv) %>% 
+  select(year, locality, cohortsize, enrolled4yr, enrolled2yr, enrolledany) %>% 
+  pivot_longer(cols = starts_with("enrolled"), names_to = "type", values_to = "number") %>% 
+  mutate(percent = (number/cohortsize)*100,
+         school_year = as.character(year))
+
+# keep only 4yr and any - or - 2yr and 4yr
+
+# ggplot(df_long, aes(x = year, y = percent, fill = type)) + 
+#   geom_area() +
+#   facet_wrap(~locality)
+
+df_long %>%
+  ggplot(aes(x = school_year, y = percent, 
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type)) +
+  geom_line() +
+  geom_point() +
+  scale_linetype_manual(values = c(6, 1, 5)) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1),
+                     name = "Percent") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "", linetype = "")
+```
+
+### Registered Voters {.tabset}
+
+#### Trends
+```{r}
+voter_reg <- read_csv("../data/vote_reg.csv")
+
+voter_reg %>%
+  mutate(year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = reg_rate, color = locality, group = locality)) +
+  geom_vline(xintercept = "2000", linetype = 2, color = "black") +
+  geom_vline(xintercept = "2004", linetype = 2, color = "black") +
+  geom_vline(xintercept = "2008", linetype = 2, color = "black") +
+  geom_vline(xintercept = "2012", linetype = 2, color = "black") +
+  geom_vline(xintercept = "2016", linetype = 2, color = "black") +
+  geom_vline(xintercept = "2020", linetype = 2, color = "black") +
+  annotate("text", x = 5.2, y = .3, size = 3, hjust = 0, color = "black", 
+           label = 
+"Presidential
+Elections") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  # scale_x_continuous("Year", labels = as.character(year), breaks = year) + 
+  scale_y_continuous(limits = c(0, 1),
+                     labels = scales::percent,
+                     name = "Percent of Adults Registered to Vote (%)") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+## Economic Securty and Housing
+
+### Per Capita Income {.tabset}
+
+#### Trends
+```{r}
+graduation_rates <- read_csv("../data/graduation_rates.csv")
+
+graduation_rates %>%
+  mutate(school_year = as.character(cohort_year)) %>% 
+  ggplot(aes(x = school_year, y = graduation_rate, color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2013", linetype = 2, color = "black") +
+  annotate("text", x = 6.2, y = 55, size = 3, hjust = 0, color = "black", 
+           label = 
+"Charlottesville City Schools
+extend WALK program hours") +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```

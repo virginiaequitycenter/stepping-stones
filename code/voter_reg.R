@@ -85,12 +85,12 @@ urllista <- paste0("https://www.elections.virginia.gov/media/registration-statis
 urllist <- c(urllista,
              "https://www.elections.virginia.gov/media/registration-statistics/2020/dec/Daily_Registrant_Count_By_Locality_2021_01_01_053053.csv", # 2020
              "https://www.elections.virginia.gov/media/registration-statistics/2021/01/csv20210201/Daily_Registrant_Count_By_Locality_2021_02_01_054110.csv") # 2021
-  
+
 url_year <- tibble(url = urllist, year = seq(2013,2021,1))
 
 ### apply function to list
 vr_list <- map2(url_year$url, yrl_year$year, 
-                     ~extract_regvoters(.x, .y, localities = c("Albemarle", "Charlottesville"))) 
+                ~extract_regvoters(.x, .y, localities = c("Albemarle", "Charlottesville"))) 
 
 vr1323 <- bind_rows(vr_list)
 
@@ -127,7 +127,7 @@ create_voteregtable <- function(file){
   df <- bind_rows(tables, .id = "Locality")
   
   return(df)
-  }
+}
 
 # extract_regvoters2: output selected locality registration totals
 # arguments: df, year, localities
@@ -225,9 +225,9 @@ vr07st <- tabst[[1]][nrow(tabst[[1]]),6]
 
 # and put them in a dataframe
 vr07 <- data.frame(locality = c("Albemarle County", "Charlottesville City", "Virginia"),
-                       fips = c("003", "540", "51"),
-                       voters = c(vr07alb, vr07cvl, vr07st),
-                       year = 2007)
+                   fips = c("003", "540", "51"),
+                   voters = c(vr07alb, vr07cvl, vr07st),
+                   year = 2007)
 vr07 <- vr07 %>% 
   mutate(voters = as.numeric(gsub(",", "", voters)))
 
@@ -246,7 +246,7 @@ pdf06 <- "https://www.elections.virginia.gov/media/registration-statistics/2006/
 pdfarea <- list(setNames(c(93, 3, 635, 610), 
                          c("top", "left", "bottom", "right")))
 list06 <- extract_tables(pdf06, area = pdfarea, 
-                       guess = FALSE, output = "data.frame")
+                         guess = FALSE, output = "data.frame")
 
 # turn everything into a character (to use bind_rows)
 list06 <- map(list06, ~mutate_all(., as.character))
@@ -442,6 +442,12 @@ votereg <- votereg %>%
   left_join(pop %>% select(year, pop_18over, fips_county),
             by = c("year" = "year", "fips" = "fips_county"))
 
+# ## fill in 2021 population with 2020 estimates
+# votereg <- votereg %>% 
+#   group_by(locality, fips) %>% 
+#   fill(pop_18over) %>% 
+#   ungroup()
+
 ## Create registration rate 
 votereg <- votereg %>% 
   mutate(reg_rate = voters/pop_18over)
@@ -460,3 +466,4 @@ ggplot(votereg, aes(x = year, y = reg_rate, color = locality)) +
 
 # Save ----
 write_csv(votereg, "data/vote_reg.csv")
+# votereg <- read_csv("data/vote_reg.csv")
