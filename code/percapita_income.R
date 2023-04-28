@@ -10,14 +10,14 @@
 # MSA Per Capita Income measures 
 #    https://apps.bea.gov/iTable/?reqid=70&step=1&isuri=1&acrdn=6
 #    choosing "Personal income and employment by county and metropolitan area"
-#    choosing "County and MSA personal income summary"
-#    choosing Metropolitican Statistical Area
-#    choosing Area = "Charlottesville, VA"
+#    choosing "County"
+#    choosing "Virginia"
+#    choosing Area = "Albemarle + Charlottesvill, VA"
 #             Statistic = "All statistics in table"
 #             Units of measure = "Levels"
 #             Time period = "All years"
 # Generates table url (exported to datadownloads manually)
-# https://apps.bea.gov/iTable/?reqid=70&step=1&isuri=1&acrdn=6#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyNCwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCIyMCJdLFsiQ2xhc3NpZmljYXRpb24iLCJOb24tSW5kdXN0cnkiXSxbIk1ham9yX0FyZWEiLCI1Il0sWyJTdGF0ZSIsWyI1Il1dLFsiQXJlYSIsWyIxNjgyMCJdXSxbIlN0YXRpc3RpYyIsWyItMSJdXSxbIlVuaXRfb2ZfbWVhc3VyZSIsIkxldmVscyJdLFsiWWVhciIsWyItMSJdXSxbIlllYXJCZWdpbiIsIi0xIl0sWyJZZWFyX0VuZCIsIi0xIl1dfQ==
+# https://apps.bea.gov/iTable/?reqid=70&step=1&isuri=1&acrdn=6#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyNCwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCIyMCJdLFsiQ2xhc3NpZmljYXRpb24iLCJOb24tSW5kdXN0cnkiXSxbIk1ham9yX0FyZWEiLCI0Il0sWyJTdGF0ZSIsWyI1MTAwMCJdXSxbIkFyZWEiLFsiNTE5MDEiXV0sWyJTdGF0aXN0aWMiLFsiLTEiXV0sWyJVbml0X29mX21lYXN1cmUiLCJMZXZlbHMiXSxbIlllYXIiLFsiLTEiXV0sWyJZZWFyQmVnaW4iLCItMSJdLFsiWWVhcl9FbmQiLCItMSJdXX0=
 # 
 # Suggested Citation from page: 
 # U.S. Bureau of Economic Analysis, "CAINC1 County and MSA personal income summary: personal income, population, per capita personal income" (accessed Saturday, January 14, 2023).
@@ -53,20 +53,20 @@ library(readxl)
 
 
 # Read in downloaded data ----
-msa_table <- read_csv("datadownloads/msa_pci_table.csv", skip = 3, n_max = 3)
+cvlalb_table <- read_csv("datadownloads/cvlalb_pci_table.csv", skip = 3, n_max = 3)
 state_table <- read_csv("datadownloads/state_pci_table.csv", skip = 3, n_max = 3)
 
 
 # Pivot and combine msa and state tables ----
 # pivot longer
-msa <- msa_table %>% 
+clvalb <- cvlalb_table %>% 
   pivot_longer(-c(GeoFips, GeoName, LineCode, Description), names_to = "year", values_to = "var")
 
 state <- state_table %>% 
   pivot_longer(-c(GeoFips, GeoName, LineCode, Description), names_to = "year", values_to = "var")
 
 # # check
-# msa %>% filter(LineCode == 3, year >= 2000) %>% 
+# clvalb %>% filter(LineCode == 3, year >= 2000) %>%
 #   ggplot(aes(x = year, y = var)) +
 #   geom_line(group = 1)
 # 
@@ -75,7 +75,7 @@ state <- state_table %>%
 #   geom_line(group = 1)
 
 # combine msa and state
-msa_pci <- msa %>% 
+cvlalb_pci <- clvalb %>% 
   filter(LineCode == 3, year >= 2000) %>% 
   select(GeoFips, GeoName, year, pci = var)
 
@@ -83,7 +83,7 @@ state_pci <- state %>%
   filter(LineCode == 10, year >= 2000) %>% 
   select(GeoFips, GeoName, year, pci = var)
   
-pci <- bind_rows(msa_pci, state_pci)
+pci <- bind_rows(cvlalb_pci, state_pci)
 
 pci <- pci %>% 
   mutate(GeoFips = as.character(GeoFips),
@@ -147,7 +147,7 @@ write_csv(pci, "data/per_cap_income.csv")
 # 
 # Comparing MSA and County measures 
 # (combined county estimates for Cvl/Alb are higher than larger MSA)
-# Using MSA measures
+# Using County measures
 #
 # A useful review on inflation adjustment: https://timeseriesreasoning.com/contents/inflation-adjustment/
 # CPI background: https://webapps.dol.gov/dolfaq/go-dol-faq.asp?faqid=98&topicid=6 

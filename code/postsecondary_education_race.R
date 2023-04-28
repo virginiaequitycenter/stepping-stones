@@ -33,12 +33,12 @@ albfiles <- list.files(path = "datadownloads/sfsf_alb", pattern = "*.xlsx", full
 vafiles <- list.files(path = "datadownloads/sfsf_va", pattern = "*.xlsx", full.names = TRUE)
 
 # ## try one
-# yeartest <- read_excel(cvlfiles[1], sheet = 1, range = "A3") %>% 
-#   names() %>% 
+# yeartest <- read_excel(cvlfiles[1], sheet = 1, range = "A3") %>%
+#   names() %>%
 #   str_extract(pattern = "[0-9]{4}")
 # 
-# datatest <- read_excel(cvlfiles[1], sheet = 1, range = "A7:J18") 
-# names(datatest) <- c("group", "cohortsize", "enrolledany", "percentany", 
+# datatest <- read_excel(cvlfiles[1], sheet = 1, range = "A7:J18")
+# names(datatest) <- c("group", "cohortsize", "enrolledany", "percentany",
 #                      "enrolled4pub", "percent4pub", "enrolled4priv", "percent4priv",
 #                      "enrolled2yr", "pecen2yr")
 
@@ -108,34 +108,44 @@ df_all <- bind_rows(cvl, alb, va)
 
 
 # Prep data ----
-df <- df_all %>% 
+df_tot <- df_all %>% 
   filter(group == "All Students") %>% 
-  mutate(across(-c("group", "locality"), as.numeric))
-
-
-# have a peek
-ggplot(df, aes(x = year, y = percentany, color = locality)) +
-  geom_line() +
-  scale_y_continuous(limits = c(50,100))
-
-df %>% 
-  mutate(enrolled4yr = enrolled4pub + enrolled4priv,
-         percent_4yr = enrolled4yr/cohortsize*100) %>% 
-  ggplot(aes(x = year, y = percent_4yr, color = locality)) +
-  geom_line()
-
-# pivot to stack 2 year and 4 year
-df_long <- df %>% 
+  mutate(across(-c("group", "locality"), as.numeric)) %>% 
   mutate(enrolled4yr = enrolled4pub + enrolled4priv) %>% 
-  select(year, locality, cohortsize, enrolled4yr, enrolled2yr) %>% 
-  pivot_longer(cols = starts_with("enrolled"), names_to = "type", values_to = "number") %>% 
-  mutate(percent = (number/cohortsize)*100)
+  select(year, locality, cohortsize_total = cohortsize, 
+         enrolledany_total = enrolledany, enrolled4yr_total = enrolled4yr) %>% 
+  mutate(percent_any = enrolledany_total/cohortsize_total*100,
+         percent_4yr = enrolled4yr_total/cohortsize_total*100)
 
-# have a peek
-ggplot(df_long, aes(x = year, y = percent, fill = type)) + 
-  geom_area() +
+df_race <- df_all %>% 
+  filter(group %in% c("Asian", "Black", "Hispanic", "White", "2 or More", 
+                      "American Indian", "Native Hawaiian", "Race Unknown")) %>% 
+  mutate(across(-c("group", "locality"), ~ifelse(.x == "-", 0, .x)),
+         across(-c("group", "locality"), as.numeric)) %>% 
+  mutate(enrolled4yr = enrolled4pub + enrolled4priv) %>% 
+  select(year, locality, group, cohortsize, enrolledany, enrolled4yr) %>% 
+  mutate(percent_any = enrolledany/cohortsize*100,
+         percent_4yr = enrolled4yr/cohortsize*100)
+
+
+# Visualize ----
+# percent of each group enrolled in any (in 4 year)
+df_race %>% 
+  filter(group %in% c("White", "Black", "Asian", "Hispanic", "2 or More")) %>% 
+  ggplot(aes(x = year, y = percent_any, color = group)) +
+  geom_line(aes(group = year), color = "grey") +
+  geom_point() +
+  geom_point(data = total, aes(x = year, y = percent_any), color = "black") +
   facet_wrap(~locality)
 
+df_race %>% 
+  filter(group %in% c("White", "Black", "Asian", "Hispanic", "2 or More")) %>% 
+  ggplot(aes(x = year, y = percent_4yr, color = group)) +
+  geom_line(aes(group = year), color = "grey") +
+  geom_point() +
+  geom_point(data = total, aes(x = year, y = percent_4yr), color = "black") +
+  facet_wrap(~locality)
+
+
 # save data ----
-write_csv(df, "data/postsecondary_education.csv")
-# df <- read_csv("data/postsecondary_education.csv")
+write_csv(df_race, "data/postsecondary_education_race.csv")
