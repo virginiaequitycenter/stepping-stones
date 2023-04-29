@@ -1,38 +1,44 @@
 # compare divorce data
 
 library(tidyverse)
-library(patchwork)
 
 divorce_vdh <- read_csv("data/divorce_vdh.csv")
 divorce_cc <- read_csv("data/divorce_circuit.csv")
 
 # compare entire series
-vdhplot <- ggplot(divorce_vdh, 
+ggplot(divorce_vdh, 
                   aes(x = year, y = divorce_rate, color = locality)) +
   geom_line() +
-  scale_y_continuous(limits = c(0,4.5)) +
+  scale_y_continuous(limits = c(0,6)) +
   scale_x_continuous(breaks = seq(2000,2022, 2)) 
 
-ccplot <- ggplot(divorce_cc, 
+ggplot(divorce_cc, 
                   aes(x = year, y = divorce_rate, color = locality)) +
   geom_line() +
-  scale_y_continuous(limits = c(0,4.5)) +
+  scale_y_continuous(limits = c(0,6)) +
   scale_x_continuous(breaks = seq(2000,2022, 2)) 
 
-ccplot + vdhplot + plot_layout(guides='collect')
+# together
+divorce_vdh <- divorce_vdh %>% 
+  mutate(locality = str_remove(locality, " County| City"))
 
-# compare years of overlap
+combined <- bind_rows(
+  divorce_cc %>% mutate(source = "circuit court"),
+  divorce_vdh %>% mutate(source = "health dept")
+)
 
-vdhplot <- ggplot(divorce_vdh %>% filter(year > 2012 & year < 2019), 
-                  aes(x = year, y = divorce_rate, color = locality)) +
+## facet
+ggplot(combined, aes(x = year, y = divorce_rate, color = locality)) +
   geom_line() +
-  scale_y_continuous(limits = c(0,4.5)) +
-  scale_x_continuous(breaks = seq(2013,2018,1)) 
+  geom_point() +
+  facet_wrap(~source)
 
-ccplot <- ggplot(divorce_cc %>% filter(year > 2012 & year < 2019), 
-                 aes(x = year, y = divorce_rate, color = locality)) +
-  geom_line() +
-  scale_y_continuous(limits = c(0,4.5)) +
-  scale_x_continuous(breaks = seq(2013,2018,1)) 
+## on same graph
+ggplot(combined, aes(x = year, y = divorce_rate, 
+                     color = locality, linetype = source)) +
+  geom_line()
 
-ccplot + vdhplot + plot_layout(guides='collect')
+
+
+
+
