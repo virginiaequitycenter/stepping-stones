@@ -47,3 +47,4 @@ ggplot(pit_long, aes(x = year, y = count, color = type)) + geom_line()
 
 # Export Data ----
 write_csv(pit_long, "data/pitcount_homeless.csv")
+# pit_long <- read_csv("data/pitcount_homeless.csv")

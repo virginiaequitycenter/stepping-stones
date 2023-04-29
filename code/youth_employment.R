@@ -189,3 +189,10 @@ employmentstatus <- unemployment %>%
 ## Saving the data ----
 
 write_csv(employmentstatus, "data/youth_employment_status.csv")
+# employmentstatus <- read_csv("data/youth_employment_status.csv")
+
+# have a peek
+ggplot(employmentstatus, aes(x = year, y = laborforce_rate, color = name)) +
+  geom_line()
+ggplot(employmentstatus, aes(x = year, y = unemployment_rate, color = name)) +
+  geom_line()
