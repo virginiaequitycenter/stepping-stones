@@ -17,6 +17,8 @@ library(janitor)
 library(ggthemes)
 
 three_category_palette <- c("#B23B6B", "#5AB48A", "#E7A342")
+two_category_palette <- c("#146A94", "#E7A342")
+one_category_palette <- c("#146A94")
 ```
 
 ## Introduction
@@ -331,7 +333,7 @@ COVID-19 Pandemic") +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(50, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Percent Average Daily Attendance") + 
+                     name = "Percent") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -454,7 +456,7 @@ Elections") +
   # scale_x_continuous("Year", labels = as.character(year), breaks = year) + 
   scale_y_continuous(limits = c(0, 1),
                      labels = scales::percent,
-                     name = "Percent of Adults Registered to Vote (%)") +
+                     name = "Percent of Adults") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -467,24 +469,340 @@ Elections") +
 
 #### Trends
 ```{r}
-graduation_rates <- read_csv("../data/graduation_rates.csv")
+per_cap_income <- read_csv("../data/per_cap_income.csv")
 
-graduation_rates %>%
-  mutate(school_year = as.character(cohort_year)) %>% 
-  ggplot(aes(x = school_year, y = graduation_rate, color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2013", linetype = 2, color = "black") +
-  annotate("text", x = 6.2, y = 55, size = 3, hjust = 0, color = "black", 
-           label = 
-"Charlottesville City Schools
-extend WALK program hours") +
+per_cap_income %>% 
+  pivot_longer(cols = c("pci", "adj_pci"), names_to = "type", values_to = "number") %>%
+  mutate(year = as.character(year),
+         locality = str_remove(GeoName, ", VA*"), 
+         locality = str_trim(locality)) %>% 
+  ggplot() +
+  geom_rect(aes(xmin = "2007", xmax = "2009", ymin = -Inf, ymax = Inf), alpha = .05, fill = "#f5f5f5") +
+  annotate("text", x = 10.2, y = 80000, size = 3, hjust = 0, color = "black",
+           label =
+"Economic Recession 
+(2007-2009)") +
+  geom_line(aes(x = year, y = number, 
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type)) +
+  geom_point(aes(x = year, y = number,
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type), size = 1) +
+  scale_linetype_manual(values = c(2, 1)) +
+  scale_color_manual(values = two_category_palette) +
+  scale_y_continuous(label = comma,
+                     name = "Per Capita Income") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "", linetype = "", fill = "")
+```
+
+### Youth Labor Force Participation and Unemployment {.tabset}
+
+#### Trends
+
+##### Youth Participation in the Labor Force
+```{r}
+youth_employment <- read_csv("../data/youth_employment_status.csv")
+
+youth_employment <- youth_employment %>% 
+  mutate(locality = recode(name,
+                          "Albemarle County, Virginia" = "Albemarle",
+                          "Charlottesville city, Virginia" = "Charlottesville"),
+         survey_period = paste0(as.character(year-5), "-", as.character(year)))
+
+youth_employment %>%
+  ggplot(aes(x = survey_period, y = laborforce_rate, color = locality, group = locality)) +
   geom_line() +
-  geom_point() +
+  geom_point(size = 1) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Percent") + 
+                     name = "Percent of Youth") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+##### Youth Unemployment
+```{r}
+youth_employment %>%
+  ggplot(aes(x = survey_period, y = unemployment_rate, color = locality, group = locality)) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Youth") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+
+### Percent of Children Living below Poverty {.tabset}
+
+#### Trends
+```{r}
+child_poverty <- read_csv("../data/child_pov.csv")
+
+child_poverty %>%
+  mutate(locality = ifelse(county_fips == "000", "Virginia",
+                       ifelse(county_fips == "003", "Albemarle",
+                              ifelse(county_fips == "540", "Charlottesville", "Unknown"))),
+         year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = pct_child_pov, color = locality, group = locality)) +
+  geom_vline(xintercept = "2020", linetype = 2, color = "black") +
+  geom_vline(xintercept = "2021", linetype = 2, color = "black") +
+  annotate("text", x = 16.8, y = 85, size = 3, hjust = 0, color = "black", 
+           label = 
+"COVID-19 Economic
+Stimulus Payments") +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Children") + 
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Students Identified as Economically Disadvantaged {.tabset}
+
+#### Trends
+```{r}
+economically_disadvantaged_students <- read_csv("../data/economically_disadvantaged_students.csv")
+
+economically_disadvantaged_students %>%
+  ggplot(aes(x = school_year, y = percent, color = division_name, group = division_name)) +
+#   geom_vline(xintercept = "2020", linetype = 2, color = "black") +
+#   annotate("text", x = 16.8, y = 85, size = 3, hjust = 0, color = "black", 
+#            label = 
+# "COVID-19 Economic
+# Stimulus Payments") +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Children") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
+
+
+### Cost-Burdened Renters {.tabset}
+
+#### Trends
+##### Renters Paying more than 30% of their Income on Housing (Rent and Utilities)
+```{r}
+rent_burdened <- read_csv("../data/rent_burdened.csv")
+
+rent_burdened %>%
+  mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
+         locality = str_trim(locality),
+         survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
+  ggplot(aes(x = survey_period, y = percent_over_30, color = locality, group = locality)) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 1),
+                     labels = scales::percent, 
+                     name = "Percent of Renters") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+
+### Cost-Burdened Homeowners {.tabset}
+
+#### Trends
+##### Homeowners Paying more than 30% of their Income on Housing (Mortgage payments, Taxes, Insurance, and Utilities)
+```{r}
+homeowner_burden <- read_csv("../data/homeowner_burden.csv")
+
+homeowner_burden %>%
+  mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
+         locality = str_trim(locality),
+         survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
+  ggplot(aes(x = survey_period, y = pct_burden, color = locality, group = locality)) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Homeowners") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+
+### People Experiencing Homelessness {.tabset}
+
+#### Trends
+```{r}
+pitcount_homeless <- read_csv("../data/pitcount_homeless.csv")
+
+pitcount_homeless %>% 
+  mutate(year = as.character(year),
+         locality = "Charlottesville Region") %>% 
+  ggplot() +
+  geom_vline(xintercept = "2012", linetype = 2, color = "black") +
+  annotate("text", x = 4.2, y = 100, size = 3, hjust = 0, color = "black", 
+           label = 
+"Opening of The Crossings
+(permanent supportive housing)") +
+  geom_vline(xintercept = "2022", linetype = 2, color = "black") +
+  annotate("text", x = 10.2, y = 275, size = 3, hjust = 0, color = "black", 
+           label = 
+"COVID-19 pandemic hightened
+impact of high housing costs 
+and lack of affordable housing") +
+  geom_line(aes(x = year, y = count, 
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type)) +
+  geom_point(aes(x = year, y = count,
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type), size = 1) +
+  scale_linetype_manual(values = c(2, 1, 6)) +
+  scale_color_manual(values = one_category_palette) +
+  scale_y_continuous(limits = c(0,300),
+                     label = comma,
+                     name = "Number of People") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "", linetype = "", fill = "")
+```
+
+
+## Health and Family
+
+### Mothers with Access to Prenatal Care {.tabset}
+
+#### Trends
+```{r}
+prenatal_first_trimester <- read_csv("../data/prenatal_first_trimester.csv")
+
+prenatal_first_trimester %>%
+  mutate(percent_access_to_prenatal_care = 100 - late_no_prenatal_to_birthrates,
+          year = as.character(year)) %>%
+  ggplot(aes(x = year, y = percent_access_to_prenatal_care, color = locality, group = locality)) +
+  geom_vline(xintercept = "2010", linetype = 2, color = "black") +
+  annotate("text", x = 5.2, y = 80, size = 3, hjust = 0, color = "black", 
+           label = 
+"Affordable Care 
+Act (ACA) passed") +
+  geom_vline(xintercept = "2019", linetype = 2, color = "black") +
+  annotate("text", x = 11.5, y = 85, size = 3, hjust = 0, color = "black", 
+           label = 
+"Virginia expanded 
+Medicaid coverage") +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(40, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Mothers") + 
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Low Birth-Weight Births {.tabset}
+
+#### Trends
+```{r}
+low_birth_weight <- read_csv("../data/low_birth_weight.csv")
+
+low_birth_weight %>%
+  mutate(locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville",
+                       "Commonwealth Of Virginia" = "Virginia"),
+         # year = as.character(year),
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
+  ggplot(aes(x = three_yr_period, y = pct_3yr, color = locality, group = locality)) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 60),
+                     labels = label_percent(scale = 1), 
+                     name = "Avg. Percent of Babies") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Infant Deaths {.tabset}
+
+#### Trends
+```{r}
+infant_mortality <- read_csv("../data/infant_mortality.csv")
+
+infant_mortality %>%
+  mutate(locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville",
+                       "Commonwealth Of Virginia" = "Virginia"),
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
+  ggplot(aes(x = three_yr_period, y = rate_3yr, color = locality, group = locality)) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 60),
+                     labels = label_percent(scale = 1), 
+                     name = "Avg. Percent of Babies") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Births to mothers with less than a 12th grade education {.tabset}
+
+#### Trends
+```{r}
+births_mothers_nohs <- read_csv("../data/births_mothers_nohs.csv")
+
+births_mothers_nohs %>%
+  mutate(year = as.character(year)) %>%
+  ggplot(aes(x = year, y = percent, color = location, group = location)) +
+  geom_vline(xintercept = "2008", linetype = 2, color = "black") +
+  annotate("text", x = 9.2, y = 40, size = 3, hjust = 0, color = "black",
+           label =
+"FDA lowers OTC Emergency 
+Contraceptive Age to 17") +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Mothers") + 
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### {.tabset}
+
+#### Trends
