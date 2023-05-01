@@ -777,31 +777,31 @@ infant_mortality %>%
   labs(color = "")
 ```
 
-### Births to mothers with less than a 12th grade education {.tabset}
+<!-- ### Births to mothers with less than a 12th grade education {.tabset} -->
 
-#### Trends
-```{r}
-births_mothers_nohs <- read_csv("../data/births_mothers_nohs.csv")
+<!-- #### Trends -->
+<!-- ```{r} -->
+<!-- births_mothers_nohs <- read_csv("../data/births_mothers_nohs.csv") -->
 
-births_mothers_nohs %>%
-  mutate(year = as.character(year)) %>%
-  ggplot(aes(x = year, y = percent, color = location, group = location)) +
-  geom_vline(xintercept = "2008", linetype = 2, color = "black") +
-  annotate("text", x = 9.2, y = 40, size = 3, hjust = 0, color = "black",
-           label =
-"FDA lowers OTC Emergency 
-Contraceptive Age to 17") +
-  geom_line() +
-  geom_point(size = 1) +
-  scale_color_manual(values = three_category_palette) +
-  scale_y_continuous(limits = c(0, 100),
-                     labels = label_percent(scale = 1), 
-                     name = "Percent of Mothers") + 
-  scale_x_discrete(name = "Year") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
-  labs(color = "")
-```
+<!-- births_mothers_nohs %>% -->
+<!--   mutate(year = as.character(year)) %>% -->
+<!--   ggplot(aes(x = year, y = percent, color = location, group = location)) + -->
+<!--   geom_vline(xintercept = "2008", linetype = 2, color = "black") + -->
+<!--   annotate("text", x = 9.2, y = 40, size = 3, hjust = 0, color = "black", -->
+<!--            label = -->
+<!-- "FDA lowers OTC Emergency  -->
+<!-- Contraceptive Age to 17") + -->
+<!--   geom_line() + -->
+<!--   geom_point(size = 1) + -->
+<!--   scale_color_manual(values = three_category_palette) + -->
+<!--   scale_y_continuous(limits = c(0, 100), -->
+<!--                      labels = label_percent(scale = 1),  -->
+<!--                      name = "Percent of Mothers") +  -->
+<!--   scale_x_discrete(name = "Year") + -->
+<!--   theme_minimal() + -->
+<!--   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") + -->
+<!--   labs(color = "") -->
+<!-- ``` -->
 
 ### {.tabset}
 
