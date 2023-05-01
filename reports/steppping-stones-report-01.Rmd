@@ -31,6 +31,51 @@ one_category_palette <- c("#146A94")
 
 ## Education and Engagement
 
+### Kindergarteners Identified for Reading Intervention Services {.tabset}
+
+#### Trends
+
+```{r}
+pals_kinder <- read_csv("../data/pals_kindergarten.csv")
+pals_kinder_u <- read_csv("../data/pals_kindergarten_updated.csv")
+
+pals_kinder_u %>%
+  ggplot(aes(x = school_year, y = percent, color = location, group = location)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Screened Students") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+##### Inverted - Kindergarteners at or above readiness levels
+```{r}
+pals_kinder <- read_csv("../data/pals_kindergarten.csv")
+pals_kinder_u <- read_csv("../data/pals_kindergarten_updated.csv")
+
+pals_kinder_u %>%
+  mutate(pct_invert = 100-percent) %>% 
+  ggplot(aes(x = school_year, y = pct_invert, color = location, group = location)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Screened Students") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+#### About
+
+
 ### Standards of Learning
 
 #### Math, Grade 3, Grade 5, Grade 8 {.tabset}
@@ -246,30 +291,6 @@ Common Core") +
 ```
 
 ##### About
-
-### Kindergarteners Identified for Reading Intervention Services {.tabset}
-
-#### Trends
-
-```{r}
-pals_kinder <- read_csv("../data/pals_kindergarten.csv")
-pals_kinder_u <- read_csv("../data/pals_kindergarten_updated.csv")
-
-pals_kinder_u %>%
-  ggplot(aes(x = school_year, y = percent, color = location, group = location)) +
-  geom_line() +
-  geom_point() +
-  scale_color_manual(values = three_category_palette) +
-  scale_y_continuous(limits = c(0, 60),
-                     labels = label_percent(scale = 1), 
-                     name = "Percent of Screened Students") + 
-  scale_x_discrete(name = "School Year") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
-  labs(color = "")
-```
-
-#### About
 
 ### Students Eligible for Special Education Services {.tabset}
 
@@ -803,6 +824,168 @@ infant_mortality %>%
 <!--   labs(color = "") -->
 <!-- ``` -->
 
-### {.tabset}
+### Teen Pregnancies, Births to Teens {.tabset}
 
 #### Trends
+##### Rate of Teen Prenancies
+```{r}
+teen_pregnancy_birth_rates <- read_csv("../data/teen_pregnancy_birth_rates.csv")
+
+teen_pregnancy_birth_rates %>%
+  mutate(locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville",
+                       "Commonwealth Of Virginia" = "Virginia"),
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
+  ggplot(aes(x = three_yr_period, y = pregnancyrate_3yr, color = locality, group = locality)) +
+#   geom_vline(xintercept = "2008-2010", linetype = 2, color = "black") +
+#   annotate("text", x = 10.2, y = 60, size = 3, hjust = 0, color = "black",
+#               label = 
+# "2008 FDA lowers OTC 
+# Emergency Contraceptive 
+# Age to 17") +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     # labels = label_percent(scale = 1), 
+                     name = "Rate per 1,000") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+##### Rate of Births to Teens
+```{r}
+teen_pregnancy_birth_rates %>%
+  mutate(locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville",
+                       "Commonwealth Of Virginia" = "Virginia"),
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
+  ggplot(aes(x = three_yr_period, y = birthsrate_3yr, color = locality, group = locality)) +
+#   geom_vline(xintercept = "2008-2010", linetype = 2, color = "black") +
+#   annotate("text", x = 10.2, y = 60, size = 3, hjust = 0, color = "black",
+#               label = 
+# "2008 FDA lowers OTC 
+# Emergency Contraceptive 
+# Age to 17") +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     # labels = label_percent(scale = 1), 
+                     name = "Rate per 1,000") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Sexually Transmitted Infections in Youth {.tabset}
+
+#### Trends
+```{r}
+youth_sti <- read_csv("../data/youth_sti.csv")
+
+youth_sti %>%
+  ggplot(aes(x = year3, y = total_incrate_3yr, color = locality, group = locality)) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     # labels = label_percent(scale = 1), 
+                     name = "Rate per 1,000 youth") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Children in Two-Parent Households {.tabset}
+
+#### Trends
+```{r}
+children_twoparents <- read_csv("../data/children_twoparents.csv")
+
+children_twoparents %>%
+  mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
+         locality = str_trim(locality),
+         survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
+  ggplot(aes(x = survey_period, y = percent, color = locality, group = locality)) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 1),
+                     labels = scales::percent, 
+                     name = "Percent of Children") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Divorce {.tabset}
+
+#### Trends
+##### Divorce Rate, Source: Virginia Circuit Court
+```{r}
+divorce_circuit <- read_csv("../data/divorce_circuit.csv")
+dc_missing <- data.frame(locality = c("Virginia", "Virginia", "Virginia", "Virginia", "Virginia", "Virginia"),
+                       year = c(2014, 2015, 2016, 2017, 2018, 2019))
+
+divorce_circuit %>% 
+  bind_rows(dc_missing) %>%
+  mutate(year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = divorce_rate, 
+             color = locality, 
+             group = locality)) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_linetype_manual(values = c(2, 1, 6)) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,10),
+                     breaks = c(0,2,4,6,8,10),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "", linetype = "", fill = "")
+```
+
+##### Divorce Rate, Source: Virginia Department of Health
+```{r}
+divorce_circuit <- read_csv("../data/divorce_circuit.csv")
+dc_missing <- data.frame(locality = c("Virginia", "Virginia", "Virginia", "Virginia", "Virginia", "Virginia"),
+                       year = c(2014, 2015, 2016, 2017, 2018, 2019))
+divorce_vdh <- read_csv("../data/divorce_vdh.csv")
+
+divorce_vdh %>% 
+  # bind_rows(dc_missing) %>%
+  mutate(year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = divorce_rate, 
+             color = locality, 
+             group = locality)) +
+  geom_line() +
+  geom_point(size = 1) +
+  scale_linetype_manual(values = c(2, 1, 6)) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,10),
+                     breaks = c(0,2,4,6,8,10),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "", linetype = "", fill = "")
+```
+
+### Investigations and Assessments by Child Protective Services {.tabset}
+
+#### Trends
+
+### Children in Foster Care {.tabset}
+
+#### Trends
+
+## School and Community Disciplinary Actions
