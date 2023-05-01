@@ -101,3 +101,4 @@ ggplot(fc, aes(x = year, y = fc_rate, color = locality)) +
 
 # save data ----
 write_csv(fc, "data/foster_care.csv")
+# fc <- read_csv("data/foster_care.csv")

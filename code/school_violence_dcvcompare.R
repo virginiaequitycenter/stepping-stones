@@ -801,7 +801,52 @@ ggplot(dfcombined, aes(x = year, y = threats, color = division, group = source))
   facet_wrap(~division, scales = "free_y", ncol = 1) +
   theme_bw()
 
+# Make totals ----
+dfcombined <- dfcombined %>% 
+  mutate(sexual_offenses = replace_na(sexual_offenses, 0),
+         count = assault_battery + fighting_conflict + sexual_offenses +
+           threats + kidnapping + robbery)
+
+ggplot(dfcombined, aes(x = year, y = count, color = division, group = source)) + 
+  geom_point() + geom_line() + scale_x_continuous(breaks = c(2007:2013, 2018:2021)) +
+  facet_wrap(~division, scales = "free_y", ncol = 1) +
+  theme_bw()
+
+# add population data ----
+students <- read_csv("datadownloads/fall_membership_statistics_team1.csv") %>% 
+  clean_names()
+
+# locality totals
+stud_cvlalb <- students %>% 
+  filter(division_name %in% c("Albemarle County", "Charlottesville City")) %>% 
+  select(school_year, division = division_name, students = total_count) %>% 
+  mutate(division = ifelse(division == "Albemarle County", "Albemarle", "Charlottesville"))
+
+# state totals
+stud_va <- students %>% 
+  group_by(school_year) %>% 
+  summarize(students = sum(total_count)) %>% 
+  mutate(division = "Virginia")
+
+# bind locality and state totals together
+students <- bind_rows(stud_cvlalb, stud_va)
+
+
+# Join weapons offense and student counts ----
+dfcombined_students <- dfcombined %>% 
+  left_join(students)
+
+## Create rate 
+dfcombined_students <- dfcombined_students %>% 
+  mutate(rate = (count/students)*1000)
+
+ggplot(dfcombined_students, aes(x = year, y = rate, color = division, group = source)) + 
+  geom_point() + geom_line() + scale_x_continuous(breaks = c(2007:2013, 2018:2021)) +
+  facet_wrap(~division, scales = "free_y", ncol = 1) +
+  scale_y_continuous(limits = c(0,100)) +
+  theme_bw()
+
 
 # Save data ----
-write_csv(dfcombined, "data/school_violence_byoffense_dcv.csv")
-
+write_csv(dfcombined_students, "data/school_violence_byoffense_dcv.csv")
+# dfcombined <- read_csv("data/school_violence_byoffense_dcv.csv")

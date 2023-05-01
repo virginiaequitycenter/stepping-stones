@@ -703,7 +703,16 @@ ggplot(df_students, aes(x = year, y = rate, color = division, group = division))
   geom_line() +
   scale_x_continuous(breaks = 2006:2021)
 
+# fill in missing years ----
+df_students <- df_students %>% 
+  group_by(division) %>% 
+  complete(year = first(year):max(year), 
+         fill = list(rate = NA)) %>% 
+  fill(division) %>% 
+  mutate(school_year = ifelse(is.na(school_year),
+                              paste0(as.character(year-1), "-", as.character(year)),
+                              school_year))
 
 # Save data ----
 write_csv(df_students, "data/school_alcdrugs_dcv.csv")
-
+# df_students <- read_csv("data/school_alcdrugs_dcv.csv")

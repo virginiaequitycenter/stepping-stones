@@ -48,13 +48,13 @@ dcv_data %>%
   summarize(n = n()) %>% 
   view()
 # Choosing: Assault/Battery, Fighting/Conflict, Kidnapping, Robbery/Person/Force or Threat of Force,
-#   Sexual Offenses, Threats/Verbal/Physical, Weapons
+#   Sexual Offenses, Threats/Verbal/Physical (removed weapons, given separate weapons variable)
 # This set is trying to replicate the categories on the city's spreadsheet
 # but I'm not sure these would be the categories I'd select from the start...
 
 dcv_cvlalb <- dcv_data %>% 
   filter(division_number %in% c(2,104),
-         offense_category %in% c(3,12,18,20,22,24,29)) %>% 
+         offense_category %in% c(3,12,18,20,22,24)) %>% 
   mutate(division_name = ifelse(division_name == "Albemarle County", "Albemarle", "Charlottesville"))
 
 # sum incidents by division, year
@@ -65,7 +65,7 @@ dcv_sum <- dcv_cvlalb %>%
 
 ## create state totals ----
 dcv_va <- dcv_data %>% 
-  filter(offense_category %in% c(3,12,18,20,22,24,29)) %>% 
+  filter(offense_category %in% c(3,12,18,20,22,24)) %>% 
   group_by(school_year) %>% 
   summarize(count = sum(count_of_incidents)) %>% 
   mutate(division_name = "Virginia", division_number = 0)
@@ -114,3 +114,4 @@ ggplot(df_students, aes(x = year, y = rate, color = division_name, group = divis
 
 # save file to date ----
 write_csv(df_students, "data/school_physical_violence.csv")
+# df_students <- read_csv("data/school_physical_violence.csv")

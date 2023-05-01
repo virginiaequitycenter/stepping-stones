@@ -7,7 +7,7 @@
 # Charlottesville, Albemarle, State
 #
 # Proposed Citation
-# Virginia Department of Education, "Discipline, Crime, and Violence Reports" 2006-2020.
+# Virginia Department of Education, "Discipline, Crime, and Violence Reports" 2006-2021.
 # https://www.doe.virginia.gov/data-policy-funding/data-reports/data-collection/special-education
 
 
@@ -646,5 +646,5 @@ ggplot(df_students, aes(x = year, y = rate, color = division, group = division))
 
 # Save data ----
 write_csv(df_students, "data/school_weapons_dcv.csv")
-
+# df_students <- read_csv("data/school_weapons_dcv.csv")
 

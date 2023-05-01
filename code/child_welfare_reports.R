@@ -100,3 +100,19 @@ ggplot(cps, aes(x = year, y = cps_rate, color = locality)) +
 
 # save data ----
 write_csv(cps, "data/child_welfare_reports.csv")
+# cps <- read_csv("data/child_welfare_reports.csv")
+
+
+# Note: DSS has several other reports (in pdf form)
+# https://www.dss.virginia.gov/geninfo/reports/children/cps/all_other.cgi
+# Referrals and Findings (by locality) is closest to data from prior report
+# but does not exactly match data from the Annual Summary used here;
+# the Referrals and Findings is not available before 2008.
+# In addition, different reports from the same year that reference
+# referrals and accepted referrals provide different numbers; 
+# for example, Abuse & Neglect (by locality) shows accepted referrals by
+# allegations and sums to more than accepted referrals in the prior report
+# (presumably because a report contains more than one allegation and each 
+# allegation is summed in the Abuse & Neglect report - a count of allegations versus a count of referrals).
+# In 2007 and before, the Abuse & Neglect Completed Reports (by locality) appear to be similar,
+# though need to be careful not to inadvertently use counts of children versus reports.
