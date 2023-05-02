@@ -1,7 +1,7 @@
 ---
 title: "Stepping Stone Report Draft 1"
-author: "Elizabeth Mitchell"
-date: "2023-04-26"
+author: "Michele Claibourn, Elizabeth Mitchell, Nina Schoonover, Lee Leboeuf"
+date: "2023-05-02"
 output: 
   html_document:
     toc: true
@@ -16,9 +16,15 @@ library(scales)
 library(janitor)
 library(ggthemes)
 
-three_category_palette <- c("#B23B6B", "#5AB48A", "#E7A342")
-two_category_palette <- c("#146A94", "#E7A342")
-one_category_palette <- c("#146A94")
+three_category_palette <- c("#E57873", "#2F7E9F", "#83DBD7")
+two_category_palette <- c("#782C6A", "#83DBD7")
+one_category_palette <- c("#782C6A")
+
+# black/white/grayscale friendly
+# three_category_palette <- c("#E57873", "#0D6A82", "#ADE9ED")
+# two_category_palette <- c("#782C6A", "#ADE9ED")
+# one_category_palette <- c("#782C6A")
+
 ```
 
 ## Introduction
@@ -29,7 +35,7 @@ one_category_palette <- c("#146A94")
 
 ### Contributions
 
-## Education and Engagement
+## Education and Civic Engagement
 
 ### Kindergarteners Identified for Reading Intervention Services {.tabset}
 
@@ -208,10 +214,8 @@ COVID-19 Pandemic") +
   geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
   annotate("text", x = 8.2, y = 10, size = 3, hjust = 0, color = "black", 
            label = 
-"Statewide transition to an online 
-English SOL test that was more 
-rigorous and based on the 
-Common Core") +
+"Revised reading standards 
+released by the VDOE") +
   geom_line() +
   geom_point() +
   scale_color_manual(values = three_category_palette) +
@@ -241,10 +245,8 @@ COVID-19 Pandemic") +
   geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
   annotate("text", x = 8.2, y = 10, size = 3, hjust = 0, color = "black", 
            label = 
-"Statewide transition to an online 
-English SOL test that was more 
-rigorous and based on the 
-Common Core") +
+"Revised reading standards 
+released by the VDOE") +
   geom_line() +
   geom_point() +
   scale_color_manual(values = three_category_palette) +
@@ -274,10 +276,8 @@ COVID-19 Pandemic") +
   geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
   annotate("text", x = 8.2, y = 10, size = 3, hjust = 0, color = "black", 
            label = 
-"Statewide transition to an online 
-English SOL test that was more 
-rigorous and based on the 
-Common Core") +
+"Revised reading standards 
+released by the VDOE") +
   geom_line() +
   geom_point() +
   scale_color_manual(values = three_category_palette) +
@@ -484,7 +484,7 @@ Elections") +
   labs(color = "")
 ```
 
-## Economic Securty and Housing
+## Economic Security and Housing
 
 ### Per Capita Income {.tabset}
 
@@ -510,7 +510,7 @@ per_cap_income %>%
   geom_point(aes(x = year, y = number,
              color = locality, 
              group = interaction(locality, type), 
-             linetype = type), size = 1) +
+             linetype = type), ) +
   scale_linetype_manual(values = c(2, 1)) +
   scale_color_manual(values = two_category_palette) +
   scale_y_continuous(label = comma,
@@ -538,7 +538,7 @@ youth_employment <- youth_employment %>%
 youth_employment %>%
   ggplot(aes(x = survey_period, y = laborforce_rate, color = locality, group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -554,7 +554,7 @@ youth_employment %>%
 youth_employment %>%
   ggplot(aes(x = survey_period, y = unemployment_rate, color = locality, group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -585,7 +585,7 @@ child_poverty %>%
 "COVID-19 Economic
 Stimulus Payments") +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -610,7 +610,7 @@ economically_disadvantaged_students %>%
 # "COVID-19 Economic
 # Stimulus Payments") +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -622,7 +622,7 @@ economically_disadvantaged_students %>%
 ```
 
 
-### Cost-Burdened Renters {.tabset}
+### Cost-Burdened Renters and Homeowners {.tabset}
 
 #### Trends
 ##### Renters Paying more than 30% of their Income on Housing (Rent and Utilities)
@@ -635,7 +635,7 @@ rent_burdened %>%
          survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
   ggplot(aes(x = survey_period, y = percent_over_30, color = locality, group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 1),
                      labels = scales::percent, 
@@ -647,9 +647,6 @@ rent_burdened %>%
 ```
 
 
-### Cost-Burdened Homeowners {.tabset}
-
-#### Trends
 ##### Homeowners Paying more than 30% of their Income on Housing (Mortgage payments, Taxes, Insurance, and Utilities)
 ```{r}
 homeowner_burden <- read_csv("../data/homeowner_burden.csv")
@@ -660,7 +657,7 @@ homeowner_burden %>%
          survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
   ggplot(aes(x = survey_period, y = pct_burden, color = locality, group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -700,7 +697,7 @@ and lack of affordable housing") +
   geom_point(aes(x = year, y = count,
              color = locality, 
              group = interaction(locality, type), 
-             linetype = type), size = 1) +
+             linetype = type), ) +
   scale_linetype_manual(values = c(2, 1, 6)) +
   scale_color_manual(values = one_category_palette) +
   scale_y_continuous(limits = c(0,300),
@@ -713,7 +710,7 @@ and lack of affordable housing") +
 ```
 
 
-## Health and Family
+## Health and Family Stability
 
 ### Mothers with Access to Prenatal Care {.tabset}
 
@@ -736,7 +733,7 @@ Act (ACA) passed") +
 "Virginia expanded 
 Medicaid coverage") +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(40, 100),
                      labels = label_percent(scale = 1), 
@@ -762,7 +759,7 @@ low_birth_weight %>%
          three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
   ggplot(aes(x = three_yr_period, y = pct_3yr, color = locality, group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
@@ -787,7 +784,7 @@ infant_mortality %>%
          three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
   ggplot(aes(x = three_yr_period, y = rate_3yr, color = locality, group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
@@ -813,7 +810,7 @@ infant_mortality %>%
 <!-- "FDA lowers OTC Emergency  -->
 <!-- Contraceptive Age to 17") + -->
 <!--   geom_line() + -->
-<!--   geom_point(size = 1) + -->
+<!--   geom_point() + -->
 <!--   scale_color_manual(values = three_category_palette) + -->
 <!--   scale_y_continuous(limits = c(0, 100), -->
 <!--                      labels = label_percent(scale = 1),  -->
@@ -845,7 +842,7 @@ teen_pregnancy_birth_rates %>%
 # Emergency Contraceptive 
 # Age to 17") +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      # labels = label_percent(scale = 1), 
@@ -872,7 +869,7 @@ teen_pregnancy_birth_rates %>%
 # Emergency Contraceptive 
 # Age to 17") +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      # labels = label_percent(scale = 1), 
@@ -892,7 +889,7 @@ youth_sti <- read_csv("../data/youth_sti.csv")
 youth_sti %>%
   ggplot(aes(x = year3, y = total_incrate_3yr, color = locality, group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      # labels = label_percent(scale = 1), 
@@ -915,7 +912,7 @@ children_twoparents %>%
          survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
   ggplot(aes(x = survey_period, y = percent, color = locality, group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 1),
                      labels = scales::percent, 
@@ -942,8 +939,7 @@ divorce_circuit %>%
              color = locality, 
              group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
-  scale_linetype_manual(values = c(2, 1, 6)) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,10),
                      breaks = c(0,2,4,6,8,10),
@@ -951,25 +947,20 @@ divorce_circuit %>%
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
-  labs(color = "", linetype = "", fill = "")
+  labs(color = "")
 ```
 
 ##### Divorce Rate, Source: Virginia Department of Health
 ```{r}
-divorce_circuit <- read_csv("../data/divorce_circuit.csv")
-dc_missing <- data.frame(locality = c("Virginia", "Virginia", "Virginia", "Virginia", "Virginia", "Virginia"),
-                       year = c(2014, 2015, 2016, 2017, 2018, 2019))
 divorce_vdh <- read_csv("../data/divorce_vdh.csv")
 
-divorce_vdh %>% 
-  # bind_rows(dc_missing) %>%
+divorce_vdh %>%
   mutate(year = as.character(year)) %>% 
   ggplot(aes(x = year, y = divorce_rate, 
              color = locality, 
              group = locality)) +
   geom_line() +
-  geom_point(size = 1) +
-  scale_linetype_manual(values = c(2, 1, 6)) +
+  geom_point() +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,10),
                      breaks = c(0,2,4,6,8,10),
@@ -977,15 +968,180 @@ divorce_vdh %>%
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
-  labs(color = "", linetype = "", fill = "")
+  labs(color = "")
 ```
 
 ### Investigations and Assessments by Child Protective Services {.tabset}
 
 #### Trends
+```{r}
+child_welfare_reports <- read_csv("../data/child_welfare_reports.csv")
+
+child_welfare_reports %>%
+  mutate(fiscal_year = paste0(as.character(year-1),"-",as.character(year)),
+         year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = cps_rate, 
+             color = locality, 
+             group = locality)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,100),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = " Fiscal Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
 
 ### Children in Foster Care {.tabset}
 
 #### Trends
+```{r}
+foster_care <- read_csv("../data/foster_care.csv")
+
+foster_care %>%
+  mutate(year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = fc_rate, 
+             color = locality, 
+             group = locality)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,100),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = " Fiscal Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
 
 ## School and Community Disciplinary Actions
+
+### School Reports of Discipline {.tabset}
+
+#### Trends
+##### Alcohol and Drug Offenses
+```{r}
+school_alcdrugs_dcv <- read_csv("../data/school_alcdrugs_dcv.csv")
+
+school_alcdrugs_dcv %>%
+  ggplot(aes(x = school_year, y = rate, 
+             color = division, group = division)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,50),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+##### Physical Violence
+```{r}
+school_violence_byoffense_dcv <- read_csv("../data/school_violence_byoffense_dcv.csv")
+sv_missing <- data.frame(division = c("Virginia", "Virginia", "Virginia", "Virginia",
+                                      "Charlottesville", "Charlottesville", "Charlottesville", "Charlottesville",
+                                      "Albemarle", "Albemarle", "Albemarle", "Albemarle"),
+                       school_year = c("2013-2014", "2014-2015", "2015-2016", "2016-2017",
+                                      "2013-2014", "2014-2015", "2015-2016", "2016-2017",
+                                      "2013-2014", "2014-2015", "2015-2016", "2016-2017"))
+
+school_violence_byoffense_dcv %>%
+  bind_rows(sv_missing) %>%
+  ggplot(aes(x = school_year, y = rate, 
+             color = division, group = division)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,100),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+##### Weapons Possession
+```{r}
+school_weapons_dcv <- read_csv("../data/school_weapons_dcv.csv")
+
+school_weapons_dcv %>%
+  ggplot(aes(x = school_year, y = rate, 
+             color = division, group = division)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,50),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### School Suspensions {.tabset}
+
+#### Trends
+##### Students given an out-of-school suspension (short-term suspension, long-term suspension, or modified expulsion to suspension) per 1000 students enrolled
+```{r}
+school_suspensions <- read_csv("../data/school_suspensions.csv")
+
+school_suspensions %>%
+  ggplot() +
+  geom_line(aes(x = school_year, y = rate, 
+             color = division, 
+             group = interaction(division, source), 
+             linetype = source)) +
+  geom_point(aes(x = school_year, y = rate, 
+             color = division, 
+             group = interaction(division, source), 
+             linetype = source), ) +
+  scale_color_manual(values = three_category_palette) +
+  scale_linetype_manual(values = c(2, 1)) +
+  scale_y_continuous(limits = c(0,500),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "", linetype = "")
+```
+
+### Juvenile Delinquency Judgments {.tabset}
+
+#### Trends
+```{r}
+juvenile_delinquency <- read_csv("../data/juvenile_delinquency.csv")
+
+juvenile_delinquency %>%
+  mutate(year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,100),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+### Children in Need of Supervision {.tabset}
+
+#### Trends
+
+### Underage Alcohol Arrests {.tabset}
+
+#### Trends
+
+### Arrests for Violent Crimes {.tabset}
+
+#### Trends
+
+## Contributions
