@@ -1,12 +1,12 @@
 # Stepping Stones Data: Judgments of Delinquency ----
-# Updated 2023-02-14
+# Updated 2023-05-02
 # Contributor: Michele Claibourn
 # Acquire data from Virginia's Judicial System Caseload Statistical Information
 # Charlottesville, Albemarle, State
 #
 # Proposed Citation
 # Virginia Judicial System, Caseload Statistical Information, "Caseload Statistics of the Juvenile and Domestic Relations Courts." 2018-2022.
-# https://www.vacourts.gov/courtadmin/aoc/judpln/csi/home.html
+# https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/home.html
 
 # Delinquency Judgments: misdemeanor + felony + capias + show cause
 # 10.11 Monthly Case Dispositions YTD by Case Category, 2018-2022
@@ -18,7 +18,8 @@ library(tabulizer)
 
 
 # 2022 report ----
-jdrurl22 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2022/jcms1011_dec.pdf"
+# jdrurl22 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2022/jcms1011_dec.pdf"
+jdrurl22 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/cms/2022/jcms1011_dec.pdf"
 
 ## Virginia ----
 # pdf22area <- locate_areas(jdrurl22, 1) # selected manually
@@ -76,7 +77,8 @@ jdr22cvl <- jdr22df %>%
 
 
 # 2021 ----
-jdrurl21 <- c("https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2021/jcms1011_dec.pdf")
+# jdrurl21 <- c("https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2021/jcms1011_dec.pdf")
+jdurl21 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/cms/2021/jcms1011_dec.pdf"
 
 ## Virgina ----
 # pdf21area <- locate_areas(jdrurl21, 1) # selected manually
@@ -134,7 +136,8 @@ jdr21cvl <- jdr21df %>%
 
 
 # 2020 ----
-jdrurl20 <- c("https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2020/jcms1011_dec.pdf")
+# jdrurl20 <- c("https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2020/jcms1011_dec.pdf")
+jdrurl20 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/cms/2020/jcms1011_dec.pdf"
 
 ## Virginia ----
 # pdf20area <- locate_areas(jdrurl20, 1) # selected manually
@@ -192,7 +195,8 @@ jdr20cvl <- jdr20df %>%
 
 
 # 2019 ----
-jdrurl19 <- c("https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2019/jcms1011_dec.pdf")
+# jdrurl19 <- c("https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2019/jcms1011_dec.pdf")
+jdrurl19 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/cms/2019/jcms1011_dec.pdf"
 
 ## Virginia ----
 # pdf19area <- locate_areas(jdrurl19, 1) # selected manually
@@ -248,13 +252,12 @@ jdr19cvl <- jdr19df %>%
   summarize(count = sum(count)) %>% 
   mutate(year = 2019, locality = "Charlottesville")
 
-
-# 2018 ----
-jdrurl18 <- c("https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2018/jcms1011_dec.pdf")
+# 2018 (monthly, december) ----
+jdrurl18 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/cms/2018/jcms1011_dec.pdf"
 
 ## Virginia ----
 # pdf18area <- locate_areas(jdrurl18, 1) # selected manually
-pdfarea <- list(setNames(c(344, 9, 735, 610), 
+pdfarea <- list(setNames(c(150, 10, 300, 610), 
                          c("top", "left", "bottom", "right")))
 
 jdr18 <- extract_tables(jdrurl18, pages = 1, area = pdfarea, 
@@ -262,53 +265,53 @@ jdr18 <- extract_tables(jdrurl18, pages = 1, area = pdfarea,
 
 jdr18df <- jdr18[[1]]
 jdr18va <- jdr18df %>% 
-  mutate(Division = ifelse(Division == "", NA_character_, Division)) %>% 
-  fill(Division, .direction = "down") %>% 
-  filter(Division == "Juvenile", str_detect(Case.Type.Description, "Misdemeanor|Felony|Capias|Cause")) %>% 
+  filter(Category == "Delinquency") %>% 
   mutate(count = str_remove(Summary, ","),
          count = as.numeric(count)) %>% 
-  summarize(count = sum(count)) %>% 
-  mutate(year = 2018, locality = "Virginia")
+  mutate(year = 2018, locality = "Virginia") %>% 
+  select(count, year, locality)
+
+# Changed to Report Archive: Caseload Reports (yearly summaries)
+# 2018 ----
+# jdrurl18 <- c("https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/cms/2018/jcms1011_dec.pdf")
+jdrurl18 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/ei01_2018.pdf"
 
 ## Albemarle ----
-# pdf18area <- locate_areas(jdrurl18, 98) # selected manually
-pdfarea <- list(setNames(c(342, 10, 627, 610), 
+# pdf18area <- locate_areas(jdrurl18, 75) # selected manually
+pdfarea <- list(setNames(c(35, 5, 520, 605), 
                          c("top", "left", "bottom", "right")))
 
-jdr18 <- extract_tables(jdrurl18, pages = 98, area = pdfarea, 
+jdr18 <- extract_tables(jdrurl18, pages = 75, area = pdfarea, 
                         guess = FALSE, output = "data.frame")
 
 jdr18df <- jdr18[[1]]
-jdr18alb <- jdr18df %>% 
-  mutate(Division = ifelse(Division == "", NA_character_, Division)) %>% 
-  fill(Division, .direction = "down") %>% 
-  filter(Division == "Juvenile", str_detect(Case.Type.Description, "Misdemeanor|Felony|Capias|Cause")) %>% 
-  mutate(count = str_remove(Summary, ","),
+jdr18alb <- jdr18df[which(jdr18df$X == "Juvenile"):nrow(jdr18df),] %>% 
+  filter(str_detect(X, "Misdemeanor|Felony|Capias|Cause")) %>% 
+  mutate(count = str_remove(Concluded, ","),
          count = as.numeric(count)) %>% 
   summarize(count = sum(count)) %>% 
   mutate(year = 2018, locality = "Albemarle")
 
 ## Charlottesville ----
-# pdf18area <- locate_areas(jdrurl18, 100) # selected manually
-pdfarea <- list(setNames(c(342, 10, 627, 610), 
+# pdf18area <- locate_areas(jdrurl18, 76) # selected manually
+pdfarea <- list(setNames(c(35, 5, 490, 600), 
                          c("top", "left", "bottom", "right")))
 
-jdr18 <- extract_tables(jdrurl18, pages = 100, area = pdfarea, 
+jdr18 <- extract_tables(jdrurl18, pages = 76, area = pdfarea, 
                         guess = FALSE, output = "data.frame")
 
 jdr18df <- jdr18[[1]]
-jdr18cvl <- jdr18df %>% 
-  mutate(Division = ifelse(Division == "", NA_character_, Division)) %>% 
-  fill(Division, .direction = "down") %>% 
-  filter(Division == "Juvenile", str_detect(Case.Type.Description, "Misdemeanor|Felony|Capias|Cause")) %>% 
-  mutate(count = str_remove(Summary, ","),
+jdr18cvl <- jdr18df[which(jdr18df$X == "Juvenile"):nrow(jdr18df),] %>% 
+  filter(str_detect(X, "Misdemeanor|Felony|Capias|Cause")) %>% 
+  mutate(count = str_remove(Concluded, ","),
          count = as.numeric(count)) %>% 
   summarize(count = sum(count)) %>% 
   mutate(year = 2018, locality = "Charlottesville")
 
 
 # 2017 ----
-jdrurl17 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2017.pdf"
+# jdrurl17 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2017.pdf"
+jdrurl17 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/ei01_2017.pdf"
 
 ## Albemarle ----
 # pdf17area <- locate_areas(jdrurl17, 75) # selected manually
@@ -344,7 +347,8 @@ jdr17cvl <- jdr17df[which(jdr17df$X == "Juvenile"):nrow(jdr17df),] %>%
 
 
 # 2016 ----
-jdrurl16 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2016.pdf"
+# jdrurl16 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2016.pdf"
+jdrurl16 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/ei01_2016.pdf"
 
 ## Albemarle ----
 # pdf16area <- locate_areas(jdrurl16, 2) # selected manually
@@ -380,7 +384,8 @@ jdr16cvl <- jdr16df[which(jdr16df$X == "Juvenile"):nrow(jdr16df),] %>%
 
 
 # 2015 ----
-jdrurl15 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2015.pdf"
+# jdrurl15 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2015.pdf"
+jdrurl15 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/ei01_2015.pdf"
 
 ## Albemarle ----
 # pdf15area <- locate_areas(jdrurl15, 2) # selected manually
@@ -416,7 +421,8 @@ jdr15cvl <- jdr15df[which(jdr15df$X == "Juvenile"):nrow(jdr15df),] %>%
 
 
 # 2014 ----
-jdrurl14 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2014.pdf"
+# jdrurl14 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2014.pdf"
+jdrurl14 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/ei01_2014.pdf"
 
 ## Albemarle ----
 # pdf14area <- locate_areas(jdrurl14, 3) # selected manually
@@ -452,7 +458,8 @@ jdr14cvl <- jdr14df[which(jdr14df$X == "Juvenile"):nrow(jdr14df),] %>%
 
 
 # 2013 ----
-jdrurl13 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2013.pdf"
+# jdrurl13 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2013.pdf"
+jdrurl13 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/ei01_2013.pdf"
 
 ## Albemarle ----
 # pdf13area <- locate_areas(jdrurl13, 3) # selected manually
@@ -488,7 +495,8 @@ jdr13cvl <- jdr13df[which(jdr13df$X == "Juvenile"):nrow(jdr13df),] %>%
 
 
 # 2012 ----
-jdrurl12 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2012.pdf"
+# jdrurl12 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2012.pdf"
+jdrurl12 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/ei01_2012.pdf"
 
 ## Albemarle ----
 # pdf12area <- locate_areas(jdrurl12, 2) # selected manually
@@ -524,7 +532,8 @@ jdr12cvl <- jdr12df[which(jdr12df$X == "Juvenile"):nrow(jdr12df),] %>%
 
 
 # 2011 ----
-jdrurl11 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2011.pdf"
+# jdrurl11 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2011.pdf"
+jdrurl11 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/ei01_2011.pdf"
 
 ## Albemarle ----
 # pdf11area <- locate_areas(jdrurl11, 109) # selected manually
@@ -560,7 +569,8 @@ jdr11cvl <- jdr11df[-which(str_detect(jdr11df$X, "DOMESTIC")):-nrow(jdr11df),] %
 
 
 # 2010 ----
-jdrurl10 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2010.pdf"
+# jdrurl10 <- "https://www.vacourts.gov/courtadmin/aoc/judpln/csi/stats/jdr/ei01_2010.pdf"
+jdrurl10 <- "https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/stats/jdr/ei01_2010.pdf"
 
 ## Albemarle ----
 # pdf10area <- locate_areas(jdrurl10, 109) # selected manually
@@ -628,11 +638,13 @@ jdr <- jdr %>%
 
 # have a peek
 ggplot(jdr, aes(x = year, y = rate, color = locality)) +
-  geom_line()
+  geom_line() +
+  scale_y_continuous(limits = c(0,150))
 
 jdr %>% filter(year >= 2018) %>% 
   ggplot(aes(x = year, y = rate, color = locality)) +
-  geom_line()
+  geom_line() 
 
 # Save data ----
 write_csv(jdr, "data/juvenile_delinquency.csv")
+# jdr <- read_csv("data/juvenile_delinquency.csv")

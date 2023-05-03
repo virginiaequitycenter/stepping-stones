@@ -130,3 +130,4 @@ ggplot(suspensions_combined, aes(x = school_year, y = rate,
 
 # save 
 write_csv(suspensions_combined, "data/school_suspensions.csv")
+# suspensions_combined <- read_csv("data/school_suspensions.csv")

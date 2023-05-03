@@ -16,11 +16,6 @@
 # Statewide Tables: Number of Arrestees by Offense & Age Range
 #   sum driving under the influence, liquor law violations, drunkeness
 
-# from https://va.beyond2020.com/va_public/Browse/browsetables.aspx
-# Number of Group B Arrestees by Age by Arrest Offense
-# choose Albemarle or Charlottesville or Virginia (Jurisdiction by Geography)
-# choose year (2017 to 2021)
-#   sum driving under the influence, liquor law violations, drunkeness
 
 # Libraries ----
 library(tidyverse)
@@ -57,8 +52,17 @@ arr_alc <- arr_alc %>%
 
 # have a peek
 ggplot(arr_alc, aes(x = year, y = arr_rate, color = locality)) +
-  geom_line()
+  geom_line() +
+  scale_y_continuous(limits = c(0,10))
 
 
 # Save data ----
 write_csv(arr_alc, "data/arrests_alcoholrelated.csv")
+# arr_alc <- read_csv("data/arrests_alcoholrelated.csv")
+
+# Also viewed
+# from https://va.beyond2020.com/va_public/Browse/browsetables.aspx
+# Number of Group B Arrestees by Age by Arrest Offense
+# choose Albemarle or Charlottesville or Virginia (Jurisdiction by Geography)
+# choose year (2017 to 2021)
+#   sum driving under the influence, liquor law violations, drunkeness

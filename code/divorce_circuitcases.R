@@ -6,7 +6,7 @@
 #
 # Proposed Citation
 # Virginia Judicial System, Caseload Statistical Information, "Caseload Statistics of the Circuit Courts." 2014-2022.
-# https://www.vacourts.gov/courtadmin/aoc/judpln/csi/home.html
+# https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/home.html
 
 # consider 2000-2018 vdh data
 # https://apps.vdh.virginia.gov/HealthStats/stats.htm

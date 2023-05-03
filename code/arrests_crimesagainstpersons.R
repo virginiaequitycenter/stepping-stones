@@ -59,8 +59,18 @@ arr_cap <- arr_cap %>%
 
 # have a peek
 ggplot(arr_cap, aes(x = year, y = arr_rate, color = locality)) +
-  geom_line()
+  geom_line() +
+  scale_y_continuous(limits = c(0,20))
 
 
 # Save data ----
 write_csv(arr_cap, "data/arrests_crimesagainstpersons.csv")
+# arr_cap <- read_csv("data/arrests_crimesagainstpersons.csv")
+
+
+# Also viewed
+# from https://va.beyond2020.com/va_public/Browse/browsetables.aspx
+# Number of Group A Arrestees by Age by Arrest Offense
+# choose Albemarle or Charlottesville or Virginia (Jurisdiction by Geography)
+# choose year (2017 to 2021)
+#   sum crimes against persons

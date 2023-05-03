@@ -628,7 +628,8 @@ jdr <- jdr %>%
 
 # have a peek
 ggplot(jdr, aes(x = year, y = rate, color = locality)) +
-  geom_line()
+  geom_line() +
+  scale_y_continuous(limits = c(0,50))
 
 jdr %>% filter(year >= 2018) %>% 
   ggplot(aes(x = year, y = rate, color = locality)) +
@@ -636,3 +637,4 @@ jdr %>% filter(year >= 2018) %>%
 
 # Save data ----
 write_csv(jdr, "data/child_need_services.csv")
+# jdr <- read_csv("data/child_need_services.csv")
