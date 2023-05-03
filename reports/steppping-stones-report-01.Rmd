@@ -15,6 +15,7 @@ library(tidyverse)
 library(scales)
 library(janitor)
 library(ggthemes)
+library(ggrepel)
 
 three_category_palette <- c("#E48073", "#2F7E9F", "#83DBD7")
 two_category_palette <- c("#782C6A", "#83DBD7")
@@ -44,11 +45,15 @@ one_category_palette <- c("#782C6A")
 ```{r}
 pals_kinder <- read_csv("../data/pals_kindergarten.csv")
 pals_kinder_u <- read_csv("../data/pals_kindergarten_updated.csv")
+pals_kinder_labels <- pals_kinder_u %>% 
+  filter(location != "Virginia") %>% 
+  mutate(label = paste0(as.character(round(percent, digits = 1)), "%"))
 
 pals_kinder_u %>%
-  ggplot(aes(x = school_year, y = percent, color = location, group = location)) +
+  ggplot(aes(x = school_year, y = percent, color = location, group = location, label = percent)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = pals_kinder_labels, aes(label = label), size = 2.5, max.overlaps = 15) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -95,6 +100,10 @@ sols <- read_csv("../data/sol_pass.csv")
 miss2021 <- data.frame(division_name = c("Albemarle County", "Charlottesville City", "Virginia"),
                        school_year = c("2019-2020", "2019-2020", "2019-2020"))
 
+sols_m3_labels <- sols %>% 
+  filter(division_name != "Virginia" & subject == "Mathematics" & test_level == "Grade 3") %>% 
+  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
+
 # Grade 3 Plot
 sols %>% 
   filter(subject == "Mathematics" & test_level == "Grade 3") %>% 
@@ -114,6 +123,7 @@ COVID-19 Pandemic") +
 released by the VDOE") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = sols_m3_labels, aes(label = label), size = 2.5, point.padding = 0.5, max.overlaps = 15) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -1111,6 +1121,28 @@ school_suspensions %>%
   labs(color = "", linetype = "")
 ```
 
+
+### Children in Need of Supervision {.tabset}
+
+#### Trends
+```{r}
+child_need_services <- read_csv("../data/child_need_services.csv")
+
+child_need_services %>%
+  mutate(year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,100),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
 ### Juvenile Delinquency Judgments {.tabset}
 
 #### Trends
@@ -1132,16 +1164,212 @@ juvenile_delinquency %>%
   labs(color = "")
 ```
 
-### Children in Need of Supervision {.tabset}
-
-#### Trends
-
 ### Underage Alcohol Arrests {.tabset}
 
 #### Trends
+```{r}
+arrests_alcoholrelated <- read_csv("../data/arrests_alcoholrelated.csv")
+
+arrests_alcoholrelated %>%
+  mutate(year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = arr_rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,50),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
 
 ### Arrests for Violent Crimes {.tabset}
 
 #### Trends
+```{r}
+arrests_crimesagainstpersons <- read_csv("../data/arrests_crimesagainstpersons.csv")
+
+arrests_crimesagainstpersons %>%
+  mutate(year = as.character(year)) %>% 
+  ggplot(aes(x = year, y = arr_rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,50),
+                     name = "Rate per 1000") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+## Disaggregated by Race
+### School Suspensions  {.tabset}
+
+#### Trends
+```{r}
+
+library(stats)
+library(ggpubr)
+library(plotrix)
+
+# reading in data
+nonprekVAall <- read.csv("../data/school_suspension_CRDCnonprek.csv")
+
+nonprekVAall$OSS_Total <- rowSums(nonprekVAall[,c('OSS_Black','OSS_Hispanic','OSS_White','OSS_TwoOrMore', 'OSS_Asian')], na.rm = T)
+
+nonprekVAall$totalstudents <- nonprekVAall$num_Total
+
+nonprekVAall <- nonprekVAall %>%
+  filter(Year != 2009)
+
+## Re-shaping them to long format 
+k12long_count_oss <- pivot_longer(nonprekVAall, cols = c('num_Black', 'num_Hispanic', 'num_White',
+                                                         'num_TwoOrMore', 'num_Asian', 'num_Total',
+                                                         'OSS_Black', 'OSS_Hispanic', 'OSS_White',
+                                                         'OSS_TwoOrMore','OSS_Asian', 'OSS_Total'),
+                                  names_to = c('.value','Race'),
+                                  names_pattern = '(.+)_(Black|White|Hispanic|Asian|TwoOrMore|Total)')
+
+k12long_count_oss$Race <- ifelse(k12long_count_oss$Race == "TwoOrMore", "Two or more", k12long_count_oss$Race)
+
+# Calculating the percent of students suspended in each racial group 
+k12long_count_oss$percsus <- round(k12long_count_oss$OSS / k12long_count_oss$num * 100, 2)
+# Calculating the percent of the students enrolled in each racial group 
+k12long_count_oss$percenroll <- round(k12long_count_oss$num / k12long_count_oss$totalstudents * 100, 2)
+
+# Making NA rows for breaking up lines in ggplot 
+# with the new way I code years later, 2010, 2012, 2014, and 2016 should all be NA years
+yrs <- c(2012, 2014, 2016)
+blanks <- data.frame(n = 1:3)
+cols <- c("Year", "Race", "meanpercsus", "se", "meanperenroll", "meanenroll", "totalsus", "lessthan")
+blanks[cols] <- NA
+blanks$Year <- yrs
+blanks <- blanks %>%
+  select(-n)
+
+# Calculating means by race and year for plotting 
+k12OSSmeans <- k12long_count_oss %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+
+# Filtering for racial groups whose enrollment is large enough that we would expect at least one 
+# suspension if rates were equitable across racial groups 
+totalsusovertime <- data.frame(Year = unique(k12OSSmeans$Year), totalsus = k12OSSmeans$meanpercsus[k12OSSmeans$Race == "Total"])
+k12OSSmeans <- merge(k12OSSmeans, totalsusovertime, by = 'Year')
+k12OSSmeans$lessthan <- ifelse(k12OSSmeans$meanenroll < (100 / k12OSSmeans$totalsus), TRUE, FALSE)
+k12OSSmeans <- k12OSSmeans %>%
+  filter(lessthan == FALSE)
+
+k12OSSmeans <- rbind(k12OSSmeans, blanks)
+
+k12OSSmeans$Locality <- "Virginia"
+
+# Charlottesville = CHARLOTTESVILLE CTY PBLC SCHS
+# Albemarle = ALBEMARLE CO PBLC SCHS
+
+albk12 <- k12long_count_oss %>%
+  filter(LEA == "ALBEMARLE CO PBLC SCHS")
+
+cvillek12 <- k12long_count_oss %>%
+  filter(LEA == "CHARLOTTESVILLE CTY PBLC SCHS")
+
+# Albemarle
+# Calculating means by race and year for plotting 
+albk12OSSmeans <- albk12 %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+
+# Filtering for racial groups whose enrollment is large enough that we would expect at least one 
+# suspension if rates were equitable across racial groups 
+totalsusovertime <- data.frame(Year = unique(albk12OSSmeans$Year), totalsus = albk12OSSmeans$meanpercsus[albk12OSSmeans$Race == "Total"])
+albk12OSSmeans <- merge(albk12OSSmeans, totalsusovertime, by = 'Year')
+albk12OSSmeans$lessthan <- ifelse(albk12OSSmeans$meanenroll < (100 / albk12OSSmeans$totalsus), TRUE, FALSE)
+albk12OSSmeans <- albk12OSSmeans %>%
+  filter(lessthan == FALSE)
+
+albk12OSSmeans <- rbind(albk12OSSmeans, blanks)
+
+albk12OSSmeans$Locality <- "Albemarle"
+
+# creating weird year variable for plotting
+albk12OSSmeans$Year <- ifelse(albk12OSSmeans$Year == 2011, 2011.5,
+                                     ifelse(albk12OSSmeans$Year == 2013, 2013.5,
+                                            ifelse(albk12OSSmeans$Year == 2015, 2015.5,
+                                                   ifelse(albk12OSSmeans$Year == 2017, 2017.5, albk12OSSmeans$Year))))
+
+# Cville
+cvillek12OSSmeans <- cvillek12 %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+
+# Filtering for racial groups whose enrollment is large enough that we would expect at least one 
+# suspension if rates were equitable across racial groups 
+totalsusovertime <- data.frame(Year = unique(cvillek12OSSmeans$Year), totalsus = cvillek12OSSmeans$meanpercsus[cvillek12OSSmeans$Race == "Total"])
+cvillek12OSSmeans <- merge(cvillek12OSSmeans, totalsusovertime, by = 'Year')
+cvillek12OSSmeans$lessthan <- ifelse(cvillek12OSSmeans$meanenroll < (100 / cvillek12OSSmeans$totalsus), TRUE, FALSE)
+cvillek12OSSmeans <- cvillek12OSSmeans %>%
+  filter(lessthan == FALSE)
+
+cvillek12OSSmeans <- rbind(cvillek12OSSmeans, blanks)
+
+cvillek12OSSmeans$Locality <- "Charlottesville"
+
+# creating weird year variable for plotting
+cvillek12OSSmeans$Year <- ifelse(cvillek12OSSmeans$Year == 2011, 2010.5,
+                                     ifelse(cvillek12OSSmeans$Year == 2013, 2012.5,
+                                            ifelse(cvillek12OSSmeans$Year == 2015, 2014.5,
+                                                   ifelse(cvillek12OSSmeans$Year == 2017, 2016.5, cvillek12OSSmeans$Year))))
+
+dat <- rbind(k12OSSmeans, albk12OSSmeans, cvillek12OSSmeans)
+
+### Plots 
+# all levels together 
+# ggplot() + geom_point(data = dat, aes(Year, meanpercsus, shape = Locality, color = Race),
+#                       position = 'identity', size = 3) + 
+#   geom_line(data = dat,aes(x = Year, y = meanpercsus, group = Locality),
+#             color = 'gray') +
+#   xlab("Year") + ylab("Average % of students receiving OSS")  + 
+#   ggtitle("") + scale_x_continuous(breaks = seq(2011, 2017, by = 2)) + 
+#   theme_bw()+ 
+#   scale_colour_discrete(na.translate = F) +
+#   labs(caption = "Note: Racial groups were only included for a given year and locality when the average
+#        number of students enrolled was high enough such that you would expect to see at least one suspension
+#        if the average overall rate were true for each racial group")+
+#   theme(plot.caption = element_text(hjust=0))
+
+
+### Plots  adjust shape and color
+# all levels together 
+dat %>% 
+ggplot(aes(x = Year, y = meanpercsus, group = Locality, shape = Race, color = Locality)) + 
+  geom_line(color = "grey") +
+  geom_point(position = 'identity', size = 3) + 
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,20),
+                     breaks = seq(0, 20, by = 5),
+                     labels = label_percent(scale = 1)) +
+  xlab("Year") + ylab("Average % of students receiving OSS")  + 
+  ggtitle("") + scale_x_continuous(breaks = seq(2011, 2017, by = 2)) + 
+  theme_minimal() +
+  labs(caption = "Note: Racial groups were only included for a given year and locality when the average
+       number of students enrolled was high enough such that you would expect to see at least one suspension
+       if the average overall rate were true for each racial group")+
+  theme(plot.caption = element_text(hjust=0))
+
+
+```
 
 ## Contributions
