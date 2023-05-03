@@ -16,7 +16,7 @@ library(scales)
 library(janitor)
 library(ggthemes)
 
-three_category_palette <- c("#E57873", "#2F7E9F", "#83DBD7")
+three_category_palette <- c("#E48073", "#2F7E9F", "#83DBD7")
 two_category_palette <- c("#782C6A", "#83DBD7")
 one_category_palette <- c("#782C6A")
 
