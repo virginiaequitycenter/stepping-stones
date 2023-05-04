@@ -77,11 +77,11 @@ df2013 <- tclean %>%
   mutate(across(alc:tob2, as.character),
          across(alc:tob2, ~str_remove(.x, ",")),
          across(alc:tob2, as.numeric),
-         #count = alc+drug+otc+tob+tob2,
+         tob = tob+tob2,
          division = str_extract(division2, "Charlottesville|Albemarle|STATE"),
          division = ifelse(division == "STATE", "Virginia", division),
          school_year = "2012-2013") %>% 
-  select(division, school_year, alc:tob2)
+  select(division, school_year, alc, drug, otc, tob)
 
 
 ## 2011-2012 ----
@@ -139,10 +139,10 @@ df2012 <- tclean %>%
   mutate(across(alc:tob2, as.character),
          across(alc:tob2, ~str_remove(.x, ",")),
          across(alc:tob2, as.numeric),
-         #count = alc+drug+otc+tob+tob2,
+         tob = tob+tob2,
          division = ifelse(str_detect(division2, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2011-2012") %>% 
-  select(division, school_year, alc:tob2)
+  select(division, school_year, alc, drug, otc, tob)
 
 # write state totals and append
 # the state totals in this table are printed vertically
@@ -151,8 +151,7 @@ df2012 <- tclean %>%
 t <- data.frame (alc  = c(745),
                  drug = c(3485),
                  otc = c(360),
-                 tob = c(456),
-                 tob2 = c(4030)
+                 tob = c(4486)
                  )
 
 t <- t %>% 
@@ -222,10 +221,10 @@ df2011 <- tclean %>%
   mutate(across(alc:tob2, as.character),
          across(alc:tob2, ~str_remove(.x, ",")),
          across(alc:tob2, as.numeric),
-         #count = alc+drug+otc+tob+tob2,
+         tob = tob+tob2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2010-2011") %>% 
-  select(division, school_year, alc:tob2)
+  select(division, school_year, alc, drug, otc, tob)
 
 # write state totals and append
 # the state totals in this table are printed vertically
@@ -234,8 +233,7 @@ df2011 <- tclean %>%
 t <- data.frame (alc  = c(842),
                  drug = c(3118),
                  otc = c(305),
-                 tob = c(444),
-                 tob2 = c(3812)
+                 tob = c(4256)
 )
 
 t <- t %>% 
@@ -305,10 +303,10 @@ df2010 <- tclean %>%
   mutate(across(alc:tob2, as.character),
          across(alc:tob2, ~str_remove(.x, ",")),
          across(alc:tob2, as.numeric),
-         #count = alc+drug+otc+tob+tob2,
+         tob = tob+tob2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2009-2010") %>% 
-  select(division, school_year, alc:tob2)
+  select(division, school_year, alc, drug, otc, tob)
 
 # write state totals and append
 # the state totals in this table are printed vertically
@@ -317,8 +315,7 @@ df2010 <- tclean %>%
 t <- data.frame (alc  = c(899),
                  drug = c(3216),
                  otc = c(385),
-                 tob = c(471),
-                 tob2 = c(4303)
+                 tob = c(4774)
 )
 
 t <- t %>% 
@@ -392,10 +389,10 @@ df2009 <- tclean %>%
   mutate(across(alc:tob2, as.character),
          across(alc:tob2, ~str_remove(.x, ",")),
          across(alc:tob2, as.numeric),
-         #count = alc+drug+otc+tob+tob2,
+         tob  = tob+tob2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2008-2009") %>% 
-  select(division, school_year, alc:tob2)
+  select(division, school_year, alc, drug, otc, tob)
 
 # write state totals and append
 # the state totals in this table are printed vertically
@@ -404,8 +401,7 @@ df2009 <- tclean %>%
 t <- data.frame (alc  = c(938),
                  drug = c(3154),
                  otc = c(412),
-                 tob = c(531),
-                 tob2 = c(4900)
+                 tob = c(5431)
 )
 
 t <- t %>% 
@@ -473,10 +469,10 @@ df2008 <- tclean %>%
   mutate(across(alc:tob2, as.character),
          across(alc:tob2, ~str_remove(.x, ",")),
          across(alc:tob2, as.numeric),
-         #count = alc+drug+otc+tob+tob2,
+         tob = tob+tob2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2007-2008") %>% 
-  select(division, school_year, alc:tob2)
+  select(division, school_year, alc, drug, otc, tob)
 
 # write state totals and append
 # the state totals in this table are printed vertically
@@ -485,8 +481,7 @@ df2008 <- tclean %>%
 t <- data.frame (alc  = c(847),
                  drug = c(2747),
                  otc = c(362),
-                 tob = c(545),
-                 tob2 = c(4956)
+                 tob = c(5501)
 )
 
 t <- t %>% 
@@ -558,10 +553,10 @@ df2007 <- tclean %>%
   mutate(across(alc:tob2, as.character),
          across(alc:tob2, ~str_remove(.x, ",")),
          across(alc:tob2, as.numeric),
-         #count = alc+drug+otc+tob+tob2,
+         tob = tob+tob2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2006-2007") %>% 
-  select(division, school_year, alc:tob2)
+  select(division, school_year, alc, drug, otc, tob)
 
 # write state totals and append
 # the state totals in this table are printed vertically
@@ -570,8 +565,7 @@ df2007 <- tclean %>%
 t <- data.frame (alc  = c(894),
                  drug = c(2921),
                  otc = c(208),
-                 tob = c(430),
-                 tob2 = c(5330)
+                 tob = c(5760)
 )
 
 t <- t %>% 
@@ -581,13 +575,121 @@ t <- t %>%
 # Bind state to localities
 df2007 <- bind_rows(df2007, t)
 
+## Just Virginia totals----
+### 2013-14, 2014-15 ----
+# Table 2 (pages 21-24)
+url <- "https://www.doe.virginia.gov/home/showpublisheddocument/20779/638043641292630000"
+# area <- locate_areas(url, pages = c(21,22,23,24)) # find area in document manually
+# area # print to console and reset by hand (for reproducibility; choosing outer value for each dimension)
+area <- list(setNames(c(160, 70, 718, 540), 
+                      c("top", "left", "bottom", "right")),
+             setNames(c(60, 70, 730, 535),
+                      c("top", "left", "bottom", "right")),
+             setNames(c(60, 70, 730, 535),
+                      c("top", "left", "bottom", "right")),
+             setNames(c(60, 70, 405, 535),
+                      c("top", "left", "bottom", "right"))
+)
+
+tables <- extract_tables(url, pages = c(21,22,23,24), area = area, # extract tables from pdf into list of data frames
+                         guess = FALSE, output = "data.frame")
+
+# combine tables and rename columns
+t <- map_df(tables, bind_rows)
+tnames <- c("offense", "code", "count2014", "perc2014", "count2015", "perc2015", "change")
+names(t) <- tnames
+
+# filter to alcohol, drug, tobacco 
+df2015 <- t %>% 
+  filter(code %in% c("TB1", "T4B", "AL1", "DR1", "DR2", "DR3", "DR4", "DR5", "D4G", "D5G", "D6G")) %>% 
+  mutate(offense = case_when(
+    str_detect(code, "T") ~ "tob",
+    str_detect(code, "DR") ~ "drug",
+    str_detect(code, "AL") ~ "alc",
+    TRUE ~ "otc"
+  )) %>% 
+  select(offense, count2014, count2015) %>% 
+  mutate(count2014 = as.numeric(str_remove(count2014, ",")),
+         count2015 = as.numeric(str_remove(count2015, ","))) %>% 
+  group_by(offense) %>% 
+  summarize(count_2014 = sum(count2014),
+            count_2015 = sum(count2015))
+
+# pivot to match data frame structures from earlier years
+# division, year, school_year, alc, drug, otc, tob
+df2015 <- df2015 %>% 
+  pivot_longer(-offense, names_to = "year", values_to = "count",
+               names_prefix = "count_")
+
+df2015 <- df2015 %>% 
+  pivot_wider(names_from = offense, values_from = count)
+
+df2015 <- df2015 %>% 
+  mutate(division = "Virginia", school_year = paste0(as.numeric(year)-1, "-", year))
+
+### 2015-16, 2016-17 ----
+# Table 2 (pages 21-24)
+# document was a word document; downloaded it and saved it as pdf to read in
+url <- "https://www.doe.virginia.gov/home/showpublisheddocument/20783/638043641306870000"
+download.file(url, destfile = "datadownloads/dcv2017.docx")
+path <- "datadownloads/dcv2017.pdf"
+# area <- locate_areas(path, pages = c(9,10,11,12)) # find area in document manually
+# area # print to console and reset by hand (for reproducibility; choosing outer value for each dimension)
+area <- list(setNames(c(99, 65, 705, 530), 
+                      c("top", "left", "bottom", "right")),
+             setNames(c(70, 65, 700, 530),
+                      c("top", "left", "bottom", "right")),
+             setNames(c(70, 65, 700, 530),
+                      c("top", "left", "bottom", "right")),
+             setNames(c(70, 65, 510, 535),
+                      c("top", "left", "bottom", "right"))
+)
+
+tables <- extract_tables(path, pages = c(9,10,11,12), area = area, # extract tables from pdf into list of data frames
+                         guess = FALSE, output = "data.frame")
+
+# combine tables and rename columns
+t <- map_df(tables, bind_rows)
+tnames <- c("offense", "code", "count2016", "perc2016", "count2017", "perc2017")
+names(t) <- tnames
+
+# filter to alcohol, drug, tobacco 
+df2017 <- t %>% # added TB2, electronic cigarettes
+  filter(code %in% c("TB1", "TB2", "T4B", "AL1", "DR1", "DR2", "DR3", "DR4", "DR5", "D4G", "D5G", "D6G")) %>% 
+  mutate(offense = case_when(
+    str_detect(code, "T") ~ "tob",
+    str_detect(code, "DR") ~ "drug",
+    str_detect(code, "AL") ~ "alc",
+    TRUE ~ "otc"
+  )) %>% 
+  select(offense, count2016, count2017) %>% 
+  mutate(count2016 = as.numeric(str_remove(count2016, ",")),
+         count2017 = as.numeric(str_remove(count2017, ","))) %>% 
+  group_by(offense) %>% 
+  summarize(count_2016 = sum(count2016),
+            count_2017 = sum(count2017))
+
+# pivot to match data frame structures from earlier years
+# division, year, school_year, alc, drug, otc, tob
+df2017 <- df2017 %>% 
+  pivot_longer(-offense, names_to = "year", values_to = "count",
+               names_prefix = "count_")
+
+df2017 <- df2017 %>% 
+  pivot_wider(names_from = offense, values_from = count)
+
+df2017 <- df2017 %>% 
+  mutate(division = "Virginia", school_year = paste0(as.numeric(year)-1, "-", year))
+
+
 
 ## Bind all years together ----
-df <- bind_rows(df2007, df2008, df2009, df2010, df2011, df2012, df2013)
+df <- bind_rows(df2007, df2008, df2009, df2010, df2011, df2012, df2013,
+                df2015, df2017)
 
 
 # Excel files from DCV reports ----
-# 2018-2021 
+## 2017-18 through 2020-21 ----
 ## create urls vector ----
 urls <- c(
   "https://www.doe.virginia.gov/home/showpublisheddocument/20785/638043641312530000", # 2018
@@ -634,7 +736,7 @@ dcv_wide <- dcv_cvlalb %>%
 
 # make column names match prior data frame
 dcv_wide <- dcv_wide %>% 
-  rename(division = division_name, alc = Alcohol, drug = `Drug Violations`, tob2 = `Tobacco Offenses`)
+  rename(division = division_name, alc = Alcohol, drug = `Drug Violations`, tob = `Tobacco Offenses`)
 
 ## create state totals ----
 dcv_va <- dcv_data %>% 
@@ -650,7 +752,7 @@ dcv_va_wide <- dcv_va %>%
 
 # make column names match prior data frame
 dcv_va_wide <- dcv_va_wide %>% 
-  rename(alc = Alcohol, drug = `Drug Violations`, tob2 = `Tobacco Offenses`)
+  rename(alc = Alcohol, drug = `Drug Violations`, tob = `Tobacco Offenses`)
 
 ## bind state and localities ----
 dcv1821 <- bind_rows(dcv_wide, dcv_va_wide)
@@ -701,7 +803,8 @@ df_students <- df_students %>%
 ggplot(df_students, aes(x = year, y = rate, color = division, group = division)) + 
   geom_point() +
   geom_line() +
-  scale_x_continuous(breaks = 2006:2021)
+  scale_x_continuous(breaks = 2006:2021) +
+  scale_y_continuous(limits = c(0, 20))
 
 # fill in missing years ----
 df_students <- df_students %>% 
