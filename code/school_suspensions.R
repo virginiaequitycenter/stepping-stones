@@ -29,7 +29,8 @@ sus_outcome <- sus_outcome %>%
 sus_cvlalb <- sus_outcome %>% 
   filter(division_number %in% c(2, 104)) %>% 
   mutate(division_name = str_remove(division_name, " Public Schools"),
-    division_name = str_replace(division_name, "Charlottes ville", "Charlottesville"))
+         division_name = str_remove(division_name, " City| County"),
+         division_name = str_replace(division_name, "Charlottes ville", "Charlottesville"))
 
 # pivot to create columns by disciplinary type
 sus_cvlalb_wide <- sus_cvlalb %>% 
@@ -114,8 +115,8 @@ suspensions_combined <- bind_rows(suspensions, suspensions_prior)
 
 suspensions_combined <- suspensions_combined %>% 
   mutate(division = case_when(
-    division_number == 2 ~ "Albemarle County",
-    division_number == 104 ~ "Charlottesville City",
+    division_number == 2 ~ "Albemarle",
+    division_number == 104 ~ "Charlottesville",
     division_number == 0 ~ "Virginia"
   ))
 # unique(suspensions_combined$division)
@@ -128,6 +129,15 @@ ggplot(suspensions_combined, aes(x = school_year, y = rate,
   geom_line() +
   geom_point()
 
+ggplot(suspensions_combined, aes(x = school_year, y = rate, 
+                                 color = division, group = division_name)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = "2016-17", linetype = 2) +
+  annotate("text", x = 14.2, y = 300, hjust = 0, size = 3,
+           label = "Replicable with\n available SSIR data")
+
 # save 
 write_csv(suspensions_combined, "data/school_suspensions.csv")
 # suspensions_combined <- read_csv("data/school_suspensions.csv")
+
