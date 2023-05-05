@@ -498,40 +498,137 @@ df2007 <- bind_rows(df2007, t)
 df <- bind_rows(df2007, df2008, df2009, df2010, df2011, df2012, df2013)
 
 
-# From SSIR ---- 
-## 2016-2017 ----
-# Select 2016-2017
-# Select Offense Category = Weapons Offenses
-# Select All for everything else
-# Downlaod Offense Frequency report
+# # From SSIR ---- 
+# ## 2016-2017 ----
+# # Select 2016-2017
+# # Select Offense Category = Weapons Offenses
+# # Select All for everything else
+# # Downlaod Offense Frequency report
+# 
+# data2016 <- read_csv("datadownloads/Offense Frequency Report.csv", skip = 16) %>% 
+#   clean_names()
+# 
+# df2016 <- data2016 %>% 
+#   filter(division_name %in% c("Albemarle County Public Schools", "Charlottes ville City Public Schools")) %>% 
+#   select(division = division_name, school_year, weapon_count = related_to_weapons) %>% 
+#   mutate(weapon_count = as.numeric(weapon_count),
+#          division = ifelse(division == "Albemarle County Public Schools",
+#                        "Albemarle", "Charlottesville"),
+#          school_year = "2016-2017")
+# 
+# # create state total
+# state2016 <- data2016 %>% 
+#   mutate(weapons = as.numeric(related_to_weapons)) 
+# # fill in suppressed values with random draw between 1 and 5 
+# # suppression rule is anything under 10, so theoretically, this is still an undercount
+# set.seed(121)
+# state2016$weapons[is.na(state2016$weapons)] <- round(runif(n = length(which(is.na(state2016$weapons))), min=1, max=5),0)
+# 
+# # now create a state total
+# state2016 <- state2016 %>% 
+#   summarize(weapon_count = sum(weapons)) %>% 
+#   mutate(school_year = "2016-2017",
+#          division = "Virginia")
+# 
+# # bind state to localities
+# df2016 <- bind_rows(df2016, state2016)
 
-data2016 <- read_csv("datadownloads/Offense Frequency Report.csv", skip = 16) %>% 
-  clean_names()
+## Just Virginia totals----
+### 2013-14, 2014-15 ----
+# Table 2 (pages 21-24)
+url <- "https://www.doe.virginia.gov/home/showpublisheddocument/20779/638043641292630000"
+# area <- locate_areas(url, pages = c(21,22,23,24)) # find area in document manually
+# area # print to console and reset by hand (for reproducibility; choosing outer value for each dimension)
+area <- list(setNames(c(160, 70, 718, 540), 
+                      c("top", "left", "bottom", "right")),
+             setNames(c(60, 70, 730, 535),
+                      c("top", "left", "bottom", "right")),
+             setNames(c(60, 70, 730, 535),
+                      c("top", "left", "bottom", "right")),
+             setNames(c(60, 70, 405, 535),
+                      c("top", "left", "bottom", "right"))
+)
 
-df2016 <- data2016 %>% 
-  filter(division_name %in% c("Albemarle County Public Schools", "Charlottes ville City Public Schools")) %>% 
-  select(division = division_name, school_year, weapon_count = related_to_weapons) %>% 
-  mutate(weapon_count = as.numeric(weapon_count),
-         division = ifelse(division == "Albemarle County Public Schools",
-                       "Albemarle", "Charlottesville"),
-         school_year = "2016-2017")
+tables <- extract_tables(url, pages = c(21,22,23,24), area = area, # extract tables from pdf into list of data frames
+                         guess = FALSE, output = "data.frame")
 
-# create state total
-state2016 <- data2016 %>% 
-  mutate(weapons = as.numeric(related_to_weapons)) 
-# fill in suppressed values with random draw between 1 and 5 
-# suppression rule is anything under 10, so theoretically, this is still an undercount
-set.seed(121)
-state2016$weapons[is.na(state2016$weapons)] <- round(runif(n = length(which(is.na(state2016$weapons))), min=1, max=5),0)
+# combine tables and rename columns
+t <- map_df(tables, bind_rows)
+tnames <- c("offense", "code", "count2014", "perc2014", "count2015", "perc2015", "change")
+names(t) <- tnames
 
-# now create a state total
-state2016 <- state2016 %>% 
-  summarize(weapon_count = sum(weapons)) %>% 
-  mutate(school_year = "2016-2017",
-         division = "Virginia")
+# filter to knife,razor,other,toygun,bb,fireworks,ammo,handgun,taser,stun; gun+weapons+razor+toygun+fireworks
+df2015 <- t %>% 
+  filter(code %in% c("WP5", "W8P", "WP9", "W3P", "WP0", "W9P", "W1P", "WP1", "WT1", "WS1", "WP4", "WP2", "WP6", "WP8")) %>% 
+  select(code, count2014, count2015) %>% 
+  mutate(count2014 = as.numeric(str_remove(count2014, ",")),
+         count2015 = as.numeric(str_remove(count2015, ",")),
+         count2014 = ifelse(is.na(count2014), 0, count2014),
+         count2015 = ifelse(is.na(count2015), 0, count2015)) %>% 
+  summarize(count_2014 = sum(count2014),
+            count_2015 = sum(count2015)) %>% 
+  mutate(division = "Virginia")
 
-# bind state to localities
-df2016 <- bind_rows(df2016, state2016)
+# pivot to match data frame structures from earlier years
+# division, year, school_year, weapon_count
+df2015 <- df2015 %>% 
+  pivot_longer(-division, names_to = "year", values_to = "weapon_count",
+               names_prefix = "count_")
+
+df2015 <- df2015 %>%
+  mutate(school_year = paste0(as.numeric(year)-1, "-", year)) %>% 
+  select(-year)
+
+### 2015-16, 2016-17 ----
+# Table 2 (pages 21-24)
+# document was a word document; downloaded it and saved it as pdf to read in
+url <- "https://www.doe.virginia.gov/home/showpublisheddocument/20783/638043641306870000"
+download.file(url, destfile = "datadownloads/dcv2017.docx")
+path <- "datadownloads/dcv2017.pdf"
+# area <- locate_areas(path, pages = c(9,10,11,12)) # find area in document manually
+# area # print to console and reset by hand (for reproducibility; choosing outer value for each dimension)
+area <- list(setNames(c(99, 65, 705, 530), 
+                      c("top", "left", "bottom", "right")),
+             setNames(c(70, 65, 700, 530),
+                      c("top", "left", "bottom", "right")),
+             setNames(c(70, 65, 700, 530),
+                      c("top", "left", "bottom", "right")),
+             setNames(c(70, 65, 510, 535),
+                      c("top", "left", "bottom", "right"))
+)
+
+tables <- extract_tables(path, pages = c(9,10,11,12), area = area, # extract tables from pdf into list of data frames
+                         guess = FALSE, output = "data.frame")
+
+# combine tables and rename columns
+t <- map_df(tables, bind_rows)
+tnames <- c("offense", "code", "count2016", "perc2016", "count2017", "perc2017")
+names(t) <- tnames
+
+# filter to alcohol, drug, tobacco 
+df2017 <- t %>% # added TB2, electronic cigarettes
+  filter(code %in% c("WP5", "W8P", "WP9", "W3P", "WP0", "W9P", "W1P", "WP1", "WT1", "WS1", "WP4", "WP2", "WP6", "WP8")) %>% 
+  select(code, count2016, count2017) %>% 
+  mutate(count2016 = as.numeric(str_remove(count2016, ",")),
+         count2017 = as.numeric(str_remove(count2017, ",")),
+         count2016 = ifelse(is.na(count2016), 0, count2016),
+         count2017 = ifelse(is.na(count2017), 0, count2017)) %>% 
+  summarize(count_2016 = sum(count2016),
+            count_2017 = sum(count2017)) %>% 
+  mutate(division = "Virginia")
+
+# pivot to match data frame structures from earlier years
+# division, year, school_year, alc, drug, otc, tob
+df2017 <- df2017 %>% 
+  pivot_longer(-division, names_to = "year", values_to = "weapon_count",
+               names_prefix = "count_")
+
+df2017 <- df2017 %>%
+  mutate(school_year = paste0(as.numeric(year)-1, "-", year)) %>% 
+  select(-year)
+
+## Bind all years together ----
+df <- bind_rows(df, df2015, df2017)
 
 
 # Excel files from DCV reports ----
@@ -600,7 +697,7 @@ df1821 <- bind_rows(dcv_cvlalb, dcv_va)
 # Bind all years of data ----
 # df <- read_csv("data/school_weapons_dcv.csv")
 # df <- bind_rows(df, df1821)
-df <- bind_rows(df, df2016, df1821)
+df <- bind_rows(df, df1821)
 
 # fill in missing years
 df_complete <- df %>% 
@@ -641,7 +738,11 @@ df_students <- df_students %>%
   mutate(rate = (weapon_count/students)*1000)
 
 # have a peek
-ggplot(df_students, aes(x = year, y = rate, color = division, group = division)) + geom_line()
+ggplot(df_students, aes(x = year, y = rate, 
+                        color = division, group = division)) + 
+  geom_line() + 
+  scale_x_continuous(breaks = 2006:2021) +
+  scale_y_continuous(limits = c(0, 10))
 
 
 # Save data ----
