@@ -202,17 +202,33 @@ inf_mort_allyears <- inf_mort_allyears %>%
          rate_other_3yr = zoo::rollmean(ratedeaths_other, k = 3, fill = NA, align = "center")) %>% 
   ungroup()
 
-# And have a peek
-ggplot(inf_mort_allyears, aes(x = year, y = rate_all_3yr, color = locality)) +
-  geom_line()
 
-# for race, will need to make long...
-inf_mort_allyears %>% 
+## Pivot for graphing ----
+inf_pct3yr_long <- inf_mort_allyears %>% 
   select(locality, year, rate_all_3yr:rate_other_3yr) %>% 
-  pivot_longer(-c(locality, year), names_to = "group", names_prefix = "rate_", values_to = "percent") %>% 
-  ggplot(aes(x = year, y = percent, color = group)) +
+  pivot_longer(-c(locality, year), names_to = "group", names_prefix = "rate_", values_to = "rate_3yr") %>% 
+  mutate(group = str_remove(group, "_3yr"))
+
+inf_pct_long <- inf_mort_allyears %>% 
+  rename(ratedeaths_all = ratedeaths) %>% 
+  select(locality, year, ratedeaths_all:ratedeaths_other) %>% 
+  pivot_longer(-c(locality, year), names_to = "group", names_prefix = "ratedeaths_", values_to = "percent")
+
+inf_num_long <- inf_mort_allyears %>% 
+  rename(numdeaths_all = numdeaths) %>% 
+  select(locality, year, numdeaths_all:numdeaths_other) %>% 
+  pivot_longer(-c(locality, year), names_to = "group", names_prefix = "numdeaths_", values_to = "number")
+
+inf_long <- inf_num_long %>% 
+  left_join(inf_pct_long) %>% 
+  left_join(inf_pct3yr_long)
+
+# have a peek.
+ggplot(inf_long, aes(x = year, y =rate_3yr, color = group)) +
   geom_line() +
   facet_wrap(~ locality)
 
+
 # Save data ----
-write_csv(inf_mort_allyears, "data/infant_mortality_race.csv")
+write_csv(inf_long, "data/infant_mortality_race.csv")
+# inf <- read_csv("data/infant_mortality_race.csv")

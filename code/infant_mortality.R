@@ -73,8 +73,8 @@ yearsb <- tibble(y = seq(2018,2020,1)) %>%
 pdflistb <- paste0("https://apps.vdh.virginia.gov/HealthStats/documents/pdf/inf_1-1_",yearsb$y,".pdf")
 
 pdflist <- c(pdflista, 
-             "https://apps.vdh.virginia.gov/HealthStats/documents/2010/pdfs/inf_1-1.pdf", 
              "https://apps.vdh.virginia.gov/HealthStats/documents/2010/pdfs/bk1inf01.pdf",
+             "https://apps.vdh.virginia.gov/HealthStats/documents/2010/pdfs/inf_1-1.pdf", 
              "https://apps.vdh.virginia.gov/HealthStats/documents/pdf/2016/2016-inf_1-1.pdf",
              "https://apps.vdh.virginia.gov/HealthStats/documents/pdf/2017/inf_1-1.pdf",
              pdflistb)
@@ -191,6 +191,9 @@ inf_mort_allyears <- inf_mort_allyears %>%
   mutate(rate_3yr = zoo::rollmean(ratedeaths, k = 3, fill = NA, align = "center")) %>% 
   ungroup()
 
+# And have a peek
+ggplot(inf_mort_allyears, aes(x = year, y = rate_3yr, color = locality)) +
+  geom_line()
 
 # Save data ----
 write_csv(inf_mort_allyears, "data/infant_mortality.csv")

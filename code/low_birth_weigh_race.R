@@ -247,23 +247,41 @@ ggplot(lbw_all, aes(x = year, y = pct_lbw, color = locality)) +
 lbw_all <- lbw_all %>% 
   arrange(locality, year) %>% 
   group_by(locality) %>% 
-  mutate(pct_all_3yr = zoo::rollmean(pct_lbw, k = 3, fill = NA, align = "center"),
-         pct_white_3yr = zoo::rollmean(pct_lbw_white, k = 3, fill = NA, align = "center"),
-         pct_black_3yr = zoo::rollmean(pct_lbw_black, k = 3, fill = NA, align = "center"),
-         pct_other_3yr = zoo::rollmean(pct_lbw_other, k = 3, fill = NA, align = "center")) %>% 
+  mutate(pct_lbw_3yr = zoo::rollmean(pct_lbw, k = 3, fill = NA, align = "center"),
+         pct_lbw_white_3yr = zoo::rollmean(pct_lbw_white, k = 3, fill = NA, align = "center"),
+         pct_lbw_black_3yr = zoo::rollmean(pct_lbw_black, k = 3, fill = NA, align = "center"),
+         pct_lbw_other_3yr = zoo::rollmean(pct_lbw_other, k = 3, fill = NA, align = "center")) %>% 
   ungroup()
 
-# And have a peek
-ggplot(lbw_all, aes(x = year, y = pct_all_3yr, color = locality)) +
-  geom_line()
 
-# for race, will need to make long...
-lbw_all %>% 
-  select(locality, year, pct_all_3yr:pct_other_3yr) %>% 
-  pivot_longer(-c(locality, year), names_to = "group", names_prefix = "pct_", values_to = "percent") %>% 
-  ggplot(aes(x = year, y = percent, color = group)) +
+## Pivot for graphing ----
+lbw_pct3yr_long <- lbw_all %>% 
+  select(locality, year, pct_lbw_3yr:pct_lbw_other_3yr) %>% 
+  pivot_longer(-c(locality, year), names_to = "group", names_prefix = "pct_", values_to = "percent_3yr") %>% 
+  mutate(group = str_remove(group, "_3yr"))
+
+lbw_pct_long <- lbw_all %>% 
+  select(locality, year, pct_lbw:pct_lbw_other) %>% 
+  pivot_longer(-c(locality, year), names_to = "group", names_prefix = "pct_", values_to = "percent")
+
+lbw_num_long <- lbw_all %>% 
+  select(locality, year, num_lbw:num_lbw_other) %>% 
+  pivot_longer(-c(locality, year), names_to = "group", names_prefix = "num_", values_to = "number")
+
+lbw_long <- lbw_num_long %>% 
+  left_join(lbw_pct_long) %>% 
+  left_join(lbw_pct3yr_long)
+
+lbw_long <- lbw_long %>% 
+  mutate(group = ifelse(group == "lbw", "all", group),
+         group = str_remove(group, "lbw_"))
+
+# have a peek.
+ggplot(lbw_long, aes(x = year, y = percent_3yr, color = group)) +
   geom_line() +
   facet_wrap(~ locality)
 
+
 # Save data ----
-write_csv(lbw_all, "data/low_birth_weight_race.csv")
+write_csv(lbw_long, "data/low_birth_weight_race.csv")
+# lbw <- read_csv("data/low_birth_weight_race.csv")

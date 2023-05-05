@@ -1,63 +1,249 @@
-locality,year,numdeaths,numdeaths_white,numdeaths_black,numdeaths_other,ratedeaths,ratedeaths_white,ratedeaths_black,ratedeaths_other,rate_all_3yr,rate_white_3yr,rate_black_3yr,rate_other_3yr
-Albemarle County,2000,6,4,2,0,5.7,4.6,17.1,0,NA,NA,NA,NA
-Albemarle County,2001,4,3,1,0,4.1,3.7,9.5,0,5.333333333333333,4.033333333333333,15.166666666666666,4.3999999999999995
-Albemarle County,2002,6,3,2,1,6.2,3.8,18.9,13.2,5.3999999999999995,4.5,12.866666666666665,4.3999999999999995
-Albemarle County,2003,6,5,1,0,5.9,6,10.2,0,4.733333333333333,3.6666666666666665,13.166666666666666,4.3999999999999995
-Albemarle County,2004,2,1,1,0,2.1,1.2,10.4,0,4.566666666666667,3.9,12.6,0
-Albemarle County,2005,6,4,2,0,5.7,4.5,17.2,0,4.733333333333333,3.4,14.366666666666667,4.566666666666666
-Albemarle County,2006,7,4,2,1,6.4,4.5,15.5,13.7,6.1000000000000005,4.433333333333334,16.266666666666666,8.9
-Albemarle County,2007,7,4,2,1,6.2,4.3,16.1,13,7.433333333333334,5.1000000000000005,20.2,13.733333333333334
-Albemarle County,2008,11,6,4,1,9.7,6.5,29,14.5,6.833333333333333,5.1000000000000005,18.099999999999998,9.166666666666666
-Albemarle County,2009,5,4,1,0,4.6,4.5,9.2,0,5.666666666666667,4.033333333333333,19.466666666666665,4.833333333333333
-Albemarle County,2010,3,1,2,0,2.7,1.1,20.2,0,3.3666666666666667,2.6333333333333333,9.799999999999999,4.166666666666667
-Albemarle County,2011,3,2,0,1,2.8,2.3,0,12.5,2.1333333333333333,1.5666666666666664,6.733333333333333,4.166666666666667
-Albemarle County,2012,1,1,0,0,0.9,1.3,0,0,3.433333333333333,3.1999999999999997,0,9.366666666666667
-Albemarle County,2013,7,5,0,2,6.6,6,0,15.6,3.4666666666666663,3.3000000000000003,2.8333333333333335,5.2
-Albemarle County,2014,3,2,1,0,2.9,2.6,8.5,0,3.4999999999999996,3.266666666666667,2.8333333333333335,5.2
-Albemarle County,2015,1,1,0,0,1,1.2,0,0,1.5999999999999999,1.2666666666666668,2.8333333333333335,1.8
-Albemarle County,2016,1,0,0,1,0.9,0,0,5.4,0.6333333333333333,0.4000000000000001,0,1.8
-Albemarle County,2017,0,0,0,0,0,0,0,0,3.1666666666666665,2.9,2.766666666666667,4.533333333333333
-Albemarle County,2018,9,7,1,1,8.6,8.7,8.3,8.2,4.5,3.6999999999999997,9,6
-Albemarle County,2019,5,2,2,1,4.9,2.4,18.7,9.8,6.199999999999999,5,14.6,6
-Albemarle County,2020,5,3,2,0,5.1,3.9,16.8,0,NA,NA,NA,NA
-Charlottesville City,2000,4,2,1,1,7.3,6,5.6,23.8,NA,NA,NA,NA
-Charlottesville City,2001,8,2,6,0,16.2,6.5,43.2,0,11.899999999999999,7.266666666666667,23.46666666666667,7.933333333333334
-Charlottesville City,2002,6,3,3,0,12.2,9.3,21.6,0,13.866666666666665,9.033333333333333,29.600000000000005,0
-Charlottesville City,2003,7,4,3,0,13.2,11.3,24,0,11.999999999999998,9,22.2,0
-Charlottesville City,2004,5,2,3,0,10.6,6.4,21,0,10.466666666666665,7.866666666666667,19.233333333333334,0
-Charlottesville City,2005,4,2,2,0,7.6,5.9,12.7,0,9.399999999999999,7,14.066666666666668,9.266666666666667
-Charlottesville City,2006,5,3,1,1,10,8.7,8.5,27.8,11.966666666666667,9.566666666666666,17.099999999999998,9.266666666666667
-Charlottesville City,2007,10,5,5,0,18.3,14.1,30.1,0,11.666666666666666,8.466666666666667,18.46666666666667,9.266666666666667
-Charlottesville City,2008,4,1,3,0,6.7,2.6,16.8,0,11.266666666666666,7.3999999999999995,21.46666666666667,0
-Charlottesville City,2009,5,2,3,0,8.8,5.5,17.5,0,8.2,3.6,21.400000000000002,0
-Charlottesville City,2010,5,1,4,0,9.1,2.7,29.9,0,7.3,3.7000000000000006,18.5,0
-Charlottesville City,2011,2,1,1,0,4,2.9,8.1,0,7.266666666666666,5.366666666666667,15.299999999999999,0
-Charlottesville City,2012,5,4,1,0,8.7,10.5,7.9,0,4.766666666666666,5.3,5.333333333333333,0
-Charlottesville City,2013,1,1,0,0,1.6,2.5,0,0,3.9666666666666655,5.166666666666667,2.6333333333333333,0
-Charlottesville City,2014,1,1,0,0,1.6,2.5,0,0,2.799999999999999,4.233333333333333,0,0
-Charlottesville City,2015,3,3,0,0,5.2,7.7,0,0,4.666666666666665,4.266666666666667,8.766666666666667,0
-Charlottesville City,2016,4,1,3,0,7.2,2.6,26.3,0,6.966666666666666,8.033333333333333,8.766666666666667,0
-Charlottesville City,2017,5,5,0,0,8.5,13.8,0,0,6.333333333333332,7,8.766666666666667,0
-Charlottesville City,2018,2,2,0,0,3.3,4.6,0,0,5.533333333333332,6.866666666666667,5.7,0
-Charlottesville City,2019,3,1,2,0,4.8,2.2,17.1,0,3.299999999999999,3.1333333333333333,5.7,0
-Charlottesville City,2020,1,1,0,0,1.8,2.6,0,0,NA,NA,NA,NA
-Commonwealth Of Virginia,2000,676,374,276,26,6.8,5.4,12.4,3.5,NA,NA,NA,NA
-Commonwealth Of Virginia,2001,730,365,342,23,7.4,5.3,15.5,3,7.166666666666667,5.433333333333334,14.133333333333333,3.1999999999999997
-Commonwealth Of Virginia,2002,725,382,316,27,7.3,5.6,14.5,3.1,7.433333333333334,5.666666666666667,14.633333333333333,3.2999999999999994
-Commonwealth Of Virginia,2003,766,428,303,35,7.6,6.1,13.9,3.8,7.433333333333334,5.833333333333333,14.266666666666666,3.1999999999999997
-Commonwealth Of Virginia,2004,768,423,321,24,7.4,5.8,14.4,2.7,7.466666666666666,5.933333333333334,14.233333333333334,3.1666666666666665
-Commonwealth Of Virginia,2005,777,427,319,31,7.4,5.9,14.4,3,7.3,5.733333333333334,14.200000000000001,3.1333333333333333
-Commonwealth Of Virginia,2006,760,402,319,39,7.1,5.5,13.8,3.7,7.3999999999999995,5.800000000000001,14.566666666666668,3.1
-Commonwealth Of Virginia,2007,839,441,367,31,7.7,6,15.5,2.6,7.166666666666667,5.633333333333334,13.833333333333334,3.233333333333333
-Commonwealth Of Virginia,2008,716,396,285,35,6.7,5.4,12.2,3.4,7.133333333333333,5.666666666666667,13.799999999999999,2.766666666666666
-Commonwealth Of Virginia,2009,740,400,315,25,7,5.6,13.7,2.3,6.833333333333333,5.300000000000001,13.5,2.733333333333333
-Commonwealth Of Virginia,2010,695,341,327,27,6.8,4.9,14.6,2.5,6.833333333333333,5.233333333333333,13.699999999999998,2.8666666666666667
-Commonwealth Of Virginia,2011,685,361,282,42,6.7,5.2,12.8,3.8,6.6000000000000005,4.966666666666668,13.466666666666667,3.0999999999999996
-Commonwealth Of Virginia,2012,650,322,285,43,6.3,4.8,13,3,6.3999999999999995,5.066666666666667,12.666666666666666,3
-Commonwealth Of Virginia,2013,632,335,264,33,6.2,5.2,12.2,2.2,6.066666666666666,5,12.1,2.2666666666666666
-Commonwealth Of Virginia,2014,586,323,237,26,5.7,5,11.1,1.6,5.933333333333334,4.966666666666668,11.533333333333331,2.433333333333333
-Commonwealth Of Virginia,2015,605,304,241,60,5.9,4.7,11.3,3.5,5.8,4.833333333333333,11.066666666666668,2.9
-Commonwealth Of Virginia,2016,593,304,225,64,5.8,4.8,10.8,3.6,5.766666666666667,4.800000000000001,10.6,3.4
-Commonwealth Of Virginia,2018,558,301,204,53,5.6,4.9,9.7,3.1,5.766666666666667,4.800000000000001,10.366666666666665,3.5666666666666664
-Commonwealth Of Virginia,2019,570,280,226,64,5.9,4.7,10.6,4,5.6000000000000005,4.466666666666668,10.166666666666666,3.7999999999999994
-Commonwealth Of Virginia,2020,497,220,210,67,5.3,3.8,10.2,4.3,NA,NA,NA,NA
+locality,year,group,number,percent,rate_3yr
+Albemarle County,2000,all,6,5.7,NA
+Albemarle County,2000,white,4,4.6,NA
+Albemarle County,2000,black,2,17.1,NA
+Albemarle County,2000,other,0,0,NA
+Albemarle County,2001,all,4,4.1,5.333333333333333
+Albemarle County,2001,white,3,3.7,4.033333333333333
+Albemarle County,2001,black,1,9.5,15.166666666666666
+Albemarle County,2001,other,0,0,4.3999999999999995
+Albemarle County,2002,all,6,6.2,5.3999999999999995
+Albemarle County,2002,white,3,3.8,4.5
+Albemarle County,2002,black,2,18.9,12.866666666666664
+Albemarle County,2002,other,1,13.2,4.3999999999999995
+Albemarle County,2003,all,6,5.9,4.733333333333333
+Albemarle County,2003,white,5,6,3.6666666666666665
+Albemarle County,2003,black,1,10.2,13.166666666666666
+Albemarle County,2003,other,0,0,4.3999999999999995
+Albemarle County,2004,all,2,2.1,4.566666666666667
+Albemarle County,2004,white,1,1.2,3.9
+Albemarle County,2004,black,1,10.4,12.6
+Albemarle County,2004,other,0,0,0
+Albemarle County,2005,all,6,5.7,4.733333333333333
+Albemarle County,2005,white,4,4.5,3.4
+Albemarle County,2005,black,2,17.2,14.366666666666667
+Albemarle County,2005,other,0,0,4.566666666666666
+Albemarle County,2006,all,7,6.4,6.1000000000000005
+Albemarle County,2006,white,4,4.5,4.433333333333334
+Albemarle County,2006,black,2,15.5,16.266666666666666
+Albemarle County,2006,other,1,13.7,8.9
+Albemarle County,2007,all,7,6.2,7.433333333333334
+Albemarle County,2007,white,4,4.3,5.1000000000000005
+Albemarle County,2007,black,2,16.1,20.2
+Albemarle County,2007,other,1,13,13.733333333333334
+Albemarle County,2008,all,11,9.7,6.833333333333333
+Albemarle County,2008,white,6,6.5,5.1000000000000005
+Albemarle County,2008,black,4,29,18.1
+Albemarle County,2008,other,1,14.5,9.166666666666666
+Albemarle County,2009,all,5,4.6,5.666666666666667
+Albemarle County,2009,white,4,4.5,4.033333333333333
+Albemarle County,2009,black,1,9.2,19.466666666666665
+Albemarle County,2009,other,0,0,4.833333333333333
+Albemarle County,2010,all,3,2.7,3.3666666666666667
+Albemarle County,2010,white,1,1.1,2.6333333333333333
+Albemarle County,2010,black,2,20.2,9.8
+Albemarle County,2010,other,0,0,4.166666666666667
+Albemarle County,2011,all,3,2.8,2.1333333333333333
+Albemarle County,2011,white,2,2.3,1.5666666666666664
+Albemarle County,2011,black,0,0,6.733333333333333
+Albemarle County,2011,other,1,12.5,4.166666666666667
+Albemarle County,2012,all,1,0.9,3.433333333333333
+Albemarle County,2012,white,1,1.3,3.1999999999999997
+Albemarle County,2012,black,0,0,0
+Albemarle County,2012,other,0,0,9.366666666666667
+Albemarle County,2013,all,7,6.6,3.4666666666666663
+Albemarle County,2013,white,5,6,3.3000000000000003
+Albemarle County,2013,black,0,0,2.8333333333333335
+Albemarle County,2013,other,2,15.6,5.2
+Albemarle County,2014,all,3,2.9,3.4999999999999996
+Albemarle County,2014,white,2,2.6,3.266666666666667
+Albemarle County,2014,black,1,8.5,2.8333333333333335
+Albemarle County,2014,other,0,0,5.2
+Albemarle County,2015,all,1,1,1.6
+Albemarle County,2015,white,1,1.2,1.2666666666666668
+Albemarle County,2015,black,0,0,2.8333333333333335
+Albemarle County,2015,other,0,0,1.8
+Albemarle County,2016,all,1,0.9,0.6333333333333333
+Albemarle County,2016,white,0,0,0.4000000000000001
+Albemarle County,2016,black,0,0,0
+Albemarle County,2016,other,1,5.4,1.8
+Albemarle County,2017,all,0,0,3.1666666666666665
+Albemarle County,2017,white,0,0,2.9
+Albemarle County,2017,black,0,0,2.766666666666667
+Albemarle County,2017,other,0,0,4.533333333333333
+Albemarle County,2018,all,9,8.6,4.5
+Albemarle County,2018,white,7,8.7,3.7
+Albemarle County,2018,black,1,8.3,9
+Albemarle County,2018,other,1,8.2,6
+Albemarle County,2019,all,5,4.9,6.199999999999999
+Albemarle County,2019,white,2,2.4,5
+Albemarle County,2019,black,2,18.7,14.6
+Albemarle County,2019,other,1,9.8,6
+Albemarle County,2020,all,5,5.1,NA
+Albemarle County,2020,white,3,3.9,NA
+Albemarle County,2020,black,2,16.8,NA
+Albemarle County,2020,other,0,0,NA
+Charlottesville City,2000,all,4,7.3,NA
+Charlottesville City,2000,white,2,6,NA
+Charlottesville City,2000,black,1,5.6,NA
+Charlottesville City,2000,other,1,23.8,NA
+Charlottesville City,2001,all,8,16.2,11.9
+Charlottesville City,2001,white,2,6.5,7.266666666666667
+Charlottesville City,2001,black,6,43.2,23.46666666666667
+Charlottesville City,2001,other,0,0,7.933333333333334
+Charlottesville City,2002,all,6,12.2,13.866666666666664
+Charlottesville City,2002,white,3,9.3,9.033333333333331
+Charlottesville City,2002,black,3,21.6,29.600000000000005
+Charlottesville City,2002,other,0,0,0
+Charlottesville City,2003,all,7,13.2,11.999999999999998
+Charlottesville City,2003,white,4,11.3,9
+Charlottesville City,2003,black,3,24,22.2
+Charlottesville City,2003,other,0,0,0
+Charlottesville City,2004,all,5,10.6,10.466666666666663
+Charlottesville City,2004,white,2,6.4,7.866666666666667
+Charlottesville City,2004,black,3,21,19.233333333333334
+Charlottesville City,2004,other,0,0,0
+Charlottesville City,2005,all,4,7.6,9.4
+Charlottesville City,2005,white,2,5.9,7
+Charlottesville City,2005,black,2,12.7,14.066666666666668
+Charlottesville City,2005,other,0,0,9.266666666666667
+Charlottesville City,2006,all,5,10,11.966666666666669
+Charlottesville City,2006,white,3,8.7,9.566666666666666
+Charlottesville City,2006,black,1,8.5,17.099999999999998
+Charlottesville City,2006,other,1,27.8,9.266666666666667
+Charlottesville City,2007,all,10,18.3,11.666666666666666
+Charlottesville City,2007,white,5,14.1,8.466666666666667
+Charlottesville City,2007,black,5,30.1,18.46666666666667
+Charlottesville City,2007,other,0,0,9.266666666666667
+Charlottesville City,2008,all,4,6.7,11.266666666666666
+Charlottesville City,2008,white,1,2.6,7.4
+Charlottesville City,2008,black,3,16.8,21.46666666666667
+Charlottesville City,2008,other,0,0,0
+Charlottesville City,2009,all,5,8.8,8.2
+Charlottesville City,2009,white,2,5.5,3.6
+Charlottesville City,2009,black,3,17.5,21.4
+Charlottesville City,2009,other,0,0,0
+Charlottesville City,2010,all,5,9.1,7.3
+Charlottesville City,2010,white,1,2.7,3.7000000000000006
+Charlottesville City,2010,black,4,29.9,18.5
+Charlottesville City,2010,other,0,0,0
+Charlottesville City,2011,all,2,4,7.266666666666666
+Charlottesville City,2011,white,1,2.9,5.366666666666667
+Charlottesville City,2011,black,1,8.1,15.3
+Charlottesville City,2011,other,0,0,0
+Charlottesville City,2012,all,5,8.7,4.766666666666666
+Charlottesville City,2012,white,4,10.5,5.3
+Charlottesville City,2012,black,1,7.9,5.333333333333333
+Charlottesville City,2012,other,0,0,0
+Charlottesville City,2013,all,1,1.6,3.9666666666666655
+Charlottesville City,2013,white,1,2.5,5.166666666666667
+Charlottesville City,2013,black,0,0,2.6333333333333333
+Charlottesville City,2013,other,0,0,0
+Charlottesville City,2014,all,1,1.6,2.799999999999999
+Charlottesville City,2014,white,1,2.5,4.233333333333333
+Charlottesville City,2014,black,0,0,0
+Charlottesville City,2014,other,0,0,0
+Charlottesville City,2015,all,3,5.2,4.666666666666665
+Charlottesville City,2015,white,3,7.7,4.266666666666667
+Charlottesville City,2015,black,0,0,8.766666666666667
+Charlottesville City,2015,other,0,0,0
+Charlottesville City,2016,all,4,7.2,6.966666666666666
+Charlottesville City,2016,white,1,2.6,8.033333333333333
+Charlottesville City,2016,black,3,26.3,8.766666666666667
+Charlottesville City,2016,other,0,0,0
+Charlottesville City,2017,all,5,8.5,6.333333333333332
+Charlottesville City,2017,white,5,13.8,7
+Charlottesville City,2017,black,0,0,8.766666666666667
+Charlottesville City,2017,other,0,0,0
+Charlottesville City,2018,all,2,3.3,5.533333333333332
+Charlottesville City,2018,white,2,4.6,6.866666666666667
+Charlottesville City,2018,black,0,0,5.7
+Charlottesville City,2018,other,0,0,0
+Charlottesville City,2019,all,3,4.8,3.299999999999999
+Charlottesville City,2019,white,1,2.2,3.1333333333333333
+Charlottesville City,2019,black,2,17.1,5.7
+Charlottesville City,2019,other,0,0,0
+Charlottesville City,2020,all,1,1.8,NA
+Charlottesville City,2020,white,1,2.6,NA
+Charlottesville City,2020,black,0,0,NA
+Charlottesville City,2020,other,0,0,NA
+Commonwealth Of Virginia,2000,all,676,6.8,NA
+Commonwealth Of Virginia,2000,white,374,5.4,NA
+Commonwealth Of Virginia,2000,black,276,12.4,NA
+Commonwealth Of Virginia,2000,other,26,3.5,NA
+Commonwealth Of Virginia,2001,all,730,7.4,7.166666666666667
+Commonwealth Of Virginia,2001,white,365,5.3,5.433333333333334
+Commonwealth Of Virginia,2001,black,342,15.5,14.133333333333333
+Commonwealth Of Virginia,2001,other,23,3,3.1999999999999997
+Commonwealth Of Virginia,2002,all,725,7.3,7.433333333333334
+Commonwealth Of Virginia,2002,white,382,5.6,5.666666666666667
+Commonwealth Of Virginia,2002,black,316,14.5,14.633333333333333
+Commonwealth Of Virginia,2002,other,27,3.1,3.2999999999999994
+Commonwealth Of Virginia,2003,all,766,7.6,7.433333333333334
+Commonwealth Of Virginia,2003,white,428,6.1,5.833333333333333
+Commonwealth Of Virginia,2003,black,303,13.9,14.266666666666666
+Commonwealth Of Virginia,2003,other,35,3.8,3.1999999999999997
+Commonwealth Of Virginia,2004,all,768,7.4,7.466666666666666
+Commonwealth Of Virginia,2004,white,423,5.8,5.933333333333334
+Commonwealth Of Virginia,2004,black,321,14.4,14.233333333333334
+Commonwealth Of Virginia,2004,other,24,2.7,3.1666666666666665
+Commonwealth Of Virginia,2005,all,777,7.4,7.3
+Commonwealth Of Virginia,2005,white,427,5.9,5.733333333333334
+Commonwealth Of Virginia,2005,black,319,14.4,14.2
+Commonwealth Of Virginia,2005,other,31,3,3.1333333333333333
+Commonwealth Of Virginia,2006,all,760,7.1,7.4
+Commonwealth Of Virginia,2006,white,402,5.5,5.800000000000001
+Commonwealth Of Virginia,2006,black,319,13.8,14.566666666666668
+Commonwealth Of Virginia,2006,other,39,3.7,3.1
+Commonwealth Of Virginia,2007,all,839,7.7,7.166666666666667
+Commonwealth Of Virginia,2007,white,441,6,5.633333333333334
+Commonwealth Of Virginia,2007,black,367,15.5,13.833333333333334
+Commonwealth Of Virginia,2007,other,31,2.6,3.233333333333333
+Commonwealth Of Virginia,2008,all,716,6.7,7.133333333333333
+Commonwealth Of Virginia,2008,white,396,5.4,5.666666666666667
+Commonwealth Of Virginia,2008,black,285,12.2,13.8
+Commonwealth Of Virginia,2008,other,35,3.4,2.766666666666666
+Commonwealth Of Virginia,2009,all,740,7,6.833333333333333
+Commonwealth Of Virginia,2009,white,400,5.6,5.300000000000001
+Commonwealth Of Virginia,2009,black,315,13.7,13.5
+Commonwealth Of Virginia,2009,other,25,2.3,2.733333333333333
+Commonwealth Of Virginia,2010,all,695,6.8,6.833333333333333
+Commonwealth Of Virginia,2010,white,341,4.9,5.233333333333333
+Commonwealth Of Virginia,2010,black,327,14.6,13.699999999999998
+Commonwealth Of Virginia,2010,other,27,2.5,2.8666666666666667
+Commonwealth Of Virginia,2011,all,685,6.7,6.6000000000000005
+Commonwealth Of Virginia,2011,white,361,5.2,4.966666666666668
+Commonwealth Of Virginia,2011,black,282,12.8,13.466666666666669
+Commonwealth Of Virginia,2011,other,42,3.8,3.0999999999999996
+Commonwealth Of Virginia,2012,all,650,6.3,6.3999999999999995
+Commonwealth Of Virginia,2012,white,322,4.8,5.066666666666667
+Commonwealth Of Virginia,2012,black,285,13,12.666666666666666
+Commonwealth Of Virginia,2012,other,43,3,3
+Commonwealth Of Virginia,2013,all,632,6.2,6.066666666666666
+Commonwealth Of Virginia,2013,white,335,5.2,5
+Commonwealth Of Virginia,2013,black,264,12.2,12.1
+Commonwealth Of Virginia,2013,other,33,2.2,2.2666666666666666
+Commonwealth Of Virginia,2014,all,586,5.7,5.933333333333334
+Commonwealth Of Virginia,2014,white,323,5,4.966666666666668
+Commonwealth Of Virginia,2014,black,237,11.1,11.533333333333331
+Commonwealth Of Virginia,2014,other,26,1.6,2.433333333333333
+Commonwealth Of Virginia,2015,all,605,5.9,5.8
+Commonwealth Of Virginia,2015,white,304,4.7,4.833333333333333
+Commonwealth Of Virginia,2015,black,241,11.3,11.066666666666668
+Commonwealth Of Virginia,2015,other,60,3.5,2.9
+Commonwealth Of Virginia,2016,all,593,5.8,5.766666666666667
+Commonwealth Of Virginia,2016,white,304,4.8,4.800000000000001
+Commonwealth Of Virginia,2016,black,225,10.8,10.6
+Commonwealth Of Virginia,2016,other,64,3.6,3.4
+Commonwealth Of Virginia,2018,all,558,5.6,5.766666666666667
+Commonwealth Of Virginia,2018,white,301,4.9,4.800000000000001
+Commonwealth Of Virginia,2018,black,204,9.7,10.366666666666664
+Commonwealth Of Virginia,2018,other,53,3.1,3.5666666666666664
+Commonwealth Of Virginia,2019,all,570,5.9,5.6000000000000005
+Commonwealth Of Virginia,2019,white,280,4.7,4.466666666666668
+Commonwealth Of Virginia,2019,black,226,10.6,10.166666666666666
+Commonwealth Of Virginia,2019,other,64,4,3.7999999999999994
+Commonwealth Of Virginia,2020,all,497,5.3,NA
+Commonwealth Of Virginia,2020,white,220,3.8,NA
+Commonwealth Of Virginia,2020,black,210,10.2,NA
+Commonwealth Of Virginia,2020,other,67,4.3,NA
