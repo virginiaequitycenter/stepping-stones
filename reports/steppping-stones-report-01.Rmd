@@ -443,8 +443,8 @@ graduation_rates_labels <- graduation_rates %>%
 
 graduation_rates %>%
   ggplot(aes(x = school_year, y = graduation_rate, color = division_name, group = division_name)) +
-  # geom_vline(xintercept = "2013", linetype = 2, color = "black") +
-#   annotate("text", x = 6.2, y = 55, size = 3, hjust = 0, color = "black", 
+  # geom_vline(xintercept = "2013", linetype = 2, color = "#333333") +
+#   annotate("text", x = 6.2, y = 55, size = 3, hjust = 0, color = "#333333", 
 #            label = 
 # "Charlottesville City Schools
 # extend WALK program hours") +
@@ -616,7 +616,7 @@ per_cap_income %>%
   geom_line() +
   geom_point() +
   geom_text_repel(data = per_cap_income_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.6, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3, fontface = "bold", nudge_x = 1.8, show.legend = FALSE, min.segment.length = Inf) +
   scale_linetype_manual(values = c(2, 1)) +
   scale_color_manual(values = two_category_palette) +
   scale_y_continuous(label = comma,
@@ -701,9 +701,9 @@ child_poverty_labels <- child_poverty %>%
 
 child_poverty %>% 
   ggplot(aes(x = year, y = pct_child_pov, color = locality, group = locality)) +
-  geom_vline(xintercept = "2020", linetype = 2, color = "black") +
-  geom_vline(xintercept = "2021", linetype = 2, color = "black") +
-  annotate("text", x = 16.8, y = 85, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2020", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2021", linetype = 2, color = "#333333") +
+  annotate("text", x = 16.8, y = 85, size = 3, hjust = 0, color = "#333333", 
            label = 
 "COVID-19 Economic
 Stimulus Payments") +
@@ -727,17 +727,28 @@ Stimulus Payments") +
 ##### Percent of Students Identified as Economically Disadvantaged (eligible for free or reduced meals, eligible for TANF, Medicaid and/or Head Start, or identified as from a migrant family, experiencing homelessness, or in foster care) for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 economically_disadvantaged_students <- read_csv("../data/economically_disadvantaged_students.csv")
+economically_disadvantaged_students <- economically_disadvantaged_students %>% 
+  mutate(division_name = recode(division_name,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"))
 economically_disadvantaged_students_labels <- economically_disadvantaged_students %>% 
   filter(division_name != "Virginia" & school_year == "2022-2023") %>%
   mutate(label = paste0(as.character(round((percent), digits = 1)), "%"))
 
 economically_disadvantaged_students %>%
   ggplot(aes(x = school_year, y = percent, color = division_name, group = division_name)) +
-#   geom_vline(xintercept = "2020", linetype = 2, color = "black") +
-#   annotate("text", x = 16.8, y = 85, size = 3, hjust = 0, color = "black", 
-#            label = 
-# "COVID-19 Economic
-# Stimulus Payments") +
+  geom_vline(xintercept = "2018-2019", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.1, y = 70, size = 3, hjust = 0, color = "#333333", 
+           label = 
+"CCS begin 
+participating 
+in USDA CEP") +
+  geom_vline(xintercept = "2021-2022", linetype = 2, color = "#333333") +
+  annotate("text", x = 18.1, y = 10, size = 3, hjust = 0, color = "#333333", 
+           label = 
+"ACPS begin 
+participating 
+in USDA CEP") +
   geom_line() +
   geom_point() +
   geom_text_repel(data = economically_disadvantaged_students_labels, aes(label = label),
@@ -756,17 +767,23 @@ economically_disadvantaged_students %>%
 ### Cost-Burdened Renters and Homeowners {.tabset}
 
 #### Trends
-##### Renters Paying more than 30% of their Income on Housing (Rent and Utilities)
+##### Percent of Renters Paying more than 30% of their Income on Housing (Rent and Utilities) for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 rent_burdened <- read_csv("../data/rent_burdened.csv")
-
-rent_burdened %>%
+rent_burdened <- rent_burdened %>%
   mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
          locality = str_trim(locality),
-         survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
+         survey_period = paste0(as.character(year-5), "-", as.character(year))) 
+rent_burdened_labels <- rent_burdened %>% 
+  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
+  mutate(label = paste0(as.character(round((percent_over_30*100), digits = 1)), "%"))
+
+rent_burdened %>% 
   ggplot(aes(x = survey_period, y = percent_over_30, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = rent_burdened_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 1),
                      labels = scales::percent, 
@@ -778,17 +795,23 @@ rent_burdened %>%
 ```
 
 
-##### Homeowners Paying more than 30% of their Income on Housing (Mortgage payments, Taxes, Insurance, and Utilities)
+##### Percent of Homeowners Paying more than 30% of their Income on Housing (Mortgage payments, Taxes, Insurance, and Utilities) for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 homeowner_burden <- read_csv("../data/homeowner_burden.csv")
-
-homeowner_burden %>%
+homeowner_burden <- homeowner_burden %>%
   mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
          locality = str_trim(locality),
-         survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
+         survey_period = paste0(as.character(year-5), "-", as.character(year)))
+homeowner_burden_labels <- homeowner_burden %>% 
+  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
+  mutate(label = paste0(as.character(round((pct_burden), digits = 1)), "%"))
+
+homeowner_burden %>% 
   ggplot(aes(x = survey_period, y = pct_burden, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = homeowner_burden_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -803,33 +826,42 @@ homeowner_burden %>%
 ### People Experiencing Homelessness {.tabset}
 
 #### Trends
+##### Point-in-Time Count of People Experiencing Homelessness for the Charlottesville Region, conducted yearly in January
 ```{r}
 pitcount_homeless <- read_csv("../data/pitcount_homeless.csv")
+pitcount_homeless <- pitcount_homeless %>% 
+  mutate(year = as.character(year),
+         locality = "Charlottesville Region",
+         type = recode(type,
+                       "unsheltered_total_persons" = "Unsheltered",
+                       "sheltered_total_persons" = "Sheltered",
+                       "total_persons" = "Total"))
+pitcount_homeless_labels <- pitcount_homeless %>% 
+  filter(year == "2022") %>%
+  mutate(label = paste0(as.character(count)))
 
 pitcount_homeless %>% 
-  mutate(year = as.character(year),
-         locality = "Charlottesville Region") %>% 
-  ggplot() +
-  geom_vline(xintercept = "2012", linetype = 2, color = "black") +
-  annotate("text", x = 4.2, y = 100, size = 3, hjust = 0, color = "black", 
+  ggplot(aes(x = year, y = count, 
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type)) +
+  geom_vline(xintercept = "2012", linetype = 2, color = "#333333") +
+  annotate("text", x = 4.2, y = 100, size = 3, hjust = 0, color = "#333333", 
            label = 
 "Opening of The Crossings
 (permanent supportive housing)") +
-  geom_vline(xintercept = "2022", linetype = 2, color = "black") +
-  annotate("text", x = 10.2, y = 275, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2022", linetype = 2, color = "#333333") +
+  annotate("text", x = 10.2, y = 275, size = 3, hjust = 0, color = "#333333", 
            label = 
 "COVID-19 pandemic hightened
 impact of high housing costs 
 and lack of affordable housing") +
-  geom_line(aes(x = year, y = count, 
-             color = locality, 
-             group = interaction(locality, type), 
-             linetype = type)) +
-  geom_point(aes(x = year, y = count,
-             color = locality, 
-             group = interaction(locality, type), 
-             linetype = type), ) +
-  scale_linetype_manual(values = c(2, 1, 6)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(data = pitcount_homeless_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_linetype_manual(values = c(2, 6, 1),
+                        limits = c("Sheltered", "Unsheltered", "Total")) +
   scale_color_manual(values = one_category_palette) +
   scale_y_continuous(limits = c(0,300),
                      label = comma,
@@ -837,64 +869,79 @@ and lack of affordable housing") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
-  labs(color = "", linetype = "", fill = "")
+  labs(color = "", linetype = "")
 ```
 
 
 ## Health and Family Stability
 
-### Mothers with Access to Prenatal Care {.tabset}
+### Access to Prenatal Care {.tabset}
 
 #### Trends
+##### Percent of People Giving Birth with Access to Prenatal Care for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 prenatal_first_trimester <- read_csv("../data/prenatal_first_trimester.csv")
+prenatal_first_trimester <- prenatal_first_trimester %>%
+  mutate(percent_access_to_prenatal_care = 100 - late_no_prenatal_to_birthrates,
+          year = as.character(year))
+prenatal_first_trimester_labels <- prenatal_first_trimester %>% 
+  filter(locality != "Virginia" & year == "2020") %>%
+  mutate(label = paste0(as.character(round((percent_access_to_prenatal_care), digits = 1)), "%"))
 
 prenatal_first_trimester %>%
-  mutate(percent_access_to_prenatal_care = 100 - late_no_prenatal_to_birthrates,
-          year = as.character(year)) %>%
   ggplot(aes(x = year, y = percent_access_to_prenatal_care, color = locality, group = locality)) +
-  geom_vline(xintercept = "2010", linetype = 2, color = "black") +
-  annotate("text", x = 5.2, y = 80, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2010", linetype = 2, color = "#333333") +
+  annotate("text", x = 5.2, y = 80, size = 3, hjust = 0, color = "#333333", 
            label = 
 "Affordable Care 
 Act (ACA) passed") +
-  geom_vline(xintercept = "2019", linetype = 2, color = "black") +
-  annotate("text", x = 11.5, y = 85, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2019", linetype = 2, color = "#333333") +
+  annotate("text", x = 11.5, y = 85, size = 3, hjust = 0, color = "#333333", 
            label = 
 "Virginia expanded 
 Medicaid coverage") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = prenatal_first_trimester_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(40, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Percent of Mothers") + 
+                     name = "Percent of People Giving Birth") + 
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
-### Low Birth-Weight Births {.tabset}
+### Low Birth-Weight Infants {.tabset}
 
 #### Trends
+##### Percent of Infants Born Weighing Under 2,500 grams (5.5 lbs) for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 low_birth_weight <- read_csv("../data/low_birth_weight.csv")
-
-low_birth_weight %>%
+low_birth_weight <- low_birth_weight %>%
+  filter(!year %in% c(2000, 2020)) %>% 
   mutate(locality = recode(locality,
                           "Albemarle County" = "Albemarle",
                           "Charlottesville City" = "Charlottesville",
                        "Commonwealth Of Virginia" = "Virginia"),
          # year = as.character(year),
-         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)))
+low_birth_weight_labels <- low_birth_weight %>% 
+  filter(locality != "Virginia" & three_yr_period == "2018-2020") %>%
+  mutate(label = paste0(as.character(round((pct_3yr), digits = 1)), "%"))
+
+low_birth_weight %>%
   ggplot(aes(x = three_yr_period, y = pct_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = low_birth_weight_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
-                     name = "Avg. Percent of Babies") + 
+                     name = "Percent of Infants") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -904,107 +951,84 @@ low_birth_weight %>%
 ### Infant Deaths {.tabset}
 
 #### Trends
+##### Percent of Infants who Died before their 1st Birthday for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 infant_mortality <- read_csv("../data/infant_mortality.csv")
-
-infant_mortality %>%
+infant_mortality <- infant_mortality %>%
+  filter(!year %in% c(2000, 2020)) %>% 
   mutate(locality = recode(locality,
                           "Albemarle County" = "Albemarle",
                           "Charlottesville City" = "Charlottesville",
                        "Commonwealth Of Virginia" = "Virginia"),
-         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)))
+infant_mortality_labels <- infant_mortality %>% 
+  filter(locality != "Virginia" & three_yr_period == "2018-2020") %>%
+  mutate(label = paste0(as.character(round((rate_3yr), digits = 1)), "%"))
+
+infant_mortality %>% 
   ggplot(aes(x = three_yr_period, y = rate_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = infant_mortality_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
-                     name = "Avg. Percent of Babies") + 
+                     name = "Percent of Infants") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
-<!-- ### Births to mothers with less than a 12th grade education {.tabset} -->
 
-<!-- #### Trends -->
-<!-- ```{r} -->
-<!-- births_mothers_nohs <- read_csv("../data/births_mothers_nohs.csv") -->
-
-<!-- births_mothers_nohs %>% -->
-<!--   mutate(year = as.character(year)) %>% -->
-<!--   ggplot(aes(x = year, y = percent, color = location, group = location)) + -->
-<!--   geom_vline(xintercept = "2008", linetype = 2, color = "black") + -->
-<!--   annotate("text", x = 9.2, y = 40, size = 3, hjust = 0, color = "black", -->
-<!--            label = -->
-<!-- "FDA lowers OTC Emergency  -->
-<!-- Contraceptive Age to 17") + -->
-<!--   geom_line() + -->
-<!--   geom_point() + -->
-<!--   scale_color_manual(values = three_category_palette) + -->
-<!--   scale_y_continuous(limits = c(0, 100), -->
-<!--                      labels = label_percent(scale = 1),  -->
-<!--                      name = "Percent of Mothers") +  -->
-<!--   scale_x_discrete(name = "Year") + -->
-<!--   theme_minimal() + -->
-<!--   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") + -->
-<!--   labs(color = "") -->
-<!-- ``` -->
-
-### Teen Pregnancies, Births to Teens {.tabset}
+### Teen Pregnancies and Births to Teens {.tabset}
 
 #### Trends
-##### Rate of Teen Prenancies
+##### Rate of Pregnancies for Teens, Ages 15-17, for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
-teen_pregnancy_birth_rates <- read_csv("../data/teen_pregnancy_birth_rates.csv")
-
-teen_pregnancy_birth_rates %>%
+teen_pregnancy_birth <- read_csv("../data/teen_pregnancy_birth.csv")
+teen_pregnancy_birth <- teen_pregnancy_birth %>%
+  filter(!year %in% c(2000, 2020)) %>%
   mutate(locality = recode(locality,
                           "Albemarle County" = "Albemarle",
                           "Charlottesville City" = "Charlottesville",
-                       "Commonwealth Of Virginia" = "Virginia"),
-         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
+                          "Commonwealth Of Virginia" = "Virginia"),
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)))
+teen_pregnancy_labels <- teen_pregnancy_birth %>% 
+  filter(locality != "Virginia" & three_yr_period == "2018-2020") %>%
+  mutate(label = as.character(round((pregnancyrate_3yr), digits = 1)))
+
+teen_pregnancy_birth %>% 
   ggplot(aes(x = three_yr_period, y = pregnancyrate_3yr, color = locality, group = locality)) +
-#   geom_vline(xintercept = "2008-2010", linetype = 2, color = "black") +
-#   annotate("text", x = 10.2, y = 60, size = 3, hjust = 0, color = "black",
-#               label = 
-# "2008 FDA lowers OTC 
-# Emergency Contraceptive 
-# Age to 17") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = teen_pregnancy_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
-  scale_y_continuous(limits = c(0, 100),
-                     # labels = label_percent(scale = 1), 
-                     name = "Rate per 1,000") + 
+  scale_y_continuous(limits = c(0, 100), 
+                     name = "Rate per 1,000 Teens (15-17)") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
-##### Rate of Births to Teens
+##### Rate of Births to Teens, Ages 15-17, for Albemarle County, City of Charlottesville, and Virginia 
 ```{r}
-teen_pregnancy_birth_rates %>%
-  mutate(locality = recode(locality,
-                          "Albemarle County" = "Albemarle",
-                          "Charlottesville City" = "Charlottesville",
-                       "Commonwealth Of Virginia" = "Virginia"),
-         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))) %>% 
+teen_birth_labels <- teen_pregnancy_birth %>% 
+  filter(locality != "Virginia" & three_yr_period == "2018-2020") %>%
+  mutate(label = as.character(round((birthsrate_3yr), digits = 1)))
+
+teen_pregnancy_birth %>% 
   ggplot(aes(x = three_yr_period, y = birthsrate_3yr, color = locality, group = locality)) +
-#   geom_vline(xintercept = "2008-2010", linetype = 2, color = "black") +
-#   annotate("text", x = 10.2, y = 60, size = 3, hjust = 0, color = "black",
-#               label = 
-# "2008 FDA lowers OTC 
-# Emergency Contraceptive 
-# Age to 17") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = teen_birth_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
-  scale_y_continuous(limits = c(0, 100),
-                     # labels = label_percent(scale = 1), 
-                     name = "Rate per 1,000") + 
+  scale_y_continuous(limits = c(0, 100), 
+                     name = "Rate per 1,000 Teens (15-17)") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -1014,17 +1038,22 @@ teen_pregnancy_birth_rates %>%
 ### Sexually Transmitted Infections in Youth {.tabset}
 
 #### Trends
+##### Rate of Sexually Transmitted Infections in Youth, Ages 10-19, for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 youth_sti <- read_csv("../data/youth_sti.csv")
+youth_sti_labels <- youth_sti %>% 
+  filter(locality != "Virginia" & year3 == "2019-2021") %>%
+  mutate(label = as.character(round((total_incrate_3yr), digits = 1)))
 
 youth_sti %>%
   ggplot(aes(x = year3, y = total_incrate_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = youth_sti_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
-                     # labels = label_percent(scale = 1), 
-                     name = "Rate per 1,000 youth") + 
+                     name = "Rate per 1,000 Youth (10-19)") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -1034,16 +1063,24 @@ youth_sti %>%
 ### Children in Two-Parent Households {.tabset}
 
 #### Trends
+##### Percent of Children in Two-Parent Households for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 children_twoparents <- read_csv("../data/children_twoparents.csv")
-
-children_twoparents %>%
+children_twoparents <- children_twoparents %>%
   mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
          locality = str_trim(locality),
-         survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
+         survey_period = paste0(as.character(year-5), "-", as.character(year)))
+
+children_twoparents_labels <- children_twoparents %>% 
+  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
+  mutate(label = paste0(as.character(round((percent*100), digits = 1)), "%"))
+
+children_twoparents %>% 
   ggplot(aes(x = survey_period, y = percent, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = children_twoparents_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 1),
                      labels = scales::percent, 
@@ -1057,69 +1094,90 @@ children_twoparents %>%
 ### Divorce {.tabset}
 
 #### Trends
-##### Divorce Rate, Source: Virginia Circuit Court
+##### Rate of Divorce for Albemarle County, City of Charlottesville, and Virginia (Source: Virginia Department of Health)
+```{r}
+divorce_vdh <- read_csv("../data/divorce_vdh.csv")
+divorce_vdh <- divorce_vdh %>%
+  mutate(locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"),
+         year = as.character(year))
+divorce_vdh_labels <- divorce_vdh %>% 
+  filter(locality != "Virginia" & year == "2018") %>%
+  mutate(label = as.character(round((divorce_rate), digits = 1)))
+
+divorce_vdh %>% 
+  ggplot(aes(x = year, y = divorce_rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(data = divorce_vdh_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,10),
+                     breaks = c(0,2,4,6,8,10),
+                     name = "Rate per 1000 People") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "")
+```
+
+##### Rate of Divorce for Albemarle County, City of Charlottesville, and Virginia (Source: Virginia Circuit Court)
 ```{r}
 divorce_circuit <- read_csv("../data/divorce_circuit.csv")
 dc_missing <- data.frame(locality = c("Virginia", "Virginia", "Virginia", "Virginia", "Virginia", "Virginia"),
                        year = c(2014, 2015, 2016, 2017, 2018, 2019))
+divorce_circuit <- divorce_circuit %>% 
+  bind_rows(dc_missing) %>%
+  mutate(year = as.character(year))
+divorce_circuit_labels <- divorce_circuit %>% 
+  filter(locality != "Virginia" & year == "2022") %>%
+  mutate(label = as.character(round((divorce_rate), digits = 1)))
 
 divorce_circuit %>% 
-  bind_rows(dc_missing) %>%
-  mutate(year = as.character(year)) %>% 
   ggplot(aes(x = year, y = divorce_rate, 
              color = locality, 
              group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = divorce_circuit_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,10),
                      breaks = c(0,2,4,6,8,10),
-                     name = "Rate per 1000") +
+                     name = "Rate per 1000 People") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
-##### Divorce Rate, Source: Virginia Department of Health
-```{r}
-divorce_vdh <- read_csv("../data/divorce_vdh.csv")
 
-divorce_vdh %>%
-  mutate(year = as.character(year)) %>% 
-  ggplot(aes(x = year, y = divorce_rate, 
-             color = locality, 
-             group = locality)) +
-  geom_line() +
-  geom_point() +
-  scale_color_manual(values = three_category_palette) +
-  scale_y_continuous(limits = c(0,10),
-                     breaks = c(0,2,4,6,8,10),
-                     name = "Rate per 1000") +
-  scale_x_discrete(name = "Year") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
-  labs(color = "")
-```
-
-### Investigations and Assessments by Child Protective Services {.tabset}
+### Assessments and Investigations by Child Protective Services {.tabset}
 
 #### Trends
+##### Rate of Referrals to Child Protective Services Accepted for Assessment or Investigation by Fiscal Year (12mo. period measured from July 1st through June 30th) for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 child_welfare_reports <- read_csv("../data/child_welfare_reports.csv")
-
-child_welfare_reports %>%
+child_welfare_reports <- child_welfare_reports %>%
   mutate(fiscal_year = paste0(as.character(year-1),"-",as.character(year)),
-         year = as.character(year)) %>% 
-  ggplot(aes(x = year, y = cps_rate, 
-             color = locality, 
-             group = locality)) +
+         year = as.character(year))
+child_welfare_reports_labels <- child_welfare_reports %>% 
+  filter(locality != "Virginia" & fiscal_year == "2019-2020") %>%
+  mutate(label = as.character(round((cps_rate), digits = 1)))
+
+child_welfare_reports %>% 
+  ggplot(aes(x = fiscal_year, y = cps_rate, 
+             color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = child_welfare_reports_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
-                     name = "Rate per 1000") +
-  scale_x_discrete(name = " Fiscal Year") +
+                     name = "Rate per 1000 Children") +
+  scale_x_discrete(name = "Fiscal Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
@@ -1129,20 +1187,26 @@ child_welfare_reports %>%
 ### Children in Foster Care {.tabset}
 
 #### Trends
+##### Rate of Children in Foster Care, Measured Yearly on October 1st, for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 foster_care <- read_csv("../data/foster_care.csv")
+foster_care <- foster_care %>%
+  mutate(year = as.character(year))
+foster_care_labels <- foster_care %>% 
+  filter(locality != "Virginia" & year == "2022") %>%
+  mutate(label = as.character(round((fc_rate), digits = 1)))
 
-foster_care %>%
-  mutate(year = as.character(year)) %>% 
+foster_care %>% 
   ggplot(aes(x = year, y = fc_rate, 
-             color = locality, 
-             group = locality)) +
+             color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = foster_care_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
-                     name = "Rate per 1000") +
-  scale_x_discrete(name = " Fiscal Year") +
+                     name = "Rate per 1000 Children") +
+  scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
@@ -1154,61 +1218,70 @@ foster_care %>%
 ### School Reports of Discipline {.tabset}
 
 #### Trends
-##### Alcohol and Drug Offenses
+
+##### Rate of Incidents of Possession of Alcohol and Drugs for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 school_alcdrugs_dcv <- read_csv("../data/school_alcdrugs_dcv.csv")
+school_alcdrugs_dcv_labels <- school_alcdrugs_dcv %>% 
+  filter(division != "Virginia" & school_year == "2020-2021") %>%
+  mutate(label = as.character(round((rate), digits = 1)))
 
 school_alcdrugs_dcv %>%
   ggplot(aes(x = school_year, y = rate, 
              color = division, group = division)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = school_alcdrugs_dcv_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,50),
-                     name = "Rate per 1000") +
+                     name = "Rate of Incidents per 1000 Students") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
-
-##### Physical Violence
+ 
+##### Rate of Incidents of Physical Violence for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
-school_violence_byoffense_dcv <- read_csv("../data/school_violence_byoffense_dcv.csv")
-sv_missing <- data.frame(division = c("Virginia", "Virginia", "Virginia", "Virginia",
-                                      "Charlottesville", "Charlottesville", "Charlottesville", "Charlottesville",
-                                      "Albemarle", "Albemarle", "Albemarle", "Albemarle"),
-                       school_year = c("2013-2014", "2014-2015", "2015-2016", "2016-2017",
-                                      "2013-2014", "2014-2015", "2015-2016", "2016-2017",
-                                      "2013-2014", "2014-2015", "2015-2016", "2016-2017"))
+school_violence_dcv <- read_csv("../data/school_violence_dcv.csv")
+school_violence_dcv_labels <- school_violence_dcv %>% 
+  filter(division != "Virginia" & school_year == "2020-2021") %>%
+  mutate(label = as.character(round((rate), digits = 1)))
 
-school_violence_byoffense_dcv %>%
-  bind_rows(sv_missing) %>%
+school_violence_dcv %>%
   ggplot(aes(x = school_year, y = rate, 
              color = division, group = division)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = school_violence_dcv_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
-                     name = "Rate per 1000") +
+                     name = "Rate of Incidents per 1000 Students") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
-##### Weapons Possession
+##### Rate of Incidents of Weapons Possession for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 school_weapons_dcv <- read_csv("../data/school_weapons_dcv.csv")
+school_weapons_dcv_labels <- school_weapons_dcv %>% 
+  filter(division != "Virginia" & school_year == "2020-2021") %>%
+  mutate(label = as.character(round((rate), digits = 1)))
 
 school_weapons_dcv %>%
   ggplot(aes(x = school_year, y = rate, 
              color = division, group = division)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = school_weapons_dcv_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,50),
-                     name = "Rate per 1000") +
+                     name = "Rate of Incidents per 1000 Students") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -1218,20 +1291,26 @@ school_weapons_dcv %>%
 ### School Suspensions {.tabset}
 
 #### Trends
-##### Students given an out-of-school suspension (short-term suspension, long-term suspension, or modified expulsion to suspension) per 1000 students enrolled
+
+##### Rate of Students Given an Out-of-School Suspension (Short-term Suspension, Long-term Suspension, or Modified Expulsion to Suspension) for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 school_suspensions <- read_csv("../data/school_suspensions.csv")
+school_suspensions_labels <- school_suspensions %>% 
+  filter(division != "Virginia" & school_year == "2020-21") %>%
+  mutate(label = as.character(round((rate), digits = 1)))
 
 school_suspensions %>%
-  ggplot() +
-  geom_line(aes(x = school_year, y = rate, 
-             color = division, 
-             group = interaction(division, source), 
-             linetype = source)) +
-  geom_point(aes(x = school_year, y = rate, 
-             color = division, 
-             group = interaction(division, source), 
-             linetype = source), ) +
+  ggplot(aes(x = school_year, y = rate, 
+             color = division, group = division)) +
+  geom_vline(xintercept = "2016-17", linetype = 2, color = "#333333") +
+  annotate("text", x = 14.2, y = 350, size = 3, hjust = 0, color = "#333333", 
+           label = 
+"Replicable with 
+available SSIR data") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(data = school_suspensions_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_linetype_manual(values = c(2, 1)) +
   scale_y_continuous(limits = c(0,500),
@@ -1243,21 +1322,29 @@ school_suspensions %>%
 ```
 
 
-### Children in Need of Supervision {.tabset}
+### Children in Need of Services or Supervision {.tabset}
 
 #### Trends
+
+##### Rate of Youth (Age 10-17) in Need of Services or Supervision for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 child_need_services <- read_csv("../data/child_need_services.csv")
+child_need_services <- child_need_services %>%
+  mutate(year = as.character(year))
+child_need_services_labels <- child_need_services %>% 
+  filter(locality != "Virginia" & year == "2022") %>%
+  mutate(label = as.character(round((rate), digits = 1)))
 
-child_need_services %>%
-  mutate(year = as.character(year)) %>% 
-  ggplot(aes(x = year, y = rate, 
-             color = locality, group = locality)) +
+child_need_services %>% 
+  ggplot(aes(x = year, y = rate, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = child_need_services_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
-                     name = "Rate per 1000") +
+                     name = "Rate per 1000 Youth (10-17)") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -1267,18 +1354,27 @@ child_need_services %>%
 ### Juvenile Delinquency Judgments {.tabset}
 
 #### Trends
+
+##### Rate of Juvenile Delinquency Judgments for Youth, Age 10-17, for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 juvenile_delinquency <- read_csv("../data/juvenile_delinquency.csv")
+juvenile_delinquency <- juvenile_delinquency %>%
+  mutate(year = as.character(year))
 
-juvenile_delinquency %>%
-  mutate(year = as.character(year)) %>% 
+juvenile_delinquency_labels <- juvenile_delinquency %>% 
+  filter(locality != "Virginia" & year == "2022") %>%
+  mutate(label = as.character(round((rate), digits = 1)))
+
+juvenile_delinquency %>% 
   ggplot(aes(x = year, y = rate, 
              color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = juvenile_delinquency_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,150),
-                     name = "Rate per 1000") +
+                     name = "Rate per 1000 Youth (10-17)") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -1288,18 +1384,26 @@ juvenile_delinquency %>%
 ### Underage Alcohol Arrests {.tabset}
 
 #### Trends
+
+##### Rate of Underage Alcohol Arrests for Youth Under 18 for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 arrests_alcoholrelated <- read_csv("../data/arrests_alcoholrelated.csv")
+arrests_alcoholrelated <- arrests_alcoholrelated %>%
+  mutate(year = as.character(year))
+arrests_alcoholrelated_labels <- arrests_alcoholrelated %>% 
+  filter(locality != "Virginia" & year == "2021") %>%
+  mutate(label = as.character(round((arr_rate), digits = 1)))
 
-arrests_alcoholrelated %>%
-  mutate(year = as.character(year)) %>% 
+arrests_alcoholrelated %>% 
   ggplot(aes(x = year, y = arr_rate, 
              color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = arrests_alcoholrelated_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,50),
-                     name = "Rate per 1000") +
+                     name = "Rate per 1000 Youth (Under 18)") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -1309,18 +1413,26 @@ arrests_alcoholrelated %>%
 ### Arrests for Violent Crimes {.tabset}
 
 #### Trends
+
+##### Rate of Arrests for Crimes against Persons for Youth Under 18 for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 arrests_crimesagainstpersons <- read_csv("../data/arrests_crimesagainstpersons.csv")
+arrests_crimesagainstpersons <- arrests_crimesagainstpersons %>%
+  mutate(year = as.character(year))
+arrests_crimesagainstpersons_labels <- arrests_crimesagainstpersons %>% 
+  filter(locality != "Virginia" & year == "2021") %>%
+  mutate(label = as.character(round((arr_rate), digits = 1)))
 
-arrests_crimesagainstpersons %>%
-  mutate(year = as.character(year)) %>% 
+arrests_crimesagainstpersons %>% 
   ggplot(aes(x = year, y = arr_rate, 
              color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = arrests_crimesagainstpersons_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,50),
-                     name = "Rate per 1000") +
+                     name = "Rate per 1000 Youth (Under 18)") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
