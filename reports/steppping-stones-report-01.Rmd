@@ -1,12 +1,33 @@
 ---
 title: "Stepping Stone Report Draft 1"
-author: "Michele Claibourn, Elizabeth Mitchell, Nina Schoonover, Lee Leboeuf"
+author: "Michele Claibourn, Elizabeth Mitchell, Nina Schoonover, Lee LeBoeuf"
 date: "2023-05-02"
 output: 
   html_document:
+    # template: school-composition-template.html
+    # theme:
+      # base_font:
+      #   google: "Poppins"
+      # heading_font:
+      #   google: "Oswald"
+      # bootswatch: spacelab
+      # version: 5
+    # css: styles.css
     toc: true
     toc_float: true
+# toc-title: Contents
 ---
+```{css, echo=FALSE}
+h1, h2, h3, h4, h5, h6 {
+  padding-top: 1rem;
+}
+div.section.level4.tabset h4 {
+  font-size: 24px;
+}
+h5, h6 {
+  font-size: 18px;
+}
+```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
@@ -16,6 +37,7 @@ library(scales)
 library(janitor)
 library(ggthemes)
 library(ggrepel)
+library(bslib)
 
 three_category_palette <- c("#E48073", "#2F7E9F", "#83DBD7")
 two_category_palette <- c("#782C6A", "#83DBD7")
@@ -38,70 +60,64 @@ one_category_palette <- c("#782C6A")
 
 ## Education and Civic Engagement
 
-### Kindergarteners Identified for Reading Intervention Services {.tabset}
+### Kindergarteners at or above Kindergarten Readiness Levels {.tabset}
 
 #### Trends
 
+##### Percent of Incoming Kindergarteners meeting or screening above PALS benchmarks for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
-pals_kinder <- read_csv("../data/pals_kindergarten.csv")
-pals_kinder_u <- read_csv("../data/pals_kindergarten_updated.csv")
-pals_kinder_labels <- pals_kinder_u %>% 
-  filter(location != "Virginia") %>% 
-  mutate(label = paste0(as.character(round(percent, digits = 1)), "%"))
+pals_kinder <- read_csv("../data/pals_kindergarten_updated.csv")
+pals_kinder <- pals_kinder %>% mutate(pct_invert = 100-percent)
+pals_kinder_labels <- pals_kinder %>% 
+  filter(location != "Virginia" & school_year == "2019-2020") %>%
+  mutate(label = paste0(as.character(round(pct_invert, digits = 1)), "%"))
 
-pals_kinder_u %>%
-  ggplot(aes(x = school_year, y = percent, color = location, group = location, label = percent)) +
-  geom_line() +
-  geom_point() +
-  geom_text_repel(data = pals_kinder_labels, aes(label = label), size = 2.5, max.overlaps = 15) +
-  scale_color_manual(values = three_category_palette) +
-  scale_y_continuous(limits = c(0, 100),
-                     labels = label_percent(scale = 1), 
-                     name = "Percent of Screened Students") + 
-  scale_x_discrete(name = "School Year") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
-  labs(color = "")
-```
-
-##### Inverted - Kindergarteners at or above readiness levels
-```{r}
-pals_kinder <- read_csv("../data/pals_kindergarten.csv")
-pals_kinder_u <- read_csv("../data/pals_kindergarten_updated.csv")
-
-pals_kinder_u %>%
-  mutate(pct_invert = 100-percent) %>% 
+pals_kinder %>%
   ggplot(aes(x = school_year, y = pct_invert, color = location, group = location)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = pals_kinder_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Percent of Screened Students") + 
+                     name = "Percent of Incoming Kindergarteners") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
+
+Source: Annie E. Casey Foundation, Kids Count Data Center, "Fall PALS-K [before](https://datacenter.kidscount.org/data/tables/3254-fall-pals-k-before-2015-16) and [after](https://datacenter.kidscount.org/data/tables/10181-fall-pals-k-after-2015-16) 2015/16 in Virginia"
 
 #### About
 
 
 ### Standards of Learning
 
-#### Math, Grade 3, Grade 5, Grade 8 {.tabset}
+#### Math: Grades 3, 5, and 8 {.tabset}
 
 ##### Trends
 
-###### Grade 3 Math
+###### Percent of Students who Pass the 3rd Grade Math SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 # Read in data
 sols <- read_csv("../data/sol_pass.csv")
-miss2021 <- data.frame(division_name = c("Albemarle County", "Charlottesville City", "Virginia"),
+sols <- sols %>% 
+  mutate(division_name = recode(division_name,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"))
+miss2021 <- data.frame(division_name = c("Albemarle", "Charlottesville", "Virginia"),
                        school_year = c("2019-2020", "2019-2020", "2019-2020"))
 
 sols_m3_labels <- sols %>% 
-  filter(division_name != "Virginia" & subject == "Mathematics" & test_level == "Grade 3") %>% 
+  filter(division_name != "Virginia" & subject == "Mathematics" & test_level == "Grade 3" & school_year == "2021-2022") %>% 
+  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
+sols_m5_labels <- sols %>% 
+  filter(division_name != "Virginia" & subject == "Mathematics" & test_level == "Grade 5" & school_year == "2021-2022") %>% 
+  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
+sols_m8_labels <- sols %>% 
+  filter(division_name != "Virginia" & subject == "Mathematics" & test_level == "Grade 8" & school_year == "2021-2022") %>% 
   mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
 
 # Grade 3 Plot
@@ -110,24 +126,25 @@ sols %>%
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
-  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2011-2012", linetype = 2, color = "black") +
-  annotate("text", x = 7.2, y = 10, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2011-2012", linetype = 2, color = "#333333") +
+  annotate("text", x = 7.2, y = 25, size = 3, hjust = 0, color = "#333333", 
            label = 
-"Revised math standards 
-released by the VDOE") +
+"Implementation of 
+revised math standards") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = sols_m3_labels, aes(label = label), size = 2.5, point.padding = 0.5, max.overlaps = 15) +
+  geom_text_repel(data = sols_m3_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Pass Rate") + 
+                     name = "Percent of Students Taking SOL") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -137,60 +154,64 @@ released by the VDOE") +
 
 Source: Virginia Department of Education (VDOE). 2006 - 2021. https://p1pe.doe.virginia.gov/buildatable/testresults
        
-###### Grade 5 Math
+###### Percent of Students who Pass the 5th Grade Math SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 sols %>% 
   filter(subject == "Mathematics" & test_level == "Grade 5") %>% 
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
-  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2011-2012", linetype = 2, color = "black") +
-  annotate("text", x = 7.2, y = 10, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2011-2012", linetype = 2, color = "#333333") +
+  annotate("text", x = 7.2, y = 25, size = 3, hjust = 0, color = "#333333", 
            label = 
-"Revised math standards 
-released by the VDOE") +
+"Implementation of 
+revised math standards") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = sols_m5_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Pass Rate") + 
+                     name = "Percent of Students Taking SOL") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
-###### Grade 8 Math
+###### Percent of Students who Pass the 8th Grade Math SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 sols %>% 
   filter(subject == "Mathematics" & test_level == "Grade 8") %>% 
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
-  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2011-2012", linetype = 2, color = "black") +
-  annotate("text", x = 7.2, y = 10, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2011-2012", linetype = 2, color = "#333333") +
+  annotate("text", x = 7.2, y = 25, size = 3, hjust = 0, color = "#333333", 
            label = 
-"Revised math standards 
-released by the VDOE") +
+"Implementation of 
+revised math standards") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = sols_m8_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Pass Rate") + 
+                     name = "Percent of Students Taking SOL") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -199,15 +220,21 @@ released by the VDOE") +
 
 ##### About
 
-#### Reading, Grades 3, 5, and 8 {.tabset}
+#### Reading: Grades 3, 5, and 8 {.tabset}
 
 ##### Trends
-###### Grade 3 Reading
+###### Percent of Students who Pass the 3rd Grade Reading SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
-# Read in data
-sols <- read_csv("../data/sol_pass.csv")
-miss2021 <- data.frame(division_name = c("Albemarle County", "Charlottesville City", "Virginia"),
-                       school_year = c("2019-2020", "2019-2020", "2019-2020"))
+# create labels for reading SOLs
+sols_r3_labels <- sols %>% 
+  filter(division_name != "Virginia" & subject == "English:Reading" & test_level == "Grade 3" & school_year == "2021-2022") %>% 
+  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
+sols_r5_labels <- sols %>% 
+  filter(division_name != "Virginia" & subject == "English:Reading" & test_level == "Grade 5" & school_year == "2021-2022") %>% 
+  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
+sols_r8_labels <- sols %>% 
+  filter(division_name != "Virginia" & subject == "English:Reading" & test_level == "Grade 8" & school_year == "2021-2022") %>% 
+  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
 
 # Grade 3 Reading Plot
 sols %>% 
@@ -215,30 +242,32 @@ sols %>%
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
-  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
-  annotate("text", x = 8.2, y = 10, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2012-2013", linetype = 2, color = "#333333") +
+  annotate("text", x = 8.2, y = 25, size = 3, hjust = 0, color = "#333333", 
            label = 
-"Revised reading standards 
-released by the VDOE") +
+"Implementation of 
+revised reading standards") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = sols_r3_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Pass Rate") + 
+                     name = "Percent of Students Taking SOL") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
-###### Grade 5 Reading
+###### Percent of Students who Pass the 5th Grade Reading SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 # Grade 5 Reading Plot
 sols %>% 
@@ -246,30 +275,32 @@ sols %>%
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
-  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
-  annotate("text", x = 8.2, y = 10, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2012-2013", linetype = 2, color = "#333333") +
+  annotate("text", x = 8.2, y = 25, size = 3, hjust = 0, color = "#333333", 
            label = 
-"Revised reading standards 
-released by the VDOE") +
+"Implementation of 
+revised reading standards") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = sols_r5_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Pass Rate") + 
+                     name = "Percent of Students Taking SOL") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
-###### Grade 8 Reading
+###### Percent of Students who Pass the 8th Grade Reading SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 # Grade 8 Plot
 sols %>% 
@@ -277,23 +308,25 @@ sols %>%
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
-  annotate("text", x = 11.9, y = 95, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2012-2013", linetype = 2, color = "black") +
-  annotate("text", x = 8.2, y = 10, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2012-2013", linetype = 2, color = "#333333") +
+  annotate("text", x = 8.2, y = 25, size = 3, hjust = 0, color = "#333333", 
            label = 
-"Revised reading standards 
-released by the VDOE") +
+"Implementation of 
+revised reading standards") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = sols_r8_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Pass Rate") + 
+                     name = "Percent of Students Taking SOL") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -305,19 +338,28 @@ released by the VDOE") +
 ### Students Eligible for Special Education Services {.tabset}
 
 #### Trends
-
+##### Percent of Students Identified to Receive Special Services for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 sped_services <- read_csv("../data/sped_services.csv")
+sped_services <- sped_services %>% 
+  mutate(division_name = recode(division_name,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"))
+sped_services_labels <- sped_services %>% 
+  filter(division_name != "Virginia" & school_year == "2021-2022") %>%
+  mutate(label = paste0(as.character(round(percent_sped, digits = 1)), "%"))
 
 sped_services %>% 
   ggplot(aes(x = school_year, y = percent_sped, 
              color = division_name, group = division_name)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = sped_services_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
-                     name = "Percent") + 
+                     name = "Percent of Enrolled Students") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -327,89 +369,167 @@ sped_services %>%
 ### English Language-Learning Students {.tabset}
 
 #### Trends
-
+##### Percent of Students Identified as English Language Learners for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 english_language_learners <- read_csv("../data/english_language_learners.csv")
+english_language_learners_labels <- english_language_learners %>% 
+  filter(locality != "Virginia" & school_year == "2022-2023") %>%
+  mutate(label = paste0(as.character(round(pct_english_learners, digits = 1)), "%"))
 
 english_language_learners %>% 
   ggplot(aes(x = school_year, y = pct_english_learners, color = locality, group=locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = english_language_learners_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.4, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
-                     name = "Percent") + 
+                     name = "Percent of Enrolled Students") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
-### Percent Average Daily Attendance {.tabset}
+### Average Daily Attendance {.tabset}
 
 #### Trends
+##### Percent of Students in Attendance on an Average Day for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 average_daily_attendance <- read_csv("../data/average_daily_attendance.csv")
+average_daily_attendance <- average_daily_attendance %>% 
+  mutate(school_year = paste0(as.character(year-1), "-", as.character(year)))
+average_daily_attendance_labels <- average_daily_attendance %>% 
+  filter(name != "Virginia" & school_year == "2021-2022") %>%
+  mutate(label = paste0(as.character(round(pct_att_total, digits = 1)), "%"))
 
-average_daily_attendance %>% 
-  mutate(school_year = paste0(as.character(year-1), "-", as.character(year))) %>% 
+average_daily_attendance %>%
   ggplot(aes(x = school_year, y = pct_att_total, color = name, group = name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "black") +
-  annotate("text", x = 10.3, y = 65, size = 3, hjust = 0, color = "black", 
+  geom_rect(aes(xmin = "2019-2020", xmax = "2020-2021", ymin = -Inf, ymax = Inf), alpha = .05, color = NA, fill = "#f5f5f5") +
+  annotate("text", x = 10.2, y = 65, size = 3, hjust = 0, color = "#333333", 
            label = 
-"School closures for 
+"School schedules 
+impacted by 
 COVID-19 Pandemic") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = average_daily_attendance_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(50, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Percent") + 
+                     name = "Percent of Students") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
-  labs(color = "")
+  labs(color = "", fill = "")
 ```
 
 ### On-Time Graduation Rates {.tabset}
 
 #### Trends
+##### Percent of Student Cohort Graduating in Four Years for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 graduation_rates <- read_csv("../data/graduation_rates.csv")
+graduation_rates <- graduation_rates %>% 
+  mutate(school_year = as.character(cohort_year),
+         division_name = recode(division_name,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"))
+graduation_rates_labels <- graduation_rates %>% 
+  filter(division_name != "Virginia" & school_year == "2022") %>%
+  mutate(label = paste0(as.character(round(graduation_rate, digits = 1)), "%"))
 
 graduation_rates %>%
-  mutate(school_year = as.character(cohort_year)) %>% 
   ggplot(aes(x = school_year, y = graduation_rate, color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2013", linetype = 2, color = "black") +
-  annotate("text", x = 6.2, y = 55, size = 3, hjust = 0, color = "black", 
-           label = 
-"Charlottesville City Schools
-extend WALK program hours") +
+  # geom_vline(xintercept = "2013", linetype = 2, color = "black") +
+#   annotate("text", x = 6.2, y = 55, size = 3, hjust = 0, color = "black", 
+#            label = 
+# "Charlottesville City Schools
+# extend WALK program hours") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = graduation_rates_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Percent") + 
-  scale_x_discrete(name = "School Year") +
+                     name = "Percent of Student Cohort") + 
+  scale_x_discrete(name = "Graduation Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
   labs(color = "")
 ```
 
+
+### Post-Secondary Enrollment {.tabset}
+
+#### Trends
+##### Percent of Graduating Students Enrolled in a Post-Secondary Institution within 16 months of High School Graduation for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r}
+postsecondary_education <- read_csv("../data/postsecondary_education.csv")
+
+# pivot to stack 2 year and 4 year
+df_long <- postsecondary_education %>% 
+  mutate(enrolled4yr = enrolled4pub + enrolled4priv) %>% 
+  select(year, locality, cohortsize, enrolled4yr, enrolled2yr, enrolledany) %>% 
+  pivot_longer(cols = starts_with("enrolled"), names_to = "type", values_to = "number") %>% 
+  mutate(percent = (number/cohortsize)*100,
+         school_year = as.character(year))
+
+df_long <- df_long %>% 
+  filter(type != "enrolled2yr") %>% 
+  mutate(type = recode(type,
+                          "enrolled4yr" = "4-yr Institution",
+                          "enrolledany" = "Any Institution"))
+
+df_long_labels <- df_long %>% 
+  filter(locality != "Virginia" & school_year == "2020") %>%
+  mutate(label = paste0(as.character(round(percent, digits = 1)), "%"))
+
+# keep only 4yr and any - or - 2yr and 4yr
+
+df_long %>%
+  ggplot(aes(x = school_year, y = percent, 
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(data = df_long_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  scale_linetype_manual(values = c(2,1)) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Graduating Students") +
+  scale_x_discrete(name = "Graduation Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  labs(color = "", linetype = "")
+```
+
 ### High School Degree Attainment {.tabset}
 
 #### Trends
+##### Percent of Residents Age 25 and Older with a High School Degree or Equivalent in Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 hsdegree_attainment <- read_csv("../data/hsdegree_attainment.csv")
-
-hsdegree_attainment %>%
+hsdegree_attainment <- hsdegree_attainment %>% 
   mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
          locality = str_trim(locality),
-         survey_period = paste0(as.character(year-5), "-", as.character(year))) %>% 
+         survey_period = paste0(as.character(year-5), "-", as.character(year)))
+hsdegree_attainment_labels <- hsdegree_attainment %>% 
+  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
+  mutate(label = paste0(as.character(round(pcthshigherE, digits = 1)), "%"))
+
+hsdegree_attainment %>%
   ggplot(aes(x = survey_period, y = pcthshigherE, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = hsdegree_attainment_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(40, 100),
                      labels = label_percent(scale = 1), 
@@ -420,69 +540,38 @@ hsdegree_attainment %>%
   labs(color = "")
 ```
 
-### Post-Secondary Enrollment {.tabset}
-
-#### Trends
-```{r}
-postsecondary_education <- read_csv("../data/postsecondary_education.csv")
-
-# ggplot(postsecondary_education, aes(x = year, y = percentany, color = locality)) +
-#   geom_line() +
-#   scale_y_continuous(limits = c(50,100))
-
-# pivot to stack 2 year and 4 year
-df_long <- postsecondary_education %>% 
-  mutate(enrolled4yr = enrolled4pub + enrolled4priv) %>% 
-  select(year, locality, cohortsize, enrolled4yr, enrolled2yr, enrolledany) %>% 
-  pivot_longer(cols = starts_with("enrolled"), names_to = "type", values_to = "number") %>% 
-  mutate(percent = (number/cohortsize)*100,
-         school_year = as.character(year))
-
-# keep only 4yr and any - or - 2yr and 4yr
-
-# ggplot(df_long, aes(x = year, y = percent, fill = type)) + 
-#   geom_area() +
-#   facet_wrap(~locality)
-
-df_long %>%
-  ggplot(aes(x = school_year, y = percent, 
-             color = locality, 
-             group = interaction(locality, type), 
-             linetype = type)) +
-  geom_line() +
-  geom_point() +
-  scale_linetype_manual(values = c(6, 1, 5)) +
-  scale_color_manual(values = three_category_palette) +
-  scale_y_continuous(limits = c(0, 100),
-                     labels = label_percent(scale = 1),
-                     name = "Percent") +
-  scale_x_discrete(name = "School Year") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
-  labs(color = "", linetype = "")
-```
-
 ### Registered Voters {.tabset}
 
 #### Trends
+##### Percent of Adults (18+) Registered to Vote in Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 voter_reg <- read_csv("../data/vote_reg.csv")
+voter_reg <- voter_reg %>% 
+  filter(year != 2021) %>% 
+  mutate(year = as.character(year),
+         locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville")) 
+voter_reg_labels <- voter_reg %>% 
+  filter(locality != "Virginia" & year == "2020") %>%
+  mutate(label = paste0(as.character(round((reg_rate*100), digits = 1)), "%"))
 
 voter_reg %>%
-  mutate(year = as.character(year)) %>% 
   ggplot(aes(x = year, y = reg_rate, color = locality, group = locality)) +
-  geom_vline(xintercept = "2000", linetype = 2, color = "black") +
-  geom_vline(xintercept = "2004", linetype = 2, color = "black") +
-  geom_vline(xintercept = "2008", linetype = 2, color = "black") +
-  geom_vline(xintercept = "2012", linetype = 2, color = "black") +
-  geom_vline(xintercept = "2016", linetype = 2, color = "black") +
-  geom_vline(xintercept = "2020", linetype = 2, color = "black") +
-  annotate("text", x = 5.2, y = .3, size = 3, hjust = 0, color = "black", 
+  geom_vline(xintercept = "2000", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2004", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2008", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2012", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2016", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2020", linetype = 2, color = "#333333") +
+  annotate("text", x = 5.2, y = .3, size = 3, hjust = 0, color = "#333333", 
            label = 
 "Presidential
 Elections") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = voter_reg_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.6, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   # scale_x_continuous("Year", labels = as.character(year), breaks = year) + 
   scale_y_continuous(limits = c(0, 1),
@@ -496,35 +585,42 @@ Elections") +
 
 ## Economic Security and Housing
 
-### Per Capita Income {.tabset}
+### Income Per Capita {.tabset}
 
 #### Trends
+##### Income Per Capita for Charlottesville and Albemarle Combined and Virginia
 ```{r}
 per_cap_income <- read_csv("../data/per_cap_income.csv")
-
-per_cap_income %>% 
+per_cap_income <- per_cap_income %>% 
   pivot_longer(cols = c("pci", "adj_pci"), names_to = "type", values_to = "number") %>%
   mutate(year = as.character(year),
-         locality = str_remove(GeoName, ", VA*"), 
-         locality = str_trim(locality)) %>% 
-  ggplot() +
-  geom_rect(aes(xmin = "2007", xmax = "2009", ymin = -Inf, ymax = Inf), alpha = .05, fill = "#f5f5f5") +
-  annotate("text", x = 10.2, y = 80000, size = 3, hjust = 0, color = "black",
-           label =
-"Economic Recession 
-(2007-2009)") +
-  geom_line(aes(x = year, y = number, 
+         locality = recode(GeoName,
+                           "Albemarle + Charlottesville, VA*" = "Albemarle + Charlottesville"),
+         type = recode(type,
+                       "pci" = "Raw Income",
+                       "adj_pci" = "Inflation-Adjusted Income"))
+per_cap_income_labels <- per_cap_income %>% 
+  filter(locality != "Virginia" & year == "2021") %>%
+  mutate(label = paste0(as.character(formatC(number, format="d", big.mark=","))))
+
+per_cap_income %>%
+  ggplot(aes(x = year, y = number,
              color = locality, 
              group = interaction(locality, type), 
              linetype = type)) +
-  geom_point(aes(x = year, y = number,
-             color = locality, 
-             group = interaction(locality, type), 
-             linetype = type), ) +
+  geom_rect(aes(xmin = "2007", xmax = "2009", ymin = -Inf, ymax = Inf), alpha = .05, color = NA, fill = "#f5f5f5") +
+  annotate("text", x = 10.2, y = 80000, size = 3, hjust = 0, color = "#333333",
+           label =
+"Economic Recession 
+(2007-2009)") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(data = per_cap_income_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.6, show.legend = FALSE, min.segment.length = Inf) +
   scale_linetype_manual(values = c(2, 1)) +
   scale_color_manual(values = two_category_palette) +
   scale_y_continuous(label = comma,
-                     name = "Per Capita Income") +
+                     name = "Income Per Capita") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -535,7 +631,7 @@ per_cap_income %>%
 
 #### Trends
 
-##### Youth Participation in the Labor Force
+##### Percent of Youth (15-24) Participating in the Labor Force for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 youth_employment <- read_csv("../data/youth_employment_status.csv")
 
@@ -545,10 +641,16 @@ youth_employment <- youth_employment %>%
                           "Charlottesville city, Virginia" = "Charlottesville"),
          survey_period = paste0(as.character(year-5), "-", as.character(year)))
 
+youth_employment_labels <- youth_employment %>% 
+  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
+  mutate(label = paste0(as.character(round((laborforce_rate), digits = 1)), "%"))
+
 youth_employment %>%
   ggplot(aes(x = survey_period, y = laborforce_rate, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = youth_employment_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -559,16 +661,22 @@ youth_employment %>%
   labs(color = "")
 ```
 
-##### Youth Unemployment
+##### Percent of Youth (15-24) in the Labor Force Experiencing Unemployment for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
+youth_unemployment_labels <- youth_employment %>% 
+  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
+  mutate(label = paste0(as.character(round((unemployment_rate), digits = 1)), "%"))
+
 youth_employment %>%
   ggplot(aes(x = survey_period, y = unemployment_rate, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = youth_unemployment_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Percent of Youth") + 
+                     name = "Percent of Youth in Labor Force") + 
   scale_x_discrete(name = "ACS Survey Period") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -576,7 +684,7 @@ youth_employment %>%
 ```
 
 
-### Percent of Children Living below Poverty {.tabset}
+### Children Living below Poverty {.tabset}
 
 #### Trends
 ```{r}
@@ -1156,7 +1264,7 @@ juvenile_delinquency %>%
   geom_line() +
   geom_point() +
   scale_color_manual(values = three_category_palette) +
-  scale_y_continuous(limits = c(0,100),
+  scale_y_continuous(limits = c(0,150),
                      name = "Rate per 1000") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
@@ -1352,6 +1460,7 @@ dat <- rbind(k12OSSmeans, albk12OSSmeans, cvillek12OSSmeans)
 
 
 ### Plots  adjust shape and color
+## years are fall year, create school year +1
 # all levels together 
 dat %>% 
 ggplot(aes(x = Year, y = meanpercsus, group = Locality, shape = Race, color = Locality)) + 
@@ -1361,7 +1470,7 @@ ggplot(aes(x = Year, y = meanpercsus, group = Locality, shape = Race, color = Lo
   scale_y_continuous(limits = c(0,20),
                      breaks = seq(0, 20, by = 5),
                      labels = label_percent(scale = 1)) +
-  xlab("Year") + ylab("Average % of students receiving OSS")  + 
+  xlab("School Year") + ylab("Average % of students receiving OSS")  + 
   ggtitle("") + scale_x_continuous(breaks = seq(2011, 2017, by = 2)) + 
   theme_minimal() +
   labs(caption = "Note: Racial groups were only included for a given year and locality when the average
