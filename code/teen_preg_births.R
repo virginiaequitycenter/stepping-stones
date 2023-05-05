@@ -30,11 +30,11 @@ library(zoo)
 #                           c("top", "left", "bottom", "right")))
 # 
 # # read table
-# list19a <- extract_tables(pdflist[20], pages = 1, area = pdfarea1,
+# list19a <- extract_tables(pdf20, pages = 1, area = pdfarea1,
 #                          guess = FALSE, output = "data.frame")
-# list19b <- extract_tables(pdflist[20], pages = 2, area = pdfarea2,
+# list19b <- extract_tables(pdf20, pages = 2, area = pdfarea2,
 #                           guess = FALSE, output = "data.frame")
-#  
+# 
 # dfnum19 <- list19a[[1]][,1:9]
 # dfrate19 <- list19b[[1]][,c(1:8,17)]
 # names(dfnum19) <- c("locality", "pregnancies", "under15pregnancies", "from15to17pregnancies", "from18to19pregnancies",
@@ -42,16 +42,16 @@ library(zoo)
 # names(dfrate19) <- c("pregnancyrate", "under15pregnancyrate", "from15to17pregnancyrate", "from18to19pregnancyrate",
 #                     "birthsrate", "under15birthsrate", "from15to17birthsrate", "from18to19birthsrate",
 #                     "locality")
-#  
+# 
 # loc19a <- dfnum19 %>%
 #   filter(locality %in% c("ALBEMARLE COUNTY", "CHARLOTTESVILLE CITY", "COMMONWEALTH OF VIRGINIA")) %>%
-#   mutate(year = 2019, locality = str_to_title(locality)) %>%
-#   select(locality, pregnancies, from15to17births, year)
+#   mutate(year = 2020, locality = str_to_title(locality)) %>%
+#   select(locality, from15to17pregnancies, from15to17births, year)
 # 
 # loc19b <- dfrate19 %>%
 #   filter(locality %in% c("ALBEMARLE COUNTY", "CHARLOTTESVILLE CITY", "COMMONWEALTH OF VIRGINIA")) %>%
-#   mutate(year = 2019, locality = str_to_title(locality)) %>%
-#   select(locality, pregnancyrate, from15to17birthsrate, year)
+#   mutate(year = 2020, locality = str_to_title(locality)) %>%
+#   select(locality, from15to17pregnancyrate, from15to17birthsrate, year)
 # 
 # loc19 <- left_join(loc19a, loc19b)
 
@@ -102,12 +102,12 @@ extract_appvdh <- function(pdfurl, year, localities, pdfarea1, pdfarea2) {
   dfa <- dflista %>% 
     filter(locality %in% c(localities, "COMMONWEALTH OF VIRGINIA")) %>% 
     mutate(year = year, locality = str_to_title(locality)) %>% 
-    select(locality, pregnancies, from15to17births, year)
+    select(locality, from15to17pregnancies, from15to17births, year)
   
   dfb <- dflistb %>% 
     filter(locality %in% c(localities, "COMMONWEALTH OF VIRGINIA")) %>% 
     mutate(year = year, locality = str_to_title(locality)) %>% 
-    select(locality, pregnancyrate, from15to17birthsrate, year)
+    select(locality, from15to17pregnancyrate, from15to17birthsrate, year)
   
   df <- left_join(dfa, dfb)
   
@@ -419,15 +419,16 @@ df_list <- map(df_list, ~mutate_all(., as.character))
 vdh_all <- bind_rows(df_list)
 # format variables
 vdh_all <- vdh_all %>% 
-  mutate(pregnancies = as.numeric(gsub(",", "", pregnancies)),
+  mutate(from15to17pregnancies = as.numeric(gsub(",", "", from15to17pregnancies)),
          from15to17births = as.numeric(gsub(",", "", from15to17births)),
          year = as.numeric(year),
-         pregnancyrate = as.numeric(pregnancyrate),
+         from15to17pregnancyrate = as.numeric(from15to17pregnancyrate),
          from15to17birthsrate = as.numeric(from15to17birthsrate))
 
 ## And have a peek
-ggplot(vdh_all, aes(x = year, y = pregnancyrate, color = locality)) +
-  geom_line()
+ggplot(vdh_all, aes(x = year, y = from15to17pregnancyrate, color = locality)) +
+  geom_line() +
+  scale_y_continuous(limits = c(0,100))
 
 ggplot(vdh_all, aes(x = year, y = from15to17birthsrate, color = locality)) +
   geom_line()
@@ -436,18 +437,19 @@ ggplot(vdh_all, aes(x = year, y = from15to17birthsrate, color = locality)) +
 vdh_all <- vdh_all %>% 
   arrange(locality, year) %>% 
   group_by(locality) %>% 
-  mutate(pregnancyrate_3yr = zoo::rollmean(pregnancyrate, k = 3, fill = NA, align = "center"),
+  mutate(pregnancyrate_3yr = zoo::rollmean(from15to17pregnancyrate, k = 3, fill = NA, align = "center"),
          birthsrate_3yr = zoo::rollmean(from15to17birthsrate, k = 3, fill = NA, align = "center")) %>% 
   ungroup()
 
 ## And have a peek
 ggplot(vdh_all, aes(x = year, y = pregnancyrate_3yr, color = locality)) +
-  geom_line()
+  geom_line() +
+  scale_y_continuous(limits = c(0,100))
 
 ggplot(vdh_all, aes(x = year, y = birthsrate_3yr, color = locality)) +
   geom_line()
 
 
 # Save data ----
-write_csv(vdh_all, "data/teen_pregnancy_birth_rates.csv")
+write_csv(vdh_all, "data/teen_pregnancy_birth.csv")
 
