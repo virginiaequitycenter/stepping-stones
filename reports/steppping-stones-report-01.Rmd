@@ -684,17 +684,22 @@ youth_employment %>%
 ```
 
 
-### Children Living below Poverty {.tabset}
+### Children Living below Poverty Threshold {.tabset}
 
 #### Trends
+##### Percent of Children (0-17) Living below the Poverty Threshold for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 child_poverty <- read_csv("../data/child_pov.csv")
-
-child_poverty %>%
+child_poverty <- child_poverty %>%
   mutate(locality = ifelse(county_fips == "000", "Virginia",
                        ifelse(county_fips == "003", "Albemarle",
                               ifelse(county_fips == "540", "Charlottesville", "Unknown"))),
-         year = as.character(year)) %>% 
+         year = as.character(year))
+child_poverty_labels <- child_poverty %>% 
+  filter(locality != "Virginia" & year == "2021") %>%
+  mutate(label = paste0(as.character(round((pct_child_pov), digits = 1)), "%"))
+
+child_poverty %>% 
   ggplot(aes(x = year, y = pct_child_pov, color = locality, group = locality)) +
   geom_vline(xintercept = "2020", linetype = 2, color = "black") +
   geom_vline(xintercept = "2021", linetype = 2, color = "black") +
@@ -704,6 +709,8 @@ child_poverty %>%
 Stimulus Payments") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = child_poverty_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.6, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -717,8 +724,12 @@ Stimulus Payments") +
 ### Students Identified as Economically Disadvantaged {.tabset}
 
 #### Trends
+##### Percent of Students Identified as Economically Disadvantaged (eligible for free or reduced meals, eligible for TANF, Medicaid and/or Head Start, or identified as from a migrant family, experiencing homelessness, or in foster care) for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 economically_disadvantaged_students <- read_csv("../data/economically_disadvantaged_students.csv")
+economically_disadvantaged_students_labels <- economically_disadvantaged_students %>% 
+  filter(division_name != "Virginia" & school_year == "2022-2023") %>%
+  mutate(label = paste0(as.character(round((percent), digits = 1)), "%"))
 
 economically_disadvantaged_students %>%
   ggplot(aes(x = school_year, y = percent, color = division_name, group = division_name)) +
@@ -729,10 +740,12 @@ economically_disadvantaged_students %>%
 # Stimulus Payments") +
   geom_line() +
   geom_point() +
+  geom_text_repel(data = economically_disadvantaged_students_labels, aes(label = label),
+                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
-                     name = "Percent of Children") + 
+                     name = "Percent of Students") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
