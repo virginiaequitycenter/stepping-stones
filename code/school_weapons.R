@@ -498,41 +498,6 @@ df2007 <- bind_rows(df2007, t)
 df <- bind_rows(df2007, df2008, df2009, df2010, df2011, df2012, df2013)
 
 
-# # From SSIR ---- 
-# ## 2016-2017 ----
-# # Select 2016-2017
-# # Select Offense Category = Weapons Offenses
-# # Select All for everything else
-# # Downlaod Offense Frequency report
-# 
-# data2016 <- read_csv("datadownloads/Offense Frequency Report.csv", skip = 16) %>% 
-#   clean_names()
-# 
-# df2016 <- data2016 %>% 
-#   filter(division_name %in% c("Albemarle County Public Schools", "Charlottes ville City Public Schools")) %>% 
-#   select(division = division_name, school_year, weapon_count = related_to_weapons) %>% 
-#   mutate(weapon_count = as.numeric(weapon_count),
-#          division = ifelse(division == "Albemarle County Public Schools",
-#                        "Albemarle", "Charlottesville"),
-#          school_year = "2016-2017")
-# 
-# # create state total
-# state2016 <- data2016 %>% 
-#   mutate(weapons = as.numeric(related_to_weapons)) 
-# # fill in suppressed values with random draw between 1 and 5 
-# # suppression rule is anything under 10, so theoretically, this is still an undercount
-# set.seed(121)
-# state2016$weapons[is.na(state2016$weapons)] <- round(runif(n = length(which(is.na(state2016$weapons))), min=1, max=5),0)
-# 
-# # now create a state total
-# state2016 <- state2016 %>% 
-#   summarize(weapon_count = sum(weapons)) %>% 
-#   mutate(school_year = "2016-2017",
-#          division = "Virginia")
-# 
-# # bind state to localities
-# df2016 <- bind_rows(df2016, state2016)
-
 ## Just Virginia totals----
 ### 2013-14, 2014-15 ----
 # Table 2 (pages 21-24)
@@ -557,7 +522,7 @@ t <- map_df(tables, bind_rows)
 tnames <- c("offense", "code", "count2014", "perc2014", "count2015", "perc2015", "change")
 names(t) <- tnames
 
-# filter to knife,razor,other,toygun,bb,fireworks,ammo,handgun,taser,stun; gun+weapons+razor+toygun+fireworks
+# filter to knife,razor,other,toygun,bb,fireworks,ammo,handgun,taser,stun
 df2015 <- t %>% 
   filter(code %in% c("WP5", "W8P", "WP9", "W3P", "WP0", "W9P", "W1P", "WP1", "WT1", "WS1", "WP4", "WP2", "WP6", "WP8")) %>% 
   select(code, count2014, count2015) %>% 
@@ -605,7 +570,7 @@ t <- map_df(tables, bind_rows)
 tnames <- c("offense", "code", "count2016", "perc2016", "count2017", "perc2017")
 names(t) <- tnames
 
-# filter to alcohol, drug, tobacco 
+# filter to knife,razor,other,toygun,bb,fireworks,ammo,handgun,taser,stun
 df2017 <- t %>% # added TB2, electronic cigarettes
   filter(code %in% c("WP5", "W8P", "WP9", "W3P", "WP0", "W9P", "W1P", "WP1", "WT1", "WS1", "WP4", "WP2", "WP6", "WP8")) %>% 
   select(code, count2016, count2017) %>% 
@@ -618,7 +583,7 @@ df2017 <- t %>% # added TB2, electronic cigarettes
   mutate(division = "Virginia")
 
 # pivot to match data frame structures from earlier years
-# division, year, school_year, alc, drug, otc, tob
+# division, year, school_year, weapon_count
 df2017 <- df2017 %>% 
   pivot_longer(-division, names_to = "year", values_to = "weapon_count",
                names_prefix = "count_")

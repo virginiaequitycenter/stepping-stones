@@ -1,5 +1,5 @@
-# Stepping Stones Data: Drug/Alcohol Offenses in Schools ----
-# Updated 2023-02-20
+# Stepping Stones Data: Violent Offenses in Schools ----
+# Updated 2023-02-21
 # Contributor: Michele Claibourn
 # Acquire data from Discipline, Crime, and Violence Reports
 # https://www.doe.virginia.gov/data-policy-funding/data-reports/data-collection/special-education
@@ -66,22 +66,23 @@ tclean <- t %>%
 
 tclean <- tclean %>% 
   mutate(miscsplit2 = str_replace_all(miscsplit2, "[:alpha:]", "")) %>% 
-  separate(miscsplit2, into=c('threat2', 'sxass', 'sxbatt'))
+  separate(miscsplit2, into=c('threat', 'sxass', 'sxbatt'))
 
 # filter to localities of interest
-# and select drug-related columns (alc,drug,otc,tob,tob2) 
+# and select violence-related columns - those identified in city spreadsheet, excluding gun and weapons
+# (aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) 
 # remove the commas from some count values and then sum (and fix division names)
 df2013 <- tclean %>% 
   filter(str_detect(division2, "Charlottesville|Albemarle|STATE")) %>% 
-  select(division1, division2, alc, drug, otc, tob, tob2) %>% 
-  mutate(across(alc:tob2, as.character),
-         across(alc:tob2, ~str_remove(.x, ",")),
-         across(alc:tob2, as.numeric),
-         tob = tob+tob2,
+  select(division1, division2, aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) %>% 
+  mutate(across(aggbat:threat2, as.character),
+         across(aggbat:threat2, ~str_remove(.x, ",")),
+         across(aggbat:threat2, as.numeric),
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2,
          division = str_extract(division2, "Charlottesville|Albemarle|STATE"),
          division = ifelse(division == "STATE", "Virginia", division),
          school_year = "2012-2013") %>% 
-  select(division, school_year, alc, drug, otc, tob)
+  select(division, school_year, count)
 
 
 ## 2011-2012 ----
@@ -131,32 +132,34 @@ tclean <- tclean %>%
   separate(miscsplit2, into=c("fireworks", "otc", "robbery", "threat", "sxass", "sxbatt"))
 
 # filter to localities of interest (can't recover state totals from this table)
-# and select drug-related columns (alc,drug,otc,tob2) 
+# and select violence-related columns (aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) 
 # remove the commas from some count values and then sum (and fix division names)
 df2012 <- tclean %>% 
   filter(str_detect(division2, "CHAR|ALBEMARLE")) %>% 
-  select(division1, division2, alc, drug, otc, tob, tob2) %>% 
-  mutate(across(alc:tob2, as.character),
-         across(alc:tob2, ~str_remove(.x, ",")),
-         across(alc:tob2, as.numeric),
-         tob = tob+tob2,
+  select(division1, division2, aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) %>% 
+  mutate(across(aggbat:threat2, as.character),
+         across(aggbat:threat2, ~str_remove(.x, ",")),
+         across(aggbat:threat2, as.numeric),
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2,
          division = ifelse(str_detect(division2, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2011-2012") %>% 
-  select(division, school_year, alc, drug, otc, tob)
+  select(division, school_year, count)
 
 # write state totals and append
 # the state totals in this table are printed vertically
 # and show up in inconsistent ways in the table as read in
 # by tabularizer -- adding the counts by head in the interim
-t <- data.frame (alc  = c(745),
-                 drug = c(3485),
-                 otc = c(360),
-                 tob = c(4486)
-                 )
+t <- data.frame (aggbat  = c(4), staffbat = c(1178), studbat = c(3922),
+                 fight = c(7279), homi = c(0), kidnap = c(0), 
+                 wound = c(24), robbery = c(13), sxass = c(1),
+                 sxbatt = c(23), sxoffense = c(361), threat2 = c(6432)
+)
 
 t <- t %>% 
   mutate(school_year = "2011-2012",
-         division = "Virginia")
+         division = "Virginia",
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2) %>% 
+  select(division, school_year, count)
 
 # Bind state to localities
 df2012 <- bind_rows(df2012, t)
@@ -213,32 +216,34 @@ tclean <- tclean %>%
   mutate(aggbat = str_sub(division1, -1))
 
 # filter to localities of interest (can't recover state totals from this table)
-# and select drug-related columns (alc,drug,otc,tob2) 
+# and select violence-related columns (aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) 
 # remove the commas from some count values and then sum (and fix division names)
 df2011 <- tclean %>% 
   filter(str_detect(division1, "CHARLOTTESVILLE|ALBEMARLE")) %>% 
-  select(division1, division2, alc, drug, otc, tob, tob2) %>% 
-  mutate(across(alc:tob2, as.character),
-         across(alc:tob2, ~str_remove(.x, ",")),
-         across(alc:tob2, as.numeric),
-         tob = tob+tob2,
+  select(division1, division2, aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) %>% 
+  mutate(across(aggbat:threat2, as.character),
+         across(aggbat:threat2, ~str_remove(.x, ",")),
+         across(aggbat:threat2, as.numeric),
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2010-2011") %>% 
-  select(division, school_year, alc, drug, otc, tob)
+  select(division, school_year, count)
 
 # write state totals and append
 # the state totals in this table are printed vertically
 # and show up in inconsistent ways in the table as read in
-# by tabularizer -- adding the counts by head in the interim
-t <- data.frame (alc  = c(842),
-                 drug = c(3118),
-                 otc = c(305),
-                 tob = c(4256)
+# by tabulizer -- adding the counts by head in the interim
+t <- data.frame (aggbat  = c(1), staffbat = c(1209), studbat = c(3829),
+                 fight = c(7215), homi = c(0), kidnap = c(0), 
+                 wound = c(24), robbery = c(28), sxass = c(1),
+                 sxbatt = c(40), sxoffense = c(355), threat2 = c(6368)
 )
 
 t <- t %>% 
   mutate(school_year = "2010-2011",
-         division = "Virginia")
+         division = "Virginia",
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2) %>% 
+  select(division, school_year, count)
 
 # Bind state to localities
 df2011 <- bind_rows(df2011, t)
@@ -296,31 +301,33 @@ tclean <- tclean %>%
   mutate(aggbat = str_sub(division1, -1))
 
 # filter to localities of interest (can't recover state totals from this table)
-# and select drug-related columns (alc,drug,otc,tob2) 
+# and select violence-related columns (aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) 
 # remove the commas from some count values and then sum (and fix division names)
 df2010 <- tclean %>% 
-  select(division1, division2, alc, drug, otc, tob, tob2) %>% 
-  mutate(across(alc:tob2, as.character),
-         across(alc:tob2, ~str_remove(.x, ",")),
-         across(alc:tob2, as.numeric),
-         tob = tob+tob2,
+  select(division1, division2, aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) %>% 
+  mutate(across(aggbat:threat2, as.character),
+         across(aggbat:threat2, ~str_remove(.x, ",")),
+         across(aggbat:threat2, as.numeric),
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2009-2010") %>% 
-  select(division, school_year, alc, drug, otc, tob)
+  select(division, school_year, count)
 
 # write state totals and append
 # the state totals in this table are printed vertically
 # and show up in inconsistent ways in the table as read in
-# by tabularizer -- adding the counts by head in the interim
-t <- data.frame (alc  = c(899),
-                 drug = c(3216),
-                 otc = c(385),
-                 tob = c(4774)
+# by tabulizer -- adding the counts by head in the interim
+t <- data.frame (aggbat  = c(2), staffbat = c(1251), studbat = c(4235),
+                 fight = c(7806), homi = c(0), kidnap = c(0), 
+                 wound = c(34), robbery = c(16), sxass = c(2),
+                 sxbatt = c(44), sxoffense = c(385), threat2 = c(6189)
 )
 
 t <- t %>% 
   mutate(school_year = "2009-2010",
-         division = "Virginia")
+         division = "Virginia",
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2) %>% 
+  select(division, school_year, count)
 
 # Bind state to localities
 df2010 <- bind_rows(df2010, t)
@@ -382,31 +389,33 @@ tclean <- tclean %>%
   separate(miscsplit2, into=c("threat", "sxass", "sxbatt", "sxharass", "sxoffense"))
 
 # filter to localities of interest (can't recover state totals from this table)
-# and select drug-related columns (alc,drug,otc,tob2) 
+# and select violence-related columns (aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) 
 # remove the commas from some count values and then sum (and fix division names)
 df2009 <- tclean %>% 
-  select(division1, division2, alc, drug, otc, tob, tob2) %>% 
-  mutate(across(alc:tob2, as.character),
-         across(alc:tob2, ~str_remove(.x, ",")),
-         across(alc:tob2, as.numeric),
-         tob  = tob+tob2,
+  select(division1, division2, aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) %>% 
+  mutate(across(aggbat:threat2, as.character),
+         across(aggbat:threat2, ~str_remove(.x, ",")),
+         across(aggbat:threat2, as.numeric),
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2008-2009") %>% 
-  select(division, school_year, alc, drug, otc, tob)
+  select(division, school_year, count)
 
 # write state totals and append
 # the state totals in this table are printed vertically
 # and show up in inconsistent ways in the table as read in
-# by tabularizer -- adding the counts by head in the interim
-t <- data.frame (alc  = c(938),
-                 drug = c(3154),
-                 otc = c(412),
-                 tob = c(5431)
+# by tabulizer -- adding the counts by head in the interim
+t <- data.frame (aggbat  = c(2), staffbat = c(1275), studbat = c(4381),
+                 fight = c(8624), homi = c(0), kidnap = c(1), 
+                 wound = c(31), robbery = c(36), sxass = c(0),
+                 sxbatt = c(26), sxoffense = c(374), threat2 = c(6349)
 )
 
 t <- t %>% 
   mutate(school_year = "2008-2009",
-         division = "Virginia")
+         division = "Virginia",
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2) %>% 
+  select(division, school_year, count)
 
 # Bind state to localities
 df2009 <- bind_rows(df2009, t)
@@ -462,31 +471,33 @@ tclean <- tclean %>%
   separate(miscsplit2, into=c("threat", "sxass", "sxbatt", "sxharass"))
 
 # filter to localities of interest (can't recover state totals from this table)
-# and select drug-related columns (alc,drug,otc,tob2) 
+# and select violence-related columns (aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) 
 # remove the commas from some count values and then sum (and fix division names)
 df2008 <- tclean %>% 
-  select(division1, division2, alc, drug, otc, tob, tob2) %>% 
-  mutate(across(alc:tob2, as.character),
-         across(alc:tob2, ~str_remove(.x, ",")),
-         across(alc:tob2, as.numeric),
-         tob = tob+tob2,
+  select(division1, division2, aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) %>% 
+  mutate(across(aggbat:threat2, as.character),
+         across(aggbat:threat2, ~str_remove(.x, ",")),
+         across(aggbat:threat2, as.numeric),
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2007-2008") %>% 
-  select(division, school_year, alc, drug, otc, tob)
+  select(division, school_year, count)
 
 # write state totals and append
 # the state totals in this table are printed vertically
 # and show up in inconsistent ways in the table as read in
-# by tabularizer -- adding the counts by head in the interim
-t <- data.frame (alc  = c(847),
-                 drug = c(2747),
-                 otc = c(362),
-                 tob = c(5501)
+# by tabulizer -- adding the counts by head in the interim
+t <- data.frame (aggbat  = c(4), staffbat = c(1393), studbat = c(4657),
+                 fight = c(9327), homi = c(0), kidnap = c(1), 
+                 wound = c(34), robbery = c(36), sxass = c(1),
+                 sxbatt = c(28), sxoffense = c(390), threat2 = c(6789)
 )
 
 t <- t %>% 
   mutate(school_year = "2007-2008",
-         division = "Virginia")
+         division = "Virginia",
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxass+sxbatt+sxoffense+threat2) %>% 
+  select(division, school_year, count)
 
 # Bind state to localities
 df2008 <- bind_rows(df2008, t)
@@ -509,9 +520,9 @@ t1 <- tables[[1]] # put each table into separate data frame
 t2 <- tables[[2]]
 
 # rename columns manually
-t1names <- c("division1", "alc", "arson", "staffbat", "studbat", "wound", "threat1", "bande",
-             "bully", "disorder", "drug", "extort", "fight1", "fight2", "gang", "homi", 
-              "misc1", "blank1", "sxbatt", "aggbat", "tob", "theft", "threat", 
+t1names <- c("division1", "alc", "arson", "staffbat", "studbat", "wound", "threat", "bande",
+             "bully", "disorder", "drugs", "extort", "fight1", "fight2", "gang", "homi", 
+              "misc1", "blank1", "sxbatt", "aggbat", "tob1", "theft", "threat2", 
              "trespass", "vandal", "gun", "weapons")
 
 names(t1) <- t1names
@@ -546,34 +557,41 @@ tclean <- tclean %>%
   mutate(touch2 = ifelse(division1 == "CITY", 2, touch2))
 
 # filter to localities of interest (can't recover state totals from this table)
-# and select drug-related columns (alc,drug,otc,tob2) 
+# and select violence-related columns (aggbat, staffbat, studbat, fight, homi, kidnap, wound, robbery, sxass, sxbatt, sxoffense, threat2) 
 # remove the commas from some count values and then sum (and fix division names)
 df2007 <- tclean %>% 
-  select(division1, division2, alc, drug, otc, tob, tob2) %>% 
-  mutate(across(alc:tob2, as.character),
-         across(alc:tob2, ~str_remove(.x, ",")),
-         across(alc:tob2, as.numeric),
-         tob = tob+tob2,
+  select(division1, division2, aggbat, staffbat, studbat, fight1, fight2, homi, kidnap, wound, robbery, sxbatt, sxoffense, threat2) %>% 
+  mutate(across(aggbat:threat2, as.character),
+         across(aggbat:threat2, ~str_remove(.x, ",")),
+         across(aggbat:threat2, as.numeric),
+         fight = fight1+fight2,
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxbatt+sxoffense+threat2,
          division = ifelse(str_detect(division1, "ALBEMARLE"), "Albemarle", "Charlottesville"),
          school_year = "2006-2007") %>% 
-  select(division, school_year, alc, drug, otc, tob)
+  select(division, school_year, count)
 
 # write state totals and append
 # the state totals in this table are printed vertically
 # and show up in inconsistent ways in the table as read in
-# by tabularizer -- adding the counts by head in the interim
-t <- data.frame (alc  = c(894),
-                 drug = c(2921),
-                 otc = c(208),
-                 tob = c(5760)
+# by tabulizer -- adding the counts by head in the interim
+t <- data.frame (aggbat  = c(7), staffbat = c(1523), studbat = c(6650),
+                 fight = c(11073), homi = c(0), kidnap = c(0), 
+                 wound = c(39), robbery = c(31),
+                 sxbatt = c(46), sxoffense = c(1515), threat2 = c(8501)
 )
 
 t <- t %>% 
   mutate(school_year = "2006-2007",
-         division = "Virginia")
+         division = "Virginia",
+         count = aggbat+staffbat+studbat+fight+homi+kidnap+wound+robbery+sxbatt+sxoffense+threat2) %>% 
+  select(division, school_year, count)
 
 # Bind state to localities
 df2007 <- bind_rows(df2007, t)
+
+
+## Bind all years together ----
+df <- bind_rows(df2007, df2008, df2009, df2010, df2011, df2012, df2013)
 
 ## Just Virginia totals----
 ### 2013-14, 2014-15 ----
@@ -599,33 +617,28 @@ t <- map_df(tables, bind_rows)
 tnames <- c("offense", "code", "count2014", "perc2014", "count2015", "perc2015", "change")
 names(t) <- tnames
 
-# filter to alcohol, drug, tobacco 
+# filter to staff battery, student battery, wounding; sexual offense, assault, battery, fighting, robbery, threat
+# (no homicide, HO, or kidnapping, K)
 df2015 <- t %>% 
-  filter(code %in% c("TB1", "T4B", "AL1", "DR1", "DR2", "DR3", "DR4", "DR5", "D4G", "D5G", "D6G")) %>% 
-  mutate(offense = case_when(
-    str_detect(code, "T") ~ "tob",
-    str_detect(code, "DR") ~ "drug",
-    str_detect(code, "AL") ~ "alc",
-    TRUE ~ "otc"
-  )) %>% 
-  select(offense, count2014, count2015) %>% 
+  filter(code %in% c("BA1", "BA2", "BA3", "BA4", "BA5", "BA6", "SX1", "SX2", "SX4", "SX8", "SB2", "FA2", "RO1", "TI1", "TI2")) %>% 
+  select(code, count2014, count2015) %>% 
   mutate(count2014 = as.numeric(str_remove(count2014, ",")),
-         count2015 = as.numeric(str_remove(count2015, ","))) %>% 
-  group_by(offense) %>% 
+         count2015 = as.numeric(str_remove(count2015, ",")),
+         count2014 = ifelse(is.na(count2014), 0, count2014),
+         count2015 = ifelse(is.na(count2015), 0, count2015)) %>% 
   summarize(count_2014 = sum(count2014),
-            count_2015 = sum(count2015))
+            count_2015 = sum(count2015)) %>% 
+  mutate(division = "Virginia")
 
 # pivot to match data frame structures from earlier years
-# division, year, school_year, alc, drug, otc, tob
+# division_number, division_name, school_year, count
 df2015 <- df2015 %>% 
-  pivot_longer(-offense, names_to = "year", values_to = "count",
+  pivot_longer(-division, names_to = "year", values_to = "count",
                names_prefix = "count_")
 
-df2015 <- df2015 %>% 
-  pivot_wider(names_from = offense, values_from = count)
-
-df2015 <- df2015 %>% 
-  mutate(division = "Virginia", school_year = paste0(as.numeric(year)-1, "-", year))
+df2015 <- df2015 %>%
+  mutate(school_year = paste0(as.numeric(year)-1, "-", year)) %>% 
+  select(-year)
 
 ### 2015-16, 2016-17 ----
 # Table 2 (pages 21-24)
@@ -655,40 +668,33 @@ names(t) <- tnames
 
 # filter to alcohol, drug, tobacco 
 df2017 <- t %>% # added TB2, electronic cigarettes
-  filter(code %in% c("TB1", "TB2", "T4B", "AL1", "DR1", "DR2", "DR3", "DR4", "DR5", "D4G", "D5G", "D6G")) %>% 
-  mutate(offense = case_when(
-    str_detect(code, "T") ~ "tob",
-    str_detect(code, "DR") ~ "drug",
-    str_detect(code, "AL") ~ "alc",
-    TRUE ~ "otc"
-  )) %>% 
-  select(offense, count2016, count2017) %>% 
+  filter(code %in% c("BA1", "BA2", "BA3", "BA4", "BA5", "BA6", "SX1", "SX2", "SX4", "SX8", "SB2", "FA2", "RO1", "TI1", "TI2")) %>% 
+  select(code, count2016, count2017) %>% 
   mutate(count2016 = as.numeric(str_remove(count2016, ",")),
-         count2017 = as.numeric(str_remove(count2017, ","))) %>% 
-  group_by(offense) %>% 
+         count2017 = as.numeric(str_remove(count2017, ",")),
+         count2016 = ifelse(is.na(count2016), 0, count2016),
+         count2017 = ifelse(is.na(count2017), 0, count2017)) %>% 
   summarize(count_2016 = sum(count2016),
-            count_2017 = sum(count2017))
+            count_2017 = sum(count2017)) %>% 
+  mutate(division = "Virginia")
 
 # pivot to match data frame structures from earlier years
 # division, year, school_year, alc, drug, otc, tob
 df2017 <- df2017 %>% 
-  pivot_longer(-offense, names_to = "year", values_to = "count",
+  pivot_longer(-division, names_to = "year", values_to = "count",
                names_prefix = "count_")
 
-df2017 <- df2017 %>% 
-  pivot_wider(names_from = offense, values_from = count)
-
-df2017 <- df2017 %>% 
-  mutate(division = "Virginia", school_year = paste0(as.numeric(year)-1, "-", year))
-
+df2017 <- df2017 %>%
+  mutate(school_year = paste0(as.numeric(year)-1, "-", year)) %>% 
+  select(-year)
 
 ## Bind all years together ----
-df <- bind_rows(df2007, df2008, df2009, df2010, df2011, df2012, df2013,
-                df2015, df2017)
+df <- bind_rows(df, df2015, df2017)
+
 
 
 # Excel files from DCV reports ----
-## 2017-18 through 2020-21 ----
+# 2018-2021 
 ## create urls vector ----
 urls <- c(
   "https://www.doe.virginia.gov/home/showpublisheddocument/20785/638043641312530000", # 2018
@@ -702,7 +708,7 @@ dest <- paste0("datadownloads/dcv/dcv_", c("2018", "2019", "2020", "2021"), ".xl
 
 ## download files ----
 if (!dir.exists(here("datadownloads/dcv"))) 
-{dir.create(here("datadownloads/dcv"))}
+  {dir.create(here("datadownloads/dcv"))}
 
 walk2(urls, dest, download.file, method = "curl", extra = "-k")
 
@@ -712,62 +718,101 @@ walk2(urls, dest, download.file, method = "curl", extra = "-k")
 dcv_data <- map(dest, ~read_excel(.x, sheet = 1))
 dcv_data <- bind_rows(dcv_data) %>% clean_names()
 
-
-## filter and prep ----
 # find relevant offense categories
 dcv_data %>%
   group_by(offense_category_description, offense_category) %>% 
   summarize(n = n()) %>% 
   view()
-# Choosing: alcohol, drug violations, tobacco offenses
+# Choosing: Assault/Battery, Fighting/Conflict, Kidnapping, Robbery/Person/Force or Threat of Force,
+#   Sexual Offenses, Threats/Verbal/Physical
 # This set is trying to replicate the categories on the city's spreadsheet
-# tobacco isn't mentioned in the report, but is mentioned on the spreadsheet...
+# but I'm not sure these would be the categories I'd select from the start...
 
+## filter and prep ----
 dcv_cvlalb <- dcv_data %>% 
   filter(division_number %in% c(2,104),
-         offense_category %in% c(1,9,26)) %>% 
-  mutate(division_name = ifelse(division_name == "Albemarle County", "Albemarle", "Charlottesville"))
+         offense_category %in% c(3,12,18,20,22,24)) %>% 
+  mutate(division = ifelse(division_name == "Albemarle County", "Albemarle", "Charlottesville"))
 
-# pivot to match prior data frame
-dcv_wide <- dcv_cvlalb %>% 
-  select(-c("region", "offense_category", "division_number")) %>% 
-  pivot_wider(names_from = offense_category_description, values_from = count_of_incidents)
+# # pivot to match prior data frame
+# dcv_wide <- dcv_cvlalb %>% 
+#   select(-c("region", "offense_category", "division_number", "division_name")) %>% 
+#   pivot_wider(names_from = offense_category_description, values_from = count_of_incidents) %>% 
+#   clean_names()
 
-# make column names match prior data frame
-dcv_wide <- dcv_wide %>% 
-  rename(division = division_name, alc = Alcohol, drug = `Drug Violations`, tob = `Tobacco Offenses`)
+dcv_cvlalb <- dcv_cvlalb %>% 
+  select(school_year, division, count_of_incidents) %>% 
+  group_by(school_year, division) %>% 
+  summarize(count = sum(count_of_incidents))
 
 ## create state totals ----
 dcv_va <- dcv_data %>% 
-  filter(offense_category %in% c(1,9,26)) %>% 
+  filter(offense_category %in% c(3,12,18,20,22,24)) %>% 
   select(school_year, offense_category_description, count_of_incidents) %>% 
   group_by(school_year, offense_category_description) %>% 
   summarize(count = sum(count_of_incidents)) %>% 
   mutate(division = "Virginia")
 
-# pivot wider
-dcv_va_wide <- dcv_va %>% 
-  pivot_wider(names_from = offense_category_description, values_from = count)
+# # pivot wider
+# dcv_va_wide <- dcv_va %>% 
+#   pivot_wider(names_from = offense_category_description, values_from = count) %>% 
+#   clean_names()
 
-# make column names match prior data frame
-dcv_va_wide <- dcv_va_wide %>% 
-  rename(alc = Alcohol, drug = `Drug Violations`, tob = `Tobacco Offenses`)
+dcv_va <- dcv_va %>% 
+  select(school_year, division, count) %>% 
+  group_by(school_year, division) %>% 
+  summarize(count = sum(count))
 
 ## bind state and localities ----
-dcv1821 <- bind_rows(dcv_wide, dcv_va_wide)
+df1821 <- bind_rows(dcv_cvlalb, dcv_va)
+
+# # fill in zeroes
+# df1821 <- df1821 %>% 
+#   mutate(across(where(is.numeric), ~replace_na(.x, 0)))
+
 
 # Bind all years of data ----
-# df <- read_csv("data/school_weapons_dcv.csv")
-# df <- bind_rows(df, df1821)
-df <- bind_rows(df, dcv1821)
 
-# fill in zeroes
-df <- df %>% 
-  mutate(across(where(is.numeric), ~replace_na(.x, 0)))
+# combine/sum prior data (df) to match 18-21 categories
+# assault_battery = staffbat, studbat, homi, wound
+# fighting_conflict = fight
+# sexual_offenses = aggbat, sxass, sxbatt, sxoffense
+# threats_verbal_physical = threat2
+# kidnapping = kidnap
+# robbery = robbery
 
+# dfcombined <- df %>% 
+#   mutate(assault_battery = staffbat+studbat+homi+wound,
+#          fighting_conflict = fight,
+#          sexual_offenses = aggbat+sxass+sxbatt+sxoffense,
+#          threats = threat2,
+#          kidnapping = kidnap,
+#          source = "old") %>% 
+#   select(division, school_year, assault_battery, fighting_conflict, 
+#          sexual_offenses, threats, kidnapping, robbery, source)
+# 
+# # rename 18-21 data
+# df1821 <- df1821 %>% 
+#   rename(robbery = robbery_person_force_or_threat_of_force, threats = threats_verbal_physical)
 
-# Pull in student count data ----
-# Downloaded previously, team 1
+# bind together
+dfcombined <- bind_rows(df, df1821)
+
+dfcombined <- dfcombined %>% 
+  mutate(year = str_sub(school_year, 6,9),
+         year = as.numeric(year))
+
+# fill in missing years
+df_complete <- dfcombined %>% 
+  mutate(year = str_sub(school_year, 6,9),
+         year = as.numeric(year)) %>% 
+  complete(division, year = 2007:2021,
+           fill = list(count = NA_real_)) %>% 
+  mutate(school_year = ifelse(is.na(school_year), 
+                              paste0(year-1, "-", year),
+                              school_year)) 
+
+# add population data ----
 students <- read_csv("datadownloads/fall_membership_statistics_team1.csv") %>% 
   clean_names()
 
@@ -788,33 +833,31 @@ students <- bind_rows(stud_cvlalb, stud_va)
 
 
 # Join weapons offense and student counts ----
-df_students <- df %>% 
+dfcombined_students <- df_complete %>% 
   left_join(students)
 
-## Create alcohol+drug total and percent (and numeric year)
-df_students <- df_students %>% 
-  mutate(year = str_sub(school_year, 6,9),
-         year = as.numeric(year),
-         alcdrug = alc+drug,
-         rate = (alcdrug/students)*1000)
+## Create rate 
+dfcombined_students <- dfcombined_students %>% 
+  mutate(rate = (count/students)*1000)
+
+# # fill in missing years
+# dfcombined_students <- dfcombined_students %>% 
+#   mutate(year = str_sub(school_year, 6,9),
+#          year = as.numeric(year)) %>% 
+#   complete(division, year = 2007:2021,
+#            fill = list(rate = NA))
+# 
 
 # have a peek
-ggplot(df_students, aes(x = year, y = rate, color = division, group = division)) + 
-  geom_point() +
-  geom_line() +
-  scale_x_continuous(breaks = 2006:2021) +
-  scale_y_continuous(limits = c(0, 20))
-
-# fill in missing years ----
-df_students <- df_students %>% 
-  group_by(division) %>% 
-  complete(year = first(year):max(year), 
-         fill = list(rate = NA)) %>% 
-  fill(division) %>% 
-  mutate(school_year = ifelse(is.na(school_year),
-                              paste0(as.character(year-1), "-", as.character(year)),
-                              school_year))
+ggplot(dfcombined_students, aes(x = year, y = rate, color = division)) + 
+  geom_point() + geom_line() + 
+  #scale_x_continuous(breaks = c(2007:2013, 2018:2021)) +
+  scale_y_continuous(limits = c(0,100)) +
+  theme_bw()
 
 # Save data ----
-write_csv(df_students, "data/school_alcdrugs_dcv.csv")
-# df_students <- read_csv("data/school_alcdrugs_dcv.csv")
+write_csv(dfcombined_students, "data/school_violence.csv")
+# dfcombined <- read_csv("data/school_violence.csv")
+
+
+
