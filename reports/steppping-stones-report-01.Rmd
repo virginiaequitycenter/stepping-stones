@@ -1,7 +1,7 @@
 ---
-title: "Stepping Stone Report Draft 1"
+title: "DRAFT - Stepping Stones Report"
 author: "Michele Claibourn, Elizabeth Mitchell, Nina Schoonover, Lee LeBoeuf"
-date: "2023-05-02"
+date: "DRAFT DATE: 5/8/2023"
 output: 
   html_document:
     # template: school-composition-template.html
@@ -14,7 +14,7 @@ output:
       # version: 5
     # css: styles.css
     toc: true
-    toc_float: true
+    # toc_float: true
 # toc-title: Contents
 ---
 ```{css, echo=FALSE}
@@ -27,10 +27,22 @@ div.section.level4.tabset h4 {
 h5, h6 {
   font-size: 18px;
 }
+
+div#TOC ul {
+  list-style-type: none;
+}
+
+div#TOC ul li ul {
+  list-style-type: circle;
+}
+
+div#TOC ul li a {
+  color: #000000;
+}
 ```
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 8)
 
 library(tidyverse)
 library(scales)
@@ -60,11 +72,11 @@ one_category_palette <- c("#782C6A")
 
 ## Education and Civic Engagement
 
-### Kindergarteners at or above Kindergarten Readiness Levels {.tabset}
+### Kindergarteners At or Above Reading Levels {.tabset}
 
 #### Trends
 
-##### Percent of Incoming Kindergarteners meeting or screening above PALS benchmarks for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+##### Percent of Incoming Kindergarteners At or Above PALS benchmarks for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 pals_kinder <- read_csv("../data/pals_kindergarten_updated.csv")
 pals_kinder <- pals_kinder %>% mutate(pct_invert = 100-percent)
@@ -175,7 +187,7 @@ revised math standards") +
   geom_line() +
   geom_point() +
   geom_text_repel(data = sols_m5_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -256,7 +268,7 @@ revised reading standards") +
   geom_line() +
   geom_point() +
   geom_text_repel(data = sols_r3_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -481,7 +493,7 @@ df_long <- postsecondary_education %>%
 df_long <- df_long %>% 
   filter(type != "enrolled2yr") %>% 
   mutate(type = recode(type,
-                          "enrolled4yr" = "4-yr Institution",
+                          "enrolled4yr" = "4-Yr Institution",
                           "enrolledany" = "Any Institution"))
 
 df_long_labels <- df_long %>% 
@@ -752,7 +764,7 @@ in USDA CEP") +
   geom_line() +
   geom_point() +
   geom_text_repel(data = economically_disadvantaged_students_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3, fontface = "bold", nudge_x = 1.4, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -1314,7 +1326,7 @@ available SSIR data") +
   scale_color_manual(values = three_category_palette) +
   scale_linetype_manual(values = c(2, 1)) +
   scale_y_continuous(limits = c(0,500),
-                     name = "Rate per 1000") +
+                     name = "Rate per 1000 Students") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
@@ -1439,7 +1451,7 @@ arrests_crimesagainstpersons %>%
   labs(color = "")
 ```
 
-## Disaggregated by Race
+# Supplemental Report
 ### School Suspensions  {.tabset}
 
 #### Trends
@@ -1606,4 +1618,3 @@ ggplot(aes(x = Year, y = meanpercsus, group = Locality, shape = Race, color = Lo
 
 ```
 
-## Contributions
