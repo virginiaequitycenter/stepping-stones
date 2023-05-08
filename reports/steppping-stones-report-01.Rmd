@@ -26,6 +26,7 @@ div.section.level4.tabset h4 {
 }
 h5, h6 {
   font-size: 18px;
+  max-width: 850px;
 }
 
 div#TOC ul {
