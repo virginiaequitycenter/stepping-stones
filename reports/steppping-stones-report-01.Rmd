@@ -30,6 +30,7 @@ h5, h6 {
 
 div#TOC ul {
   list-style-type: none;
+  font-size: 18px;
 }
 
 div#TOC ul li ul {
@@ -38,6 +39,12 @@ div#TOC ul li ul {
 
 div#TOC ul li a {
   color: #000000;
+}
+
+.main-container {
+  max-width: 86vw;
+  margin-left: auto;
+  margin-right: auto;
 }
 ```
 
@@ -1628,8 +1635,8 @@ ggplot(aes(x = Year, y = meanpercsus, group = Locality, shape = Race, color = Lo
 ### Post-Secondary Education  {.tabset}
 
 #### Trends
-##### Enrollement in Any Post-Secondry Education
-```{r fig.width=10, fig.height=9}
+##### Enrollment in Any Post-Secondary Education
+```{r fig.width=12, fig.height=9}
 
 dat <- read.csv("../data/postsecondary_education_race.csv")
 
