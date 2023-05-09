@@ -50,7 +50,7 @@ div#TOC ul li a {
 ```
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 8)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 8.5, fig.height = 5.5)
 
 library(tidyverse)
 library(scales)
@@ -58,15 +58,39 @@ library(janitor)
 library(ggthemes)
 library(ggrepel)
 library(bslib)
+library(stringr)
 
-three_category_palette <- c("#E48073", "#2F7E9F", "#83DBD7")
-two_category_palette <- c("#782C6A", "#83DBD7")
+str_sort_last <- function(object){
+  last <- str_sort(object)
+  last <- tail(last, 1)
+  last
+}
+
+three_category_palette <- c("#E57873", "#146A94", "#58C9AB")
+two_category_palette <- c("#782C6A", "#58C9AB")
 one_category_palette <- c("#782C6A")
+
+# web colors
+# three_category_palette <- c("#E48073", "#2F7E9F", "#83DBD7")
+# two_category_palette <- c("#782C6A", "#83DBD7")
+# one_category_palette <- c("#782C6A")
 
 # black/white/grayscale friendly
 # three_category_palette <- c("#E57873", "#0D6A82", "#ADE9ED")
 # two_category_palette <- c("#782C6A", "#ADE9ED")
 # one_category_palette <- c("#782C6A")
+
+favs <- c("#E57873", "#2F7E9F", "#83DBD7")
+muted_palette <- c("#96595A", "#DA897C", "#E4E4B2", "#B2E4CF", "#0D6A82")
+
+test3 <- c("#003f5c", "#7a5195", "#ef5675", "#ffa600")
+test2 <- c("#E57873", "#2F7E9F","#FFD05B", "#EA7000", "#AF0000", "#BDBF00", "#00878F", "#2bd7e3", "#82BAFF", "#ADE9ED")
+
+test <- c("#EE1C25", "#DD4765", "#6D968A", "#58C9AB", "#D1C627")
+old <- c("#B23B6B", "#5AB48A", "#E7A342")
+two_old <- c("#146A94", "#E7A342")
+one_old <- c("#146A94")
+
 
 ```
 
@@ -87,24 +111,28 @@ one_category_palette <- c("#782C6A")
 ##### Percent of Incoming Kindergarteners At or Above PALS benchmarks for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 pals_kinder <- read_csv("../data/pals_kindergarten_updated.csv")
-pals_kinder <- pals_kinder %>% mutate(pct_invert = 100-percent)
-pals_kinder_labels <- pals_kinder %>% 
-  filter(location != "Virginia" & school_year == "2019-2020") %>%
-  mutate(label = paste0(as.character(round(pct_invert, digits = 1)), "%"))
+pals_kinder <- pals_kinder %>% 
+  mutate(pct_invert = 100-percent,
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!location %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(pct_invert, digits = 1)), "%"), NA))
 
 pals_kinder %>%
   ggplot(aes(x = school_year, y = pct_invert, color = location, group = location)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = pals_kinder_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.5, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Incoming Kindergarteners") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -126,19 +154,13 @@ sols <- read_csv("../data/sol_pass.csv")
 sols <- sols %>% 
   mutate(division_name = recode(division_name,
                           "Albemarle County" = "Albemarle",
-                          "Charlottesville City" = "Charlottesville"))
-miss2021 <- data.frame(division_name = c("Albemarle", "Charlottesville", "Virginia"),
-                       school_year = c("2019-2020", "2019-2020", "2019-2020"))
+                          "Charlottesville City" = "Charlottesville"),
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division_name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(pass_rate, digits = 1)), "%"), NA))
 
-sols_m3_labels <- sols %>% 
-  filter(division_name != "Virginia" & subject == "Mathematics" & test_level == "Grade 3" & school_year == "2021-2022") %>% 
-  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
-sols_m5_labels <- sols %>% 
-  filter(division_name != "Virginia" & subject == "Mathematics" & test_level == "Grade 5" & school_year == "2021-2022") %>% 
-  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
-sols_m8_labels <- sols %>% 
-  filter(division_name != "Virginia" & subject == "Mathematics" & test_level == "Grade 8" & school_year == "2021-2022") %>% 
-  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
+miss2021 <- data.frame(division_name = c("Albemarle", "Charlottesville", "Virginia"),
+                       school_year = c("2019-20", "2019-20", "2019-20"))
 
 # Grade 3 Plot
 sols %>% 
@@ -146,28 +168,31 @@ sols %>%
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
-  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2011-2012", linetype = 2, color = "#333333") +
-  annotate("text", x = 7.2, y = 25, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2011-12", linetype = 2, color = "#333333") +
+  annotate("text", x = 7.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Implementation of 
 revised math standards") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = sols_m3_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students Taking SOL") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
   
 ```
@@ -181,28 +206,31 @@ sols %>%
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
-  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2011-2012", linetype = 2, color = "#333333") +
-  annotate("text", x = 7.2, y = 25, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2011-12", linetype = 2, color = "#333333") +
+  annotate("text", x = 7.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Implementation of 
 revised math standards") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = sols_m5_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students Taking SOL") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -213,28 +241,31 @@ sols %>%
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
-  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2011-2012", linetype = 2, color = "#333333") +
-  annotate("text", x = 7.2, y = 25, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2011-12", linetype = 2, color = "#333333") +
+  annotate("text", x = 7.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Implementation of 
 revised math standards") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = sols_m8_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students Taking SOL") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -245,45 +276,37 @@ revised math standards") +
 ##### Trends
 ###### Percent of Students who Pass the 3rd Grade Reading SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
-# create labels for reading SOLs
-sols_r3_labels <- sols %>% 
-  filter(division_name != "Virginia" & subject == "English:Reading" & test_level == "Grade 3" & school_year == "2021-2022") %>% 
-  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
-sols_r5_labels <- sols %>% 
-  filter(division_name != "Virginia" & subject == "English:Reading" & test_level == "Grade 5" & school_year == "2021-2022") %>% 
-  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
-sols_r8_labels <- sols %>% 
-  filter(division_name != "Virginia" & subject == "English:Reading" & test_level == "Grade 8" & school_year == "2021-2022") %>% 
-  mutate(label = paste0(as.character(round(pass_rate, digits = 1)), "%"))
-
 # Grade 3 Reading Plot
 sols %>% 
   filter(subject == "English:Reading" & test_level == "Grade 3") %>% 
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
-  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2012-2013", linetype = 2, color = "#333333") +
-  annotate("text", x = 8.2, y = 25, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2012-13", linetype = 2, color = "#333333") +
+  annotate("text", x = 8.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Implementation of 
 revised reading standards") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = sols_r3_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students Taking SOL") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -295,28 +318,31 @@ sols %>%
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
-  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2012-2013", linetype = 2, color = "#333333") +
-  annotate("text", x = 8.2, y = 25, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2012-13", linetype = 2, color = "#333333") +
+  annotate("text", x = 8.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Implementation of 
 revised reading standards") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = sols_r5_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students Taking SOL") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -328,28 +354,31 @@ sols %>%
                         bind_rows(miss2021) %>%
   ggplot(aes(x = school_year, y = pass_rate, 
                  color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2019-2020", linetype = 2, color = "#333333") +
-  annotate("text", x = 15.2, y = 95, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "SOLs not conducted
 in 2020 due to the 
 COVID-19 Pandemic") +
-  geom_vline(xintercept = "2012-2013", linetype = 2, color = "#333333") +
-  annotate("text", x = 8.2, y = 25, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2012-13", linetype = 2, color = "#333333") +
+  annotate("text", x = 8.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Implementation of 
 revised reading standards") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = sols_r8_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students Taking SOL") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -364,25 +393,28 @@ sped_services <- read_csv("../data/sped_services.csv")
 sped_services <- sped_services %>% 
   mutate(division_name = recode(division_name,
                           "Albemarle County" = "Albemarle",
-                          "Charlottesville City" = "Charlottesville"))
-sped_services_labels <- sped_services %>% 
-  filter(division_name != "Virginia" & school_year == "2021-2022") %>%
-  mutate(label = paste0(as.character(round(percent_sped, digits = 1)), "%"))
+                          "Charlottesville City" = "Charlottesville"),
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division_name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(percent_sped, digits = 1)), "%"), NA))
 
 sped_services %>% 
   ggplot(aes(x = school_year, y = percent_sped, 
              color = division_name, group = division_name)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = sped_services_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Enrolled Students") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -392,23 +424,27 @@ sped_services %>%
 ##### Percent of Students Identified as English Language Learners for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 english_language_learners <- read_csv("../data/english_language_learners.csv")
-english_language_learners_labels <- english_language_learners %>% 
-  filter(locality != "Virginia" & school_year == "2022-2023") %>%
-  mutate(label = paste0(as.character(round(pct_english_learners, digits = 1)), "%"))
+english_language_learners <- english_language_learners %>%
+  mutate(school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!locality %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(pct_english_learners, digits = 1)), "%"), NA))
 
 english_language_learners %>% 
   ggplot(aes(x = school_year, y = pct_english_learners, color = locality, group=locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = english_language_learners_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.4, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.4, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Enrolled Students") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -419,30 +455,33 @@ english_language_learners %>%
 ```{r}
 average_daily_attendance <- read_csv("../data/average_daily_attendance.csv")
 average_daily_attendance <- average_daily_attendance %>% 
-  mutate(school_year = paste0(as.character(year-1), "-", as.character(year)))
-average_daily_attendance_labels <- average_daily_attendance %>% 
-  filter(name != "Virginia" & school_year == "2021-2022") %>%
-  mutate(label = paste0(as.character(round(pct_att_total, digits = 1)), "%"))
+  mutate(school_year = paste0(as.character(year-1), "-", as.character(year)),
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(pct_att_total, digits = 1)), "%"), NA))
 
 average_daily_attendance %>%
   ggplot(aes(x = school_year, y = pct_att_total, color = name, group = name)) +
-  geom_rect(aes(xmin = "2019-2020", xmax = "2020-2021", ymin = -Inf, ymax = Inf), alpha = .05, color = NA, fill = "#f5f5f5") +
-  annotate("text", x = 10.2, y = 65, size = 3, hjust = 0, color = "#333333", 
+  geom_rect(aes(xmin = "2019-20", xmax = "2020-21", ymin = -Inf, ymax = Inf), alpha = .05, color = NA, fill = "#f5f5f5") +
+  annotate("text", x = 10.2, y = 65, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "School schedules 
 impacted by 
 COVID-19 Pandemic") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = average_daily_attendance_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(50, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "", fill = "")
 ```
 
@@ -456,29 +495,31 @@ graduation_rates <- graduation_rates %>%
   mutate(school_year = as.character(cohort_year),
          division_name = recode(division_name,
                           "Albemarle County" = "Albemarle",
-                          "Charlottesville City" = "Charlottesville"))
-graduation_rates_labels <- graduation_rates %>% 
-  filter(division_name != "Virginia" & school_year == "2022") %>%
-  mutate(label = paste0(as.character(round(graduation_rate, digits = 1)), "%"))
+                          "Charlottesville City" = "Charlottesville"),
+         label = ifelse((!division_name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(graduation_rate, digits = 1)), "%"), NA))
 
 graduation_rates %>%
   ggplot(aes(x = school_year, y = graduation_rate, color = division_name, group = division_name)) +
   # geom_vline(xintercept = "2013", linetype = 2, color = "#333333") +
-#   annotate("text", x = 6.2, y = 55, size = 3, hjust = 0, color = "#333333", 
+#   annotate("text", x = 6.2, y = 55, size = 3.5, hjust = 0, color = "#333333", 
 #            label = 
 # "Charlottesville City Schools
 # extend WALK program hours") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = graduation_rates_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Student Cohort") + 
   scale_x_discrete(name = "Graduation Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -502,11 +543,9 @@ df_long <- df_long %>%
   filter(type != "enrolled2yr") %>% 
   mutate(type = recode(type,
                           "enrolled4yr" = "4-Yr Institution",
-                          "enrolledany" = "Any Institution"))
-
-df_long_labels <- df_long %>% 
-  filter(locality != "Virginia" & school_year == "2020") %>%
-  mutate(label = paste0(as.character(round(percent, digits = 1)), "%"))
+                          "enrolledany" = "Any Institution"),
+         label = ifelse((!locality %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(percent, digits = 1)), "%"), NA))
 
 # keep only 4yr and any - or - 2yr and 4yr
 
@@ -517,8 +556,8 @@ df_long %>%
              linetype = type)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = df_long_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_linetype_manual(values = c(2,1)) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
@@ -526,7 +565,10 @@ df_long %>%
                      name = "Percent of Graduating Students") +
   scale_x_discrete(name = "Graduation Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "", linetype = "")
 ```
 
@@ -539,24 +581,26 @@ hsdegree_attainment <- read_csv("../data/hsdegree_attainment.csv")
 hsdegree_attainment <- hsdegree_attainment %>% 
   mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
          locality = str_trim(locality),
-         survey_period = paste0(as.character(year-5), "-", as.character(year)))
-hsdegree_attainment_labels <- hsdegree_attainment %>% 
-  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
-  mutate(label = paste0(as.character(round(pcthshigherE, digits = 1)), "%"))
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round(pcthshigherE, digits = 1)), "%"), NA))
 
 hsdegree_attainment %>%
   ggplot(aes(x = survey_period, y = pcthshigherE, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = hsdegree_attainment_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(40, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Residents") + 
   scale_x_discrete(name = "ACS Survey Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -571,10 +615,9 @@ voter_reg <- voter_reg %>%
   mutate(year = as.character(year),
          locality = recode(locality,
                           "Albemarle County" = "Albemarle",
-                          "Charlottesville City" = "Charlottesville")) 
-voter_reg_labels <- voter_reg %>% 
-  filter(locality != "Virginia" & year == "2020") %>%
-  mutate(label = paste0(as.character(round((reg_rate*100), digits = 1)), "%"))
+                          "Charlottesville City" = "Charlottesville"),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         paste0(as.character(round((reg_rate*100), digits = 1)), "%"), NA))
 
 voter_reg %>%
   ggplot(aes(x = year, y = reg_rate, color = locality, group = locality)) +
@@ -584,14 +627,14 @@ voter_reg %>%
   geom_vline(xintercept = "2012", linetype = 2, color = "#333333") +
   geom_vline(xintercept = "2016", linetype = 2, color = "#333333") +
   geom_vline(xintercept = "2020", linetype = 2, color = "#333333") +
-  annotate("text", x = 5.2, y = .3, size = 3, hjust = 0, color = "#333333", 
+  annotate("text", x = 5.2, y = .3, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Presidential
 Elections") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = voter_reg_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.6, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.6, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   # scale_x_continuous("Year", labels = as.character(year), breaks = year) + 
   scale_y_continuous(limits = c(0, 1),
@@ -599,7 +642,10 @@ Elections") +
                      name = "Percent of Adults") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -618,10 +664,9 @@ per_cap_income <- per_cap_income %>%
                            "Albemarle + Charlottesville, VA*" = "Albemarle + Charlottesville"),
          type = recode(type,
                        "pci" = "Raw Income",
-                       "adj_pci" = "Inflation-Adjusted Income"))
-per_cap_income_labels <- per_cap_income %>% 
-  filter(locality != "Virginia" & year == "2021") %>%
-  mutate(label = paste0(as.character(formatC(number, format="d", big.mark=","))))
+                       "adj_pci" = "Inflation-Adjusted Income"),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         paste0(as.character(formatC(number, format="d", big.mark=","))), NA))
 
 per_cap_income %>%
   ggplot(aes(x = year, y = number,
@@ -629,21 +674,24 @@ per_cap_income %>%
              group = interaction(locality, type), 
              linetype = type)) +
   geom_rect(aes(xmin = "2007", xmax = "2009", ymin = -Inf, ymax = Inf), alpha = .05, color = NA, fill = "#f5f5f5") +
-  annotate("text", x = 10.2, y = 80000, size = 3, hjust = 0, color = "#333333",
+  annotate("text", x = 10.2, y = 80000, size = 3.5, hjust = 0, color = "#333333",
            label =
 "Economic Recession 
 (2007-2009)") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = per_cap_income_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.8, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.8, show.legend = FALSE, min.segment.length = Inf) +
   scale_linetype_manual(values = c(2, 1)) +
   scale_color_manual(values = two_category_palette) +
   scale_y_continuous(label = comma,
                      name = "Income Per Capita") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "", linetype = "", fill = "")
 ```
 
@@ -659,47 +707,49 @@ youth_employment <- youth_employment %>%
   mutate(locality = recode(name,
                           "Albemarle County, Virginia" = "Albemarle",
                           "Charlottesville city, Virginia" = "Charlottesville"),
-         survey_period = paste0(as.character(year-5), "-", as.character(year)))
-
-youth_employment_labels <- youth_employment %>% 
-  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
-  mutate(label = paste0(as.character(round((laborforce_rate), digits = 1)), "%"))
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label_labor = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round(laborforce_rate, digits = 1)), "%"), NA),
+         label_unempl = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round(unemployment_rate, digits = 1)), "%"), NA))
 
 youth_employment %>%
   ggplot(aes(x = survey_period, y = laborforce_rate, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = youth_employment_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label_labor),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Youth") + 
   scale_x_discrete(name = "ACS Survey Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
 ##### Percent of Youth (15-24) in the Labor Force Experiencing Unemployment for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
-youth_unemployment_labels <- youth_employment %>% 
-  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
-  mutate(label = paste0(as.character(round((unemployment_rate), digits = 1)), "%"))
-
 youth_employment %>%
   ggplot(aes(x = survey_period, y = unemployment_rate, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = youth_unemployment_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label_unempl),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Youth in Labor Force") + 
   scale_x_discrete(name = "ACS Survey Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -714,30 +764,32 @@ child_poverty <- child_poverty %>%
   mutate(locality = ifelse(county_fips == "000", "Virginia",
                        ifelse(county_fips == "003", "Albemarle",
                               ifelse(county_fips == "540", "Charlottesville", "Unknown"))),
-         year = as.character(year))
-child_poverty_labels <- child_poverty %>% 
-  filter(locality != "Virginia" & year == "2021") %>%
-  mutate(label = paste0(as.character(round((pct_child_pov), digits = 1)), "%"))
+         year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         paste0(as.character(round(pct_child_pov, digits = 1)), "%"), NA))
 
 child_poverty %>% 
   ggplot(aes(x = year, y = pct_child_pov, color = locality, group = locality)) +
   geom_vline(xintercept = "2020", linetype = 2, color = "#333333") +
   geom_vline(xintercept = "2021", linetype = 2, color = "#333333") +
-  annotate("text", x = 16.8, y = 85, size = 3, hjust = 0, color = "#333333", 
+  annotate("text", x = 16.8, y = 85, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "COVID-19 Economic
 Stimulus Payments") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = child_poverty_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.6, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.6, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Children") + 
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -750,36 +802,39 @@ economically_disadvantaged_students <- read_csv("../data/economically_disadvanta
 economically_disadvantaged_students <- economically_disadvantaged_students %>% 
   mutate(division_name = recode(division_name,
                           "Albemarle County" = "Albemarle",
-                          "Charlottesville City" = "Charlottesville"))
-economically_disadvantaged_students_labels <- economically_disadvantaged_students %>% 
-  filter(division_name != "Virginia" & school_year == "2022-2023") %>%
-  mutate(label = paste0(as.character(round((percent), digits = 1)), "%"))
+                          "Charlottesville City" = "Charlottesville"),
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division_name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(percent, digits = 1)), "%"), NA))
 
 economically_disadvantaged_students %>%
   ggplot(aes(x = school_year, y = percent, color = division_name, group = division_name)) +
-  geom_vline(xintercept = "2018-2019", linetype = 2, color = "#333333") +
-  annotate("text", x = 15.1, y = 70, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2018-19", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.1, y = 70, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "CCS begin 
 participating 
 in USDA CEP") +
-  geom_vline(xintercept = "2021-2022", linetype = 2, color = "#333333") +
-  annotate("text", x = 18.1, y = 10, size = 3, hjust = 0, color = "#333333", 
+  geom_vline(xintercept = "2021-22", linetype = 2, color = "#333333") +
+  annotate("text", x = 18.1, y = 10, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "ACPS begin 
 participating 
 in USDA CEP") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = economically_disadvantaged_students_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.4, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.4, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students") + 
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14), 
+        axis.text.x = element_text(angle = 45, hjust = 1), 
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position="top") +
   labs(color = "")
 ```
 
@@ -793,24 +848,25 @@ rent_burdened <- read_csv("../data/rent_burdened.csv")
 rent_burdened <- rent_burdened %>%
   mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
          locality = str_trim(locality),
-         survey_period = paste0(as.character(year-5), "-", as.character(year))) 
-rent_burdened_labels <- rent_burdened %>% 
-  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
-  mutate(label = paste0(as.character(round((percent_over_30*100), digits = 1)), "%"))
-
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round((percent_over_30*100), digits = 1)), "%"), NA))
 rent_burdened %>% 
   ggplot(aes(x = survey_period, y = percent_over_30, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = rent_burdened_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 1),
                      labels = scales::percent, 
                      name = "Percent of Renters") + 
   scale_x_discrete(name = "ACS Survey Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -821,24 +877,26 @@ homeowner_burden <- read_csv("../data/homeowner_burden.csv")
 homeowner_burden <- homeowner_burden %>%
   mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
          locality = str_trim(locality),
-         survey_period = paste0(as.character(year-5), "-", as.character(year)))
-homeowner_burden_labels <- homeowner_burden %>% 
-  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
-  mutate(label = paste0(as.character(round((pct_burden), digits = 1)), "%"))
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round(pct_burden, digits = 1)), "%"), NA))
 
 homeowner_burden %>% 
   ggplot(aes(x = survey_period, y = pct_burden, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = homeowner_burden_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Homeowners") + 
   scale_x_discrete(name = "ACS Survey Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -855,10 +913,9 @@ pitcount_homeless <- pitcount_homeless %>%
          type = recode(type,
                        "unsheltered_total_persons" = "Unsheltered",
                        "sheltered_total_persons" = "Sheltered",
-                       "total_persons" = "Total"))
-pitcount_homeless_labels <- pitcount_homeless %>% 
-  filter(year == "2022") %>%
-  mutate(label = paste0(as.character(count)))
+                       "total_persons" = "Total"),
+         label = ifelse(year %in% str_sort_last(year),
+                         as.character(count), NA))
 
 pitcount_homeless %>% 
   ggplot(aes(x = year, y = count, 
@@ -866,20 +923,20 @@ pitcount_homeless %>%
              group = interaction(locality, type), 
              linetype = type)) +
   geom_vline(xintercept = "2012", linetype = 2, color = "#333333") +
-  annotate("text", x = 4.2, y = 100, size = 3, hjust = 0, color = "#333333", 
+  annotate("text", x = 4.2, y = 100, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Opening of The Crossings
 (permanent supportive housing)") +
   geom_vline(xintercept = "2022", linetype = 2, color = "#333333") +
-  annotate("text", x = 10.2, y = 275, size = 3, hjust = 0, color = "#333333", 
+  annotate("text", x = 10.2, y = 275, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "COVID-19 pandemic hightened
 impact of high housing costs 
 and lack of affordable housing") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = pitcount_homeless_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_linetype_manual(values = c(2, 6, 1),
                         limits = c("Sheltered", "Unsheltered", "Total")) +
   scale_color_manual(values = one_category_palette) +
@@ -888,7 +945,10 @@ and lack of affordable housing") +
                      name = "Number of People") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14), 
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position="top") +
   labs(color = "", linetype = "")
 ```
 
@@ -903,34 +963,36 @@ and lack of affordable housing") +
 prenatal_first_trimester <- read_csv("../data/prenatal_first_trimester.csv")
 prenatal_first_trimester <- prenatal_first_trimester %>%
   mutate(percent_access_to_prenatal_care = 100 - late_no_prenatal_to_birthrates,
-          year = as.character(year))
-prenatal_first_trimester_labels <- prenatal_first_trimester %>% 
-  filter(locality != "Virginia" & year == "2020") %>%
-  mutate(label = paste0(as.character(round((percent_access_to_prenatal_care), digits = 1)), "%"))
+          year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         paste0(as.character(round(percent_access_to_prenatal_care, digits = 1)), "%"), NA))
 
 prenatal_first_trimester %>%
   ggplot(aes(x = year, y = percent_access_to_prenatal_care, color = locality, group = locality)) +
   geom_vline(xintercept = "2010", linetype = 2, color = "#333333") +
-  annotate("text", x = 5.2, y = 80, size = 3, hjust = 0, color = "#333333", 
+  annotate("text", x = 5.2, y = 80, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Affordable Care 
 Act (ACA) passed") +
   geom_vline(xintercept = "2019", linetype = 2, color = "#333333") +
-  annotate("text", x = 11.5, y = 85, size = 3, hjust = 0, color = "#333333", 
+  annotate("text", x = 11.5, y = 85, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Virginia expanded 
 Medicaid coverage") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = prenatal_first_trimester_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(40, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of People Giving Birth") + 
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14), 
+        axis.text.x = element_text(angle = 45, hjust = 1), 
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position="top") +
   labs(color = "")
 ```
 
@@ -946,25 +1008,26 @@ low_birth_weight <- low_birth_weight %>%
                           "Albemarle County" = "Albemarle",
                           "Charlottesville City" = "Charlottesville",
                        "Commonwealth Of Virginia" = "Virginia"),
-         # year = as.character(year),
-         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)))
-low_birth_weight_labels <- low_birth_weight %>% 
-  filter(locality != "Virginia" & three_yr_period == "2018-2020") %>%
-  mutate(label = paste0(as.character(round((pct_3yr), digits = 1)), "%"))
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)),
+         label = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
+                         paste0(as.character(round(pct_3yr, digits = 1)), "%"), NA))
 
 low_birth_weight %>%
   ggplot(aes(x = three_yr_period, y = pct_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = low_birth_weight_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Infants") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -980,24 +1043,26 @@ infant_mortality <- infant_mortality %>%
                           "Albemarle County" = "Albemarle",
                           "Charlottesville City" = "Charlottesville",
                        "Commonwealth Of Virginia" = "Virginia"),
-         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)))
-infant_mortality_labels <- infant_mortality %>% 
-  filter(locality != "Virginia" & three_yr_period == "2018-2020") %>%
-  mutate(label = paste0(as.character(round((rate_3yr), digits = 1)), "%"))
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)),
+         label = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
+                         paste0(as.character(round(rate_3yr, digits = 1)), "%"), NA))
 
 infant_mortality %>% 
   ggplot(aes(x = three_yr_period, y = rate_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = infant_mortality_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 60),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Infants") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1014,44 +1079,47 @@ teen_pregnancy_birth <- teen_pregnancy_birth %>%
                           "Albemarle County" = "Albemarle",
                           "Charlottesville City" = "Charlottesville",
                           "Commonwealth Of Virginia" = "Virginia"),
-         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)))
-teen_pregnancy_labels <- teen_pregnancy_birth %>% 
-  filter(locality != "Virginia" & three_yr_period == "2018-2020") %>%
-  mutate(label = as.character(round((pregnancyrate_3yr), digits = 1)))
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)),
+         label_preg = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
+                         as.character(round(pregnancyrate_3yr, digits = 1)), NA),
+         label_birth = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
+                         as.character(round(birthsrate_3yr, digits = 1)), NA))
 
 teen_pregnancy_birth %>% 
   ggplot(aes(x = three_yr_period, y = pregnancyrate_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = teen_pregnancy_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label_preg),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100), 
                      name = "Rate per 1,000 Teens (15-17)") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
 ##### Rate of Births to Teens, Ages 15-17, for Albemarle County, City of Charlottesville, and Virginia 
 ```{r}
-teen_birth_labels <- teen_pregnancy_birth %>% 
-  filter(locality != "Virginia" & three_yr_period == "2018-2020") %>%
-  mutate(label = as.character(round((birthsrate_3yr), digits = 1)))
-
 teen_pregnancy_birth %>% 
   ggplot(aes(x = three_yr_period, y = birthsrate_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = teen_birth_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label_birth),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100), 
                      name = "Rate per 1,000 Teens (15-17)") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1061,22 +1129,25 @@ teen_pregnancy_birth %>%
 ##### Rate of Sexually Transmitted Infections in Youth, Ages 10-19, for Albemarle County, City of Charlottesville, and Virginia
 ```{r}
 youth_sti <- read_csv("../data/youth_sti.csv")
-youth_sti_labels <- youth_sti %>% 
-  filter(locality != "Virginia" & year3 == "2019-2021") %>%
-  mutate(label = as.character(round((total_incrate_3yr), digits = 1)))
+youth_sti <- youth_sti %>% 
+  mutate(label = ifelse((!locality %in% "Virginia") & (year3 %in% str_sort_last(year3)),
+                         as.character(round(total_incrate_3yr, digits = 1)), NA))
 
 youth_sti %>%
   ggplot(aes(x = year3, y = total_incrate_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = youth_sti_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      name = "Rate per 1,000 Youth (10-19)") + 
   scale_x_discrete(name = "Three-Year Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1089,25 +1160,26 @@ children_twoparents <- read_csv("../data/children_twoparents.csv")
 children_twoparents <- children_twoparents %>%
   mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
          locality = str_trim(locality),
-         survey_period = paste0(as.character(year-5), "-", as.character(year)))
-
-children_twoparents_labels <- children_twoparents %>% 
-  filter(locality != "Virginia" & survey_period == "2016-2021") %>%
-  mutate(label = paste0(as.character(round((percent*100), digits = 1)), "%"))
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round((percent*100), digits = 1)), "%"), NA))
 
 children_twoparents %>% 
   ggplot(aes(x = survey_period, y = percent, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = children_twoparents_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 1),
                      labels = scales::percent, 
                      name = "Percent of Children") + 
   scale_x_discrete(name = "ACS Survey Period") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1121,25 +1193,27 @@ divorce_vdh <- divorce_vdh %>%
   mutate(locality = recode(locality,
                           "Albemarle County" = "Albemarle",
                           "Charlottesville City" = "Charlottesville"),
-         year = as.character(year))
-divorce_vdh_labels <- divorce_vdh %>% 
-  filter(locality != "Virginia" & year == "2018") %>%
-  mutate(label = as.character(round((divorce_rate), digits = 1)))
+         year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(divorce_rate, digits = 1)), NA))
 
 divorce_vdh %>% 
   ggplot(aes(x = year, y = divorce_rate, 
              color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = divorce_vdh_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,10),
                      breaks = c(0,2,4,6,8,10),
                      name = "Rate per 1000 People") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1150,10 +1224,9 @@ dc_missing <- data.frame(locality = c("Virginia", "Virginia", "Virginia", "Virgi
                        year = c(2014, 2015, 2016, 2017, 2018, 2019))
 divorce_circuit <- divorce_circuit %>% 
   bind_rows(dc_missing) %>%
-  mutate(year = as.character(year))
-divorce_circuit_labels <- divorce_circuit %>% 
-  filter(locality != "Virginia" & year == "2022") %>%
-  mutate(label = as.character(round((divorce_rate), digits = 1)))
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(divorce_rate, digits = 1)), NA))
 
 divorce_circuit %>% 
   ggplot(aes(x = year, y = divorce_rate, 
@@ -1161,15 +1234,18 @@ divorce_circuit %>%
              group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = divorce_circuit_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,10),
                      breaks = c(0,2,4,6,8,10),
                      name = "Rate per 1000 People") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1182,24 +1258,27 @@ divorce_circuit %>%
 child_welfare_reports <- read_csv("../data/child_welfare_reports.csv")
 child_welfare_reports <- child_welfare_reports %>%
   mutate(fiscal_year = paste0(as.character(year-1),"-",as.character(year)),
-         year = as.character(year))
-child_welfare_reports_labels <- child_welfare_reports %>% 
-  filter(locality != "Virginia" & fiscal_year == "2019-2020") %>%
-  mutate(label = as.character(round((cps_rate), digits = 1)))
+         fiscal_year = str_replace_all(fiscal_year, "-20", "-"),
+         # year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (fiscal_year %in% str_sort_last(fiscal_year)),
+                         as.character(round(cps_rate, digits = 1)), NA))
 
 child_welfare_reports %>% 
   ggplot(aes(x = fiscal_year, y = cps_rate, 
              color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = child_welfare_reports_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
                      name = "Rate per 1000 Children") +
   scale_x_discrete(name = "Fiscal Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1211,24 +1290,26 @@ child_welfare_reports %>%
 ```{r}
 foster_care <- read_csv("../data/foster_care.csv")
 foster_care <- foster_care %>%
-  mutate(year = as.character(year))
-foster_care_labels <- foster_care %>% 
-  filter(locality != "Virginia" & year == "2022") %>%
-  mutate(label = as.character(round((fc_rate), digits = 1)))
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(fc_rate, digits = 1)), NA))
 
 foster_care %>% 
   ggplot(aes(x = year, y = fc_rate, 
              color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = foster_care_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
                      name = "Rate per 1000 Children") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1242,69 +1323,81 @@ foster_care %>%
 ##### Rate of Incidents of Possession of Alcohol and Drugs for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 school_alcdrugs_dcv <- read_csv("../data/school_alcdrugs_dcv.csv")
-school_alcdrugs_dcv_labels <- school_alcdrugs_dcv %>% 
-  filter(division != "Virginia" & school_year == "2020-2021") %>%
-  mutate(label = as.character(round((rate), digits = 1)))
+school_alcdrugs_dcv <- school_alcdrugs_dcv %>% 
+  mutate(school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         as.character(round(rate, digits = 1)), NA))
 
 school_alcdrugs_dcv %>%
   ggplot(aes(x = school_year, y = rate, 
              color = division, group = division)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = school_alcdrugs_dcv_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,50),
                      name = "Rate of Incidents per 1000 Students") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
  
 ##### Rate of Incidents of Physical Violence for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 school_violence_dcv <- read_csv("../data/school_violence_dcv.csv")
-school_violence_dcv_labels <- school_violence_dcv %>% 
-  filter(division != "Virginia" & school_year == "2020-2021") %>%
-  mutate(label = as.character(round((rate), digits = 1)))
+school_violence_dcv <- school_violence_dcv %>% 
+  mutate(school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         as.character(round(rate, digits = 1)), NA))
 
 school_violence_dcv %>%
   ggplot(aes(x = school_year, y = rate, 
              color = division, group = division)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = school_violence_dcv_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
                      name = "Rate of Incidents per 1000 Students") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
 ##### Rate of Incidents of Weapons Possession for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 school_weapons_dcv <- read_csv("../data/school_weapons_dcv.csv")
-school_weapons_dcv_labels <- school_weapons_dcv %>% 
-  filter(division != "Virginia" & school_year == "2020-2021") %>%
-  mutate(label = as.character(round((rate), digits = 1)))
+school_weapons_dcv <- school_weapons_dcv %>% 
+  mutate(school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         as.character(round(rate, digits = 1)), NA))
 
 school_weapons_dcv %>%
   ggplot(aes(x = school_year, y = rate, 
              color = division, group = division)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = school_weapons_dcv_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,50),
                      name = "Rate of Incidents per 1000 Students") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1315,29 +1408,32 @@ school_weapons_dcv %>%
 ##### Rate of Students Given an Out-of-School Suspension (Short-term Suspension, Long-term Suspension, or Modified Expulsion to Suspension) for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 school_suspensions <- read_csv("../data/school_suspensions.csv")
-school_suspensions_labels <- school_suspensions %>% 
-  filter(division != "Virginia" & school_year == "2020-21") %>%
-  mutate(label = as.character(round((rate), digits = 1)))
+school_suspensions <- school_suspensions %>% 
+  mutate(label = ifelse((!division %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         as.character(round(rate, digits = 1)), NA))
 
 school_suspensions %>%
   ggplot(aes(x = school_year, y = rate, 
              color = division, group = division)) +
   geom_vline(xintercept = "2016-17", linetype = 2, color = "#333333") +
-  annotate("text", x = 14.2, y = 350, size = 3, hjust = 0, color = "#333333", 
+  annotate("text", x = 14.2, y = 350, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "Replicable with 
 available SSIR data") +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = school_suspensions_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_linetype_manual(values = c(2, 1)) +
   scale_y_continuous(limits = c(0,500),
                      name = "Rate per 1000 Students") +
   scale_x_discrete(name = "School Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "", linetype = "")
 ```
 
@@ -1350,24 +1446,26 @@ available SSIR data") +
 ```{r}
 child_need_services <- read_csv("../data/child_need_services.csv")
 child_need_services <- child_need_services %>%
-  mutate(year = as.character(year))
-child_need_services_labels <- child_need_services %>% 
-  filter(locality != "Virginia" & year == "2022") %>%
-  mutate(label = as.character(round((rate), digits = 1)))
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(rate, digits = 1)), NA))
 
 child_need_services %>% 
   ggplot(aes(x = year, y = rate, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = child_need_services_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
                      name = "Rate per 1000 Youth (10-17)") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1379,25 +1477,26 @@ child_need_services %>%
 ```{r}
 juvenile_delinquency <- read_csv("../data/juvenile_delinquency.csv")
 juvenile_delinquency <- juvenile_delinquency %>%
-  mutate(year = as.character(year))
-
-juvenile_delinquency_labels <- juvenile_delinquency %>% 
-  filter(locality != "Virginia" & year == "2022") %>%
-  mutate(label = as.character(round((rate), digits = 1)))
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(rate, digits = 1)), NA))
 
 juvenile_delinquency %>% 
   ggplot(aes(x = year, y = rate, 
              color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = juvenile_delinquency_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,150),
                      name = "Rate per 1000 Youth (10-17)") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1409,24 +1508,26 @@ juvenile_delinquency %>%
 ```{r}
 arrests_alcoholrelated <- read_csv("../data/arrests_alcoholrelated.csv")
 arrests_alcoholrelated <- arrests_alcoholrelated %>%
-  mutate(year = as.character(year))
-arrests_alcoholrelated_labels <- arrests_alcoholrelated %>% 
-  filter(locality != "Virginia" & year == "2021") %>%
-  mutate(label = as.character(round((arr_rate), digits = 1)))
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(arr_rate, digits = 1)), NA))
 
 arrests_alcoholrelated %>% 
   ggplot(aes(x = year, y = arr_rate, 
              color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = arrests_alcoholrelated_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,50),
                      name = "Rate per 1000 Youth (Under 18)") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1438,24 +1539,26 @@ arrests_alcoholrelated %>%
 ```{r}
 arrests_crimesagainstpersons <- read_csv("../data/arrests_crimesagainstpersons.csv")
 arrests_crimesagainstpersons <- arrests_crimesagainstpersons %>%
-  mutate(year = as.character(year))
-arrests_crimesagainstpersons_labels <- arrests_crimesagainstpersons %>% 
-  filter(locality != "Virginia" & year == "2021") %>%
-  mutate(label = as.character(round((arr_rate), digits = 1)))
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(arr_rate, digits = 1)), NA))
 
 arrests_crimesagainstpersons %>% 
   ggplot(aes(x = year, y = arr_rate, 
              color = locality, group = locality)) +
   geom_line() +
   geom_point() +
-  geom_text_repel(data = arrests_crimesagainstpersons_labels, aes(label = label),
-                  size = 3, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,50),
                      name = "Rate per 1000 Youth (Under 18)") +
   scale_x_discrete(name = "Year") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top") +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
   labs(color = "")
 ```
 
@@ -1463,7 +1566,7 @@ arrests_crimesagainstpersons %>%
 ### School Suspensions  {.tabset}
 
 #### Trends
-```{r fig.height=7}
+```{r fig.height=6, fig.width=10}
 
 library(stats)
 library(ggpubr)
@@ -1591,7 +1694,7 @@ dat <- rbind(k12OSSmeans, albk12OSSmeans, cvillek12OSSmeans)
 ### Plots 
 # all levels together 
 # ggplot() + geom_point(data = dat, aes(Year, meanpercsus, shape = Locality, color = Race),
-#                       position = 'identity', size = 3) + 
+#                       position = 'identity', size = 3.5) + 
 #   geom_line(data = dat,aes(x = Year, y = meanpercsus, group = Locality),
 #             color = 'gray') +
 #   xlab("Year") + ylab("Average % of students receiving OSS")  + 
@@ -1615,20 +1718,22 @@ dat %>%
   # filter(!is.na())
 ggplot(aes(x = Year, y = meanpercsus, group = Locality, shape = Race, color = Locality)) + 
   geom_line(size = 0.4) +
-  geom_point(position = 'identity', size = 3) + 
+  geom_point(position = 'identity', size = 3.5) + 
   scale_color_manual(values = three_category_palette) +
-  scale_y_continuous(limits = c(0,20),
-                     breaks = seq(0, 20, by = 5),
+  scale_y_continuous(limits = c(0,15),
+                     breaks = seq(0, 15, by = 5),
                      labels = label_percent(scale = 1)) +
   xlab("School Year") + ylab("Average % of students receiving OSS")  + 
   ggtitle("") + scale_x_continuous(breaks = seq(2011, 2017, by = 2)) + 
   theme_minimal() +
   scale_shape_manual(values = c(15,16,17,7,18,8),
                      na.translate = FALSE) +
-  labs(color = "", shape = "", caption = "Note: Racial groups were only included for a given year and locality when the average
-       number of students enrolled was high enough such that you would expect to see at least one suspension
-       if the average overall rate were true for each racial group")+
-  theme(plot.caption = element_text(hjust=0), legend.position="top")
+  labs(color = "", shape = "", caption = "Note: Racial groups were only included for a given year and locality when the average number of 
+  students enrolled was high enough such that you would expect to see at least one suspension if 
+  the average overall rate were true for each racial group")+
+  theme(text = element_text(size = 16), 
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)))
 
 
 ```
@@ -1699,7 +1804,7 @@ plotdat4yr <- plotdat4yr %>%
 plotdat4yr <- rbind(plotdat4yr, blanks)
 
 # ggplot() + geom_point(data = plotdat4yr, aes(year, percent_4yr, shape = group, color = locality),
-#                       position = 'identity', size = 3) + 
+#                       position = 'identity', size = 3.5) + 
 #   geom_line(data = plotdat4yr,aes(x = year, y = percent_4yr, group = locality),
 #             color = 'gray') +
 #   xlab("Year") + ylab("Pecent of students")  + 
@@ -1733,21 +1838,77 @@ plotdatAny <- plotdatAny %>%
 plotdatAny %>% 
 ggplot(aes(x = year, y = percent_any, group = locality, shape = group, color = locality)) + 
   geom_line(size = 0.4) +
-  geom_point(position = 'identity', size = 3) + 
+  geom_point(position = 'identity', size = 3.5) + 
   scale_color_manual(values = three_category_palette) +
   scale_x_continuous(breaks = seq(2008, 2020, by = 1)) +
   scale_y_continuous(limits = c(40,100),
                      breaks = seq(40, 100, by = 10),
                      labels = label_percent(scale = 1)) +
-  xlab("Year") + ylab("Pecent of students")  + 
+  xlab("Year") + ylab("Percent of Students")  + 
   ggtitle("") +  
   theme_minimal() +
   scale_shape_manual(values = c(23,15,16,17,7,18),
                      na.translate = FALSE) +
-  labs(color = "", shape = "", caption = "Note: Racial groups were only included for a given year and locality when the number of students enrolled 
-  was high enough such that you would expect to see at least one student enrolled in a 4-year institution if the 
-  overall rate were true for each racial group")+
-  theme(plot.caption = element_text(hjust=0), legend.position="top")
+  labs(color = "", shape = "", caption = "Note: Racial groups were only included for a given year and locality when the number of students enrolled was high 
+  enough such that you would expect to see at least one student enrolled in a 4-year institution if the overall rate
+  were true for each racial group")+
+  theme(text = element_text(size = 16), 
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)))
 
 ```
 
+### Low Birth-Weight Infants  {.tabset}
+
+#### Trends
+``` {r fig.height=6, fig.width=10}
+lbw_race <- read.csv("../data/low_birth_weight_race.csv")
+spaceframe <- data.frame(locality = c("Albemarle","Albemarle","Albemarle","Albemarle","Albemarle","Albemarle",
+                                      "Charlottesville","Charlottesville","Charlottesville","Charlottesville","Charlottesville","Charlottesville",
+                                      "Virginia","Virginia","Virginia","Virginia","Virginia","Virginia"),
+                       year_space = c(2002,2005,2008,2011,2014,2017,
+                                2002,2005,2008,2011,2014,2017,
+                                2002,2005,2008,2011,2014,2017))
+
+lbw_race <- lbw_race %>% 
+  mutate(group = factor(group, levels = c("black", "white", "other", "all"), labels = c("Black", "White", "Other", "All")),
+         locality = recode(locality, "Albemarle County" = "Albemarle",
+                           "Charlottesville City" = "Charlottesville",
+                           "Commonwealth Of Virginia" = "Virginia"),
+         year_space = ifelse(locality == "Albemarle", year - 0.5, 
+                       ifelse(locality == "Charlottesville", year + 0.5, 
+                              year))
+         # three_yr_period = paste0(as.character(year-1),"-",as.character(year+1))
+         ) %>% 
+  filter(year %in% c(2001,2004,2007,2010,2013,2016,2019)
+    # three_yr_period %in% c("2000-2002", "2003-2005", "2006-2008", "2009-2011", "2012-2014", "2015-2017", "2018-2020")
+    ) %>% 
+  bind_rows(spaceframe)
+
+
+
+lbw_race %>% 
+  bind_rows(spaceframe) %>% 
+ggplot(aes(x = year_space, y = percent_3yr, group = locality, shape = group, color = locality)) + 
+  geom_line(size = 0.4) +
+  geom_point(position = 'identity', 
+             size = 3.5) + 
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(breaks = seq(2001, 2019, by = 3),
+                     labels = c("2000-2002", "2003-2005", "2006-2008", "2009-2011", "2012-2014", "2015-2017", "2018-2020"),
+                     name = "Three-Year Period") +
+  # scale_x_discrete(name = "Three-Year Period") +
+  scale_y_continuous(limits = c(0,17),
+                     # breaks = seq(0, 100, by = 10),
+                     labels = label_percent(scale = 1)) +
+  xlab("Year") + ylab("Percent of Infants")  + 
+  ggtitle("") +  
+  theme_minimal() +
+  scale_shape_manual(values = c(16,18,5,8),
+                     na.translate = FALSE) +
+  labs(color = "", shape = "")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        axis.title.x = element_text(margin = margin(t=12)),
+        text = element_text(size = 16), 
+        plot.caption = element_text(hjust=0))
+```
