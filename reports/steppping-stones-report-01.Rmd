@@ -185,7 +185,7 @@ revised math standards") +
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = 1.1, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -223,7 +223,7 @@ revised math standards") +
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -258,7 +258,7 @@ revised math standards") +
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = 1.1, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -299,7 +299,7 @@ revised reading standards") +
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = 1.1, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -335,7 +335,7 @@ revised reading standards") +
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = 1.1, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -371,7 +371,7 @@ revised reading standards") +
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = 1.1, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -776,7 +776,7 @@ child_poverty %>%
   ggplot(aes(x = year, y = pct_child_pov, color = locality, group = locality)) +
   geom_vline(xintercept = "2020", linetype = 2, color = "#333333") +
   geom_vline(xintercept = "2021", linetype = 2, color = "#333333") +
-  annotate("text", x = 16.8, y = 85, size = 3.5, hjust = 0, color = "#333333", 
+  annotate("text", x = 16.7, y = 85, size = 3.5, hjust = 0, color = "#333333", 
            label = 
 "COVID-19 Economic
 Stimulus Payments") +
@@ -1085,16 +1085,16 @@ teen_pregnancy_birth <- teen_pregnancy_birth %>%
                           "Commonwealth Of Virginia" = "Virginia"),
          three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)),
          label_preg = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
-                         as.character(round(pregnancyrate_3yr, digits = 1)), NA),
+                         as.character(round(pregnancyrate_3yr, digits = 0)), NA),
          label_birth = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
-                         as.character(round(birthsrate_3yr, digits = 1)), NA))
+                         as.character(round(birthsrate_3yr, digits = 0)), NA))
 
 teen_pregnancy_birth %>% 
   ggplot(aes(x = three_yr_period, y = pregnancyrate_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label_preg),
-                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100), 
                      name = "Rate per 1,000 Teens (15-17)") + 
@@ -1114,7 +1114,7 @@ teen_pregnancy_birth %>%
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label_birth),
-                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100), 
                      name = "Rate per 1,000 Teens (15-17)") + 
@@ -1135,14 +1135,14 @@ teen_pregnancy_birth %>%
 youth_sti <- read_csv("../data/youth_sti.csv")
 youth_sti <- youth_sti %>% 
   mutate(label = ifelse((!locality %in% "Virginia") & (year3 %in% str_sort_last(year3)),
-                         as.character(round(total_incrate_3yr, digits = 1)), NA))
+                         as.character(round(total_incrate_3yr, digits = 0)), NA))
 
 youth_sti %>%
   ggplot(aes(x = year3, y = total_incrate_3yr, color = locality, group = locality)) +
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0, 100),
                      name = "Rate per 1,000 Youth (10-19)") + 
@@ -1265,7 +1265,7 @@ child_welfare_reports <- child_welfare_reports %>%
          fiscal_year = str_replace_all(fiscal_year, "-20", "-"),
          # year = as.character(year),
          label = ifelse((!locality %in% "Virginia") & (fiscal_year %in% str_sort_last(fiscal_year)),
-                         as.character(round(cps_rate, digits = 1)), NA))
+                         as.character(round(cps_rate, digits = 0)), NA))
 
 child_welfare_reports %>% 
   ggplot(aes(x = fiscal_year, y = cps_rate, 
@@ -1273,7 +1273,7 @@ child_welfare_reports %>%
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = .3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
                      name = "Rate per 1000 Children") +
@@ -1296,7 +1296,7 @@ foster_care <- read_csv("../data/foster_care.csv")
 foster_care <- foster_care %>%
   mutate(year = as.character(year),
          label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
-                         as.character(round(fc_rate, digits = 1)), NA))
+                         as.character(round(fc_rate, digits = 0)), NA))
 
 foster_care %>% 
   ggplot(aes(x = year, y = fc_rate, 
@@ -1304,7 +1304,7 @@ foster_care %>%
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = .6, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,100),
                      name = "Rate per 1000 Children") +
@@ -1324,7 +1324,7 @@ foster_care %>%
 
 #### Trends
 
-##### Rate of Incidences of Alcohol and Drug Violations for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+##### Rate of Incidents of Alcohol and Drug Violations for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 school_alcdrugs_dcv <- read_csv("../data/school_alcdrugs_dcv.csv")
 school_alcdrugs_dcv <- school_alcdrugs_dcv %>% 
@@ -1409,7 +1409,7 @@ school_weapons_dcv %>%
 
 #### Trends
 
-##### Rate of Students Given an Out-of-School Suspension (Short-term Suspension, Long-term Suspension, or Modified Expulsion to Suspension) for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+##### Rate of Out-of-School Suspensions (Short-term Suspension, Long-term Suspension, or Modified Expulsion to Suspension) for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
 ```{r}
 school_suspensions <- read_csv("../data/school_suspensions.csv")
 school_suspensions <- school_suspensions %>% 
@@ -1483,7 +1483,7 @@ juvenile_delinquency <- read_csv("../data/juvenile_delinquency.csv")
 juvenile_delinquency <- juvenile_delinquency %>%
   mutate(year = as.character(year),
          label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
-                         as.character(round(rate, digits = 1)), NA))
+                         as.character(round(rate, digits = 0)), NA))
 
 juvenile_delinquency %>% 
   ggplot(aes(x = year, y = rate, 
@@ -1491,7 +1491,7 @@ juvenile_delinquency %>%
   geom_line() +
   geom_point() +
   geom_text_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+                  size = 3.5, fontface = "bold", nudge_x = .3, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = three_category_palette) +
   scale_y_continuous(limits = c(0,150),
                      name = "Rate per 1000 Youth (10-17)") +
