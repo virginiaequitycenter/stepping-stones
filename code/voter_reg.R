@@ -84,12 +84,12 @@ urllista <- paste0("https://www.elections.virginia.gov/media/registration-statis
 
 urllist <- c(urllista,
              "https://www.elections.virginia.gov/media/registration-statistics/2020/dec/Daily_Registrant_Count_By_Locality_2021_01_01_053053.csv", # 2020
-             "https://www.elections.virginia.gov/media/registration-statistics/2021/01/csv20210201/Daily_Registrant_Count_By_Locality_2021_02_01_054110.csv") # 2021
+             "https://www.elections.virginia.gov/media/registration-statistics/2021/12/dec2021-csv-stats/Daily_Registrant_Count_By_Locality_2022_01_01_053216.csv") # 2021
   
 url_year <- tibble(url = urllist, year = seq(2013,2021,1))
 
 ### apply function to list
-vr_list <- map2(url_year$url, yrl_year$year, 
+vr_list <- map2(url_year$url, url_year$year, 
                      ~extract_regvoters(.x, .y, localities = c("Albemarle", "Charlottesville"))) 
 
 vr1323 <- bind_rows(vr_list)
