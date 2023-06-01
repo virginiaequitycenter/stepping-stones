@@ -614,7 +614,7 @@ hsdegree_attainment %>%
 ```{r}
 voter_reg <- read_csv("../data/vote_reg.csv")
 voter_reg <- voter_reg %>% 
-  filter(year != 2021) %>% 
+  # filter(year != 2021) %>% 
   mutate(year = as.character(year),
          locality = recode(locality,
                           "Albemarle County" = "Albemarle",
