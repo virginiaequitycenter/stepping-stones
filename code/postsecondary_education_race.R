@@ -54,7 +54,7 @@ names(cvl_data) <- years # add year as names for list
 # rename columns to be identical across years
 colnames = c("group", "cohortsize", "enrolledany", "percentany", 
              "enrolled4pub", "percent4pub", "enrolled4priv", "percent4priv",
-             "enrolled2yr", "pecen2yr")
+             "enrolled2yr", "pecent2yr")
 
 cvl_data <- map(cvl_data, ~ rename_with(., ~ colnames))
 
@@ -74,7 +74,7 @@ names(alb_data) <- years # add year as names for list
 # rename columns to be identical across years
 colnames = c("group", "cohortsize", "enrolledany", "percentany", 
              "enrolled4pub", "percent4pub", "enrolled4priv", "percent4priv",
-             "enrolled2yr", "pecen2yr")
+             "enrolled2yr", "pecent2yr")
 
 alb_data <- map(alb_data, ~ rename_with(., ~ colnames))
 
@@ -94,7 +94,7 @@ names(va_data) <- years # add year as names for list
 # rename columns to be identical across years
 colnames = c("group", "cohortsize", "enrolledany", "percentany", 
              "enrolled4pub", "percent4pub", "enrolled4priv", "percent4priv",
-             "enrolled2yr", "pecen2yr")
+             "enrolled2yr", "pecent2yr")
 
 va_data <- map(va_data, ~ rename_with(., ~ colnames))
 
@@ -108,18 +108,10 @@ df_all <- bind_rows(cvl, alb, va)
 
 
 # Prep data ----
-df_tot <- df_all %>% 
-  filter(group == "All Students") %>% 
-  mutate(across(-c("group", "locality"), as.numeric)) %>% 
-  mutate(enrolled4yr = enrolled4pub + enrolled4priv) %>% 
-  select(year, locality, cohortsize_total = cohortsize, 
-         enrolledany_total = enrolledany, enrolled4yr_total = enrolled4yr) %>% 
-  mutate(percent_any = enrolledany_total/cohortsize_total*100,
-         percent_4yr = enrolled4yr_total/cohortsize_total*100)
-
 df_race <- df_all %>% 
   filter(group %in% c("Asian", "Black", "Hispanic", "White", "2 or More", 
-                      "American Indian", "Native Hawaiian", "Race Unknown")) %>% 
+                      "American Indian", "Native Hawaiian", "Race Unknown",
+                      "All Students")) %>% 
   mutate(across(-c("group", "locality"), ~ifelse(.x == "-", 0, .x)),
          across(-c("group", "locality"), as.numeric)) %>% 
   mutate(enrolled4yr = enrolled4pub + enrolled4priv) %>% 
@@ -135,7 +127,6 @@ df_race %>%
   ggplot(aes(x = year, y = percent_any, color = group)) +
   geom_line(aes(group = year), color = "grey") +
   geom_point() +
-  geom_point(data = total, aes(x = year, y = percent_any), color = "black") +
   facet_wrap(~locality)
 
 df_race %>% 
@@ -143,9 +134,7 @@ df_race %>%
   ggplot(aes(x = year, y = percent_4yr, color = group)) +
   geom_line(aes(group = year), color = "grey") +
   geom_point() +
-  geom_point(data = total, aes(x = year, y = percent_4yr), color = "black") +
   facet_wrap(~locality)
-
 
 # save data ----
 write_csv(df_race, "data/postsecondary_education_race.csv")
