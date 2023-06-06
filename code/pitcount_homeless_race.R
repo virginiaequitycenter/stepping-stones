@@ -1,10 +1,10 @@
 # Title: Stepping Stones Project
 # Point-in-Time Count of People Experiencing Homelessness by race
 # Michele Claibourn
-# Last Updated: 2023-04-21
+# Last Updated: 2023-06-06
 
 # Proposed Citation
-# Blue Ridge Area Coalition for the Homeless, "Point-in-Time Count", 2022.
+# Blue Ridge Area Coalition for the Homeless, "Point-in-Time Count", 2014-2022.
 
 # ..................................................
 # Load Libraries ----
@@ -17,92 +17,140 @@ library(tidycensus)
 
 
 # ..................................................
-# Read in BRACH data & prep ----
-pit <- read_excel("datadownloads/PIT Count 2022 Homeless Populations.xls", 
-                  sheet = "Totals",
-                  range = "A30:K36")
+# Generate list of files, read ----
+pitlist <- list.files(path = "datadownloads/All Reports", recursive = TRUE, pattern = "General", full.names = TRUE)
+# remove 2012 and 2013
+pitlist <- pitlist[3:12]
 
-pit <- pit %>% 
-  select(race = 1, es = 3, ts = 5, sh = 7, un = 9, total = 11) %>% 
-  mutate(race2 = case_when(
-    race == "American Indian, Alaska Native, or Indigenous" ~ "aian",
-    race == "Asian or Asian American" ~ "asian",
-    race == "Black, African American, or African" ~ "black",
-    race == "Native Hawaiian or Pacific Islander" ~ "nhpi",
-    race == "White" ~ "white", 
-    race == "Multiple Races" ~ "multi"),
-    pit_percent = (total/sum(total))*100)
-  
+# Read in  ----
+# slightly different formats in 2014-2016, 2017-2021, 2022-2023
+## 2014-2016 ----
+pit1416 <- map(pitlist[1:3], ~read_excel(.x, sheet = "Totals"))
+names(pit1416) <- 2014:2016 # add year as names for list
+pit1416 <- map(pit1416, ~rename(., group = 1))
+pit1416 <- bind_rows(pit1416, .id = "year") %>% 
+  rename(es = 3, ts = 4, sh = 5, un = 6, total = 7) %>% 
+  filter(group %in% c("Total Number of \nPersons", 
+                      "Non-Hispanic/Non-Latino", "Hispanic/Latino",
+                      "White", "Black or African-American", 
+                      "Asian", "American Indian or Alaska Native", 
+                      "Native Hawaiian or Other Pacific Islander", "Multiple Races"))
+
+## 2017-2021 ----
+pit1721 <- map(pitlist[4:8], ~read_excel(.x, sheet = "Totals"))
+names(pit1721) <- 2017:2021 # add year as names for list
+pit1721 <- map(pit1721, ~rename(., group = 1))
+pit1721 <- bind_rows(pit1721, .id = "year") %>% 
+  select(year, group, es = 4, ts = 6, sh = 8, un = 10, total = 12) %>% 
+  filter(group %in% c("Total Number of \nPersons", 
+                      "Non-Hispanic/Non-Latino", "Hispanic/Latino",
+                      "White", "Black or African-American", 
+                      "Asian", "American Indian or Alaska Native", 
+                      "Native Hawaiian or Other Pacific Islander", "Multiple Races"))
+
+## 2022-2023 ----
+pit2223 <- map(pitlist[9:10], ~read_excel(.x, sheet = "Totals"))
+names(pit2223) <- 2022:2023 # add year as names for list
+pit2223 <- map(pit2223, ~rename(., group = 1))
+pit2223 <- bind_rows(pit2223, .id = "year") %>% 
+  select(year, group, es = 4, ts = 6, sh = 8, un = 10, total = 12) %>% 
+  filter(group %in% c("Total Number of \nPersons", 
+                      "Non-Hispanic/Non-Latin(a)(o)(x)", "Hispanic/Latin(a)(o)(x)",
+                      "White", "Black, African American, or African", 
+                      "Asian or Asian American", "American Indian, Alaska Native, or Indigenous", 
+                      "Native Hawaiian or Pacific Islander", "Multiple Races"))
+
+# ..................................................
+# Combine and standardize race ----
+pit_race <- bind_rows(pit1416, pit1721, pit2223)
+
+pit_race<- pit_race %>% 
+  mutate(initialgroup = group,
+         group = fct_collapse(group,
+                               white = "White",
+                               black = c("Black or African-American", "Black, African American, or African"),
+                               asian = c("Asian", "Asian or Asian American"),
+                               aian = c("American Indian or Alaska Native", "American Indian, Alaska Native, or Indigenous"),
+                               nhpi = c("Native Hawaiian or Pacific Islander", "Native Hawaiian or Other Pacific Islander"),
+                               multi = "Multiple Races",
+                               hispanic = c("Hispanic/Latino", "Hispanic/Latin(a)(o)(x)"),
+                               nonhispanic = c("Non-Hispanic/Non-Latino", "Non-Hispanic/Non-Latin(a)(o)(x)"),
+                               total = "Total Number of \nPersons")) %>% 
+  mutate(total = as.numeric(total)) %>% 
+  group_by(year, group) %>% 
+  summarize(total = sum(total))
 
 
 # ..................................................
-# Read in populatio data & prep ----
-region = c("540", "003", "065", "079", "109", "125")
-county_pop <- get_acs(geography = "county",
+# Read in population data & prep ----
+# race: b02001
+# hispanic: b03003
+# population for cbille/albemarle
+years <- 2014:2021
+region <- c("540", "003")
+vars <- c(white = "B02001_002", 
+          black = "B02001_003", 
+          aian = "B02001_004",
+          asian = "B02001_005",
+          nhpi = "B02001_006", 
+          other = "B02001_007", 
+          multi = "B02001_008")
+
+race <- map_dfr(years,
+                ~get_acs(geography = "county",
                       state = "51",
                       county = region,
-                      table = "B02001",
-                      year = 2021,
-                      survey = "acs5")
+                      var = vars,
+                      year = .x,
+                      survey = "acs5") %>%
+                  mutate(year = .x))
 
-pop_total <- county_pop %>% 
-  filter(variable == "B02001_001") %>% 
-  summarize(total = sum(estimate))
+varsb <- c(total = "B03003_001", 
+          nonhispanic = "B03003_002", 
+          hispanic = "B03003_003")
 
-pop <- county_pop %>% 
-  filter(!(variable %in% c("B02001_001", "B02001_007", "B02001_009", "B02001_010"))) %>% 
-  mutate(race2 = fct_recode(variable,
-                             white = "B02001_002",
-                             black = "B02001_003",
-                             aian = "B02001_004",
-                             asian = "B02001_005",
-                             nhpi = "B02001_006",
-                             multi = "B02001_008")
-         ) %>% 
-  group_by(race2) %>%
+hisp <- map_dfr(years,
+                ~get_acs(geography = "county",
+                         state = "51", 
+                         county = region,
+                         var = varsb,
+                         year = .x,
+                         survey = "acs5") %>% 
+                  mutate(year = .x))
+
+pop_race <- race %>% 
+  group_by(year, variable) %>% 
   summarize(pop = sum(estimate)) %>% 
-  ungroup() %>% 
-  mutate(pop_percent = (pop/pop_total$total)*100) 
+  rename(group = variable)
+
+pop_hisp <- hisp %>% 
+  group_by(year, variable) %>% 
+  summarize(pop = sum(estimate)) %>% 
+  rename(group = variable)
+
+pop <- bind_rows(pop_hisp, pop_race)
 
 
 # ..................................................
-# Join and visualize ----
-pit_pop <- pit %>% 
+# Join population data, create rate ----
+pit_pop <- pit_race %>% 
+  mutate(year = as.integer(year)) %>% 
   left_join(pop) %>% 
-  mutate(rdi = pit_percent/pop_percent)
+  ## fill in 2022 population with 2021 estimates
+  group_by(group) %>%
+  fill(pop) %>%
+  ungroup() %>% 
+  mutate(rate = (total/pop)*1000) %>% 
+  # remove 2023 due to absence of population data
+  filter(year != 2023)
 
-# visualize percent: stacked bar
-pit_pop %>% 
-  select(race, race2, total, pop) %>% 
-  pivot_longer(-c(race, race2), 
-               names_to = "source", values_to = "count") %>% 
-  ggplot(aes(x = source, y = count, fill = race2)) +
-  geom_col(position = "fill")
-
-# visualize percent: dots
-pit_pop %>% 
-  select(race, race2, pit_percent, pop_percent) %>% 
-  pivot_longer(-c(race, race2), 
-               names_to = "source", values_to = "percent") %>% 
-  ggplot(aes(y = fct_reorder(race2, percent), x = percent)) +
-  geom_line(aes(group = race2), color = "grey") +
-  geom_point(aes(color = source))
-
-# visualize ratio/index
-pit_pop %>% 
-  ggplot(aes(x = rdi, y = race2)) +
-  geom_col() +
-  geom_vline(xintercept = 1, color = "black") +
-  scale_x_continuous(name = "Disproportionality Index", 
-                     limits = c(-0.98, 9),
-                     trans = "log",
-                     breaks = c(0.125, 0.25, 0.33, 0.5, 0.67, 1, 1.5, 2, 3, 4, 5), 
-                     labels = c("0.125", "0.25", "0.33", "0.5", "0.67", "1", "1.5", "2", "3", "4", "5"))
-
-
-# combine aian and nhpi? or remove nhpi (it's zero)?
 
 # ..................................................
-# Export Data ----
+# Visualize and save ----
+
+ggplot(pit_pop, aes(x = year, y = rate, color = group)) +
+  geom_line()
+
+## save ----
 write_csv(pit_pop, "data/pit_homelessness_race.csv")
 # pit_pop <- read_csv("data/pit_homelessness_race.csv")
