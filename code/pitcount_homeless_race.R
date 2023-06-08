@@ -83,11 +83,11 @@ pit_race<- pit_race %>%
 
 # ..................................................
 # Read in population data & prep ----
+## Charlottesville and Albemarle totals ----
 # race: b02001
 # hispanic: b03003
-# population for cbille/albemarle
-years <- 2014:2021
 region <- c("540", "003")
+years <- 2014:2021
 vars <- c(white = "B02001_002", 
           black = "B02001_003", 
           aian = "B02001_004",
@@ -96,7 +96,7 @@ vars <- c(white = "B02001_002",
           other = "B02001_007", 
           multi = "B02001_008")
 
-race <- map_dfr(years,
+race_cvlalb <- map_dfr(years,
                 ~get_acs(geography = "county",
                       state = "51",
                       county = region,
@@ -109,7 +109,7 @@ varsb <- c(total = "B03003_001",
           nonhispanic = "B03003_002", 
           hispanic = "B03003_003")
 
-hisp <- map_dfr(years,
+hisp_cvlalb <- map_dfr(years,
                 ~get_acs(geography = "county",
                          state = "51", 
                          county = region,
@@ -118,29 +118,64 @@ hisp <- map_dfr(years,
                          survey = "acs5") %>% 
                   mutate(year = .x))
 
-pop_race <- race %>% 
+pop_race_cvlalb <- race_cvlalb %>% 
   group_by(year, variable) %>% 
-  summarize(pop = sum(estimate)) %>% 
+  summarize(pop_cvlalb = sum(estimate)) %>% 
   rename(group = variable)
 
-pop_hisp <- hisp %>% 
+pop_hisp_cvlalb <- hisp_cvlalb %>% 
   group_by(year, variable) %>% 
-  summarize(pop = sum(estimate)) %>% 
+  summarize(pop_cvlalb = sum(estimate)) %>% 
   rename(group = variable)
 
-pop <- bind_rows(pop_hisp, pop_race)
+pop_cvlalb <- bind_rows(pop_hisp_cvlalb, pop_race_cvlalb)
 
+
+## Six-county region totals ----
+region <- c("540", "003", "065", "079", "109", "125")
+
+race_region <- map_dfr(years,
+                       ~get_acs(geography = "county",
+                                state = "51",
+                                county = region,
+                                var = vars,
+                                year = .x,
+                                survey = "acs5") %>%
+                         mutate(year = .x))
+
+hisp_region <- map_dfr(years,
+                       ~get_acs(geography = "county",
+                                state = "51", 
+                                county = region,
+                                var = varsb,
+                                year = .x,
+                                survey = "acs5") %>% 
+                         mutate(year = .x))
+
+pop_race_region <- race_region %>% 
+  group_by(year, variable) %>% 
+  summarize(pop_region = sum(estimate)) %>% 
+  rename(group = variable)
+
+pop_hisp_region <- hisp_region %>% 
+  group_by(year, variable) %>% 
+  summarize(pop_region = sum(estimate)) %>% 
+  rename(group = variable)
+
+pop_region <- bind_rows(pop_hisp_region, pop_race_region)
 
 # ..................................................
-# Join population data, create rate ----
+# Join population data, create rate(s) ----
 pit_pop <- pit_race %>% 
   mutate(year = as.integer(year)) %>% 
-  left_join(pop) %>% 
+  left_join(pop_cvlalb) %>% 
+  left_join(pop_region) %>% 
   ## fill in 2022 population with 2021 estimates
   group_by(group) %>%
-  fill(pop) %>%
+  fill(pop_cvlalb, pop_region) %>%
   ungroup() %>% 
-  mutate(rate = (total/pop)*1000) %>% 
+  mutate(rate_cvlalb = (total/pop_cvlalb)*1000,
+         rate_region = (total/pop_region)*1000) %>% 
   # remove 2023 due to absence of population data
   filter(year != 2023)
 
@@ -148,7 +183,10 @@ pit_pop <- pit_race %>%
 # ..................................................
 # Visualize and save ----
 
-ggplot(pit_pop, aes(x = year, y = rate, color = group)) +
+ggplot(pit_pop, aes(x = year, y = rate_cvlalb, color = group)) +
+  geom_line()
+
+ggplot(pit_pop, aes(x = year, y = rate_region, color = group)) +
   geom_line()
 
 ## save ----
