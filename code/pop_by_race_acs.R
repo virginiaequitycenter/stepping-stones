@@ -11,10 +11,21 @@
 library(tidyverse)
 library(janitor)
 library(tidycensus)
+library(stringr)
+
+# rename function 
+rename <- function(data_names,originals,replacements){
+  for(i in 1:length(originals)){
+    data_names <- stringi::stri_replace_all_fixed(data_names, originals[i],replacements[i])
+  }
+  return(data_names)
+}
 
 
 # Download ----
 years <- 2009:2021
+
+#### Data for everyone
 
 ## pull county data ----
 vars <- c(white = "B01001A_001",
@@ -59,6 +70,66 @@ pop_alltotals <- pop_all %>%
   summarise(totalpop = sum(estimate))
 
 pop_all <- merge(pop_all, pop_alltotals, by = c("GEOID", "year"))
+
+#### Data for population 17 and under 
+
+# Pull variables, Charlottesville/Albemarle and VA----
+
+# population variables 
+varstable <- read.csv("popByRaceVariables.csv")
+
+popunder18county <- map_dfr(years,
+                      ~get_acs(
+                        geography = "county",
+                        state = "51",
+                        county = c("003", "540"),
+                        year = .x,
+                        survey = "acs5",
+                        var = varstable$OldName,
+                        output = "tidy") %>%
+                        mutate(year = .x))
+
+popunder18state <- map_dfr(years,
+                     ~get_acs(
+                       geography = "state",
+                       state = "51",
+                       year = .x,
+                       survey = "acs5",
+                       var = varstable$OldName,
+                       output = "tidy") %>%
+                       mutate(year = .x))
+
+# Prep data ----
+# ..................................................
+# Renaming variables 
+
+popunder18county$variable <- rename(popunder18county$variable,varstable$OldName,varstable$NewName)
+popunder18county[c("race", "GenderAge")] <- stringr::str_split_fixed(popunder18county$variable, "_", 2)
+
+popunder18state$variable <- rename(popunder18state$variable,varstable$OldName,varstable$NewName)
+popunder18state[c("race", "GenderAge")] <- stringr::str_split_fixed(popunder18state$variable, "_", 2)
+
+# Adding columns of the same race and 
+popunder18county <- popunder18county %>%
+  group_by(race, year, GEOID) %>%
+  summarise(estimate = sum(estimate))
+
+popunder18state <- popunder18state %>%
+  group_by(race, year, GEOID) %>%
+  summarise(estimate = sum(estimate))
+
+# binding states and localities together 
+cpop <- rbind(popunder18county, popunder18state)
+
+cpop <- cpop %>%
+  dplyr::rename(youthpop_count = estimate,
+                variable = race)
+
+pop_all <- merge(cpop, pop_all, by = c("GEOID", "year", 'variable'))
+
+pop_all <- pop_all %>%
+  dplyr::rename(pop_count = estimate,
+                pop_moe = moe)
 
 # Save ----
 write_csv(pop_all, file = "pop_race_ethn.csv")

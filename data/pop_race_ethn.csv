@@ -1,352 +1,313 @@
-GEOID,year,NAME,variable,estimate,moe,raceethn,totalpop
-51,2009,Virginia,white,5458832,5757,race,7721730
-51,2009,Virginia,black,1510139,3831,race,7721730
-51,2009,Virginia,aian,22932,1401,race,7721730
-51,2009,Virginia,asian,371788,2033,race,7721730
-51,2009,Virginia,nhpi,5804,806,race,7721730
-51,2009,Virginia,other,192534,5087,race,7721730
-51,2009,Virginia,multi,159701,4542,race,7721730
-51,2009,Virginia,nhwhite,5172149,2475,ethnicity,7721730
-51,2009,Virginia,hispanic,514959,627,ethnicity,7721730
-51,2010,Virginia,white,5479975,6073,race,7841754
-51,2010,Virginia,black,1532150,3958,race,7841754
-51,2010,Virginia,aian,24941,1674,race,7841754
-51,2010,Virginia,asian,416549,1970,race,7841754
-51,2010,Virginia,nhpi,5711,685,race,7841754
-51,2010,Virginia,other,201692,5907,race,7841754
-51,2010,Virginia,multi,180736,4763,race,7841754
-51,2010,Virginia,nhwhite,5151070,2085,ethnicity,7841754
-51,2010,Virginia,hispanic,574966,551,ethnicity,7841754
-51,2011,Virginia,white,5526985,6695,race,7926192
-51,2011,Virginia,black,1545568,3885,race,7926192
-51,2011,Virginia,aian,25665,1918,race,7926192
-51,2011,Virginia,asian,430227,2654,race,7926192
-51,2011,Virginia,nhpi,5295,545,race,7926192
-51,2011,Virginia,other,194281,6189,race,7926192
-51,2011,Virginia,multi,198171,5956,race,7926192
-51,2011,Virginia,nhwhite,5169156,1418,ethnicity,7926192
-51,2011,Virginia,hispanic,604882,495,ethnicity,7926192
-51,2012,Virginia,white,5575445,6533,race,8014955
-51,2012,Virginia,black,1561042,4367,race,8014955
-51,2012,Virginia,aian,25205,1709,race,8014955
-51,2012,Virginia,asian,443460,2569,race,8014955
-51,2012,Virginia,nhpi,5438,579,race,8014955
-51,2012,Virginia,other,184403,6536,race,8014955
-51,2012,Virginia,multi,219962,5636,race,8014955
-51,2012,Virginia,nhwhite,5191698,1324,ethnicity,8014955
-51,2012,Virginia,hispanic,631669,415,ethnicity,8014955
-51,2013,Virginia,white,5627076,5673,race,8100653
-51,2013,Virginia,black,1568021,4276,race,8100653
-51,2013,Virginia,aian,24816,1745,race,8100653
-51,2013,Virginia,asian,457792,2615,race,8100653
-51,2013,Virginia,nhpi,5633,541,race,8100653
-51,2013,Virginia,other,179449,5553,race,8100653
-51,2013,Virginia,multi,237866,5569,race,8100653
-51,2013,Virginia,nhwhite,5211870,1138,ethnicity,8100653
-51,2013,Virginia,hispanic,659599,461,ethnicity,8100653
-51,2014,Virginia,white,5668363,6990,race,8185131
-51,2014,Virginia,black,1577943,3956,race,8185131
-51,2014,Virginia,aian,23421,1583,race,8185131
-51,2014,Virginia,asian,475632,3210,race,8185131
-51,2014,Virginia,nhpi,5485,547,race,8185131
-51,2014,Virginia,other,179166,5948,race,8185131
-51,2014,Virginia,multi,255121,5604,race,8185131
-51,2014,Virginia,nhwhite,5227415,1146,ethnicity,8185131
-51,2014,Virginia,hispanic,687265,341,ethnicity,8185131
-51,2015,Virginia,white,5695147,5990,race,8256630
-51,2015,Virginia,black,1589345,3850,race,8256630
-51,2015,Virginia,aian,22570,1347,race,8256630
-51,2015,Virginia,asian,492973,2605,race,8256630
-51,2015,Virginia,nhpi,5304,450,race,8256630
-51,2015,Virginia,other,183124,5359,race,8256630
-51,2015,Virginia,multi,268167,5593,race,8256630
-51,2015,Virginia,nhwhite,5237848,1272,ethnicity,8256630
-51,2015,Virginia,hispanic,709156,428,ethnicity,8256630
-51,2016,Virginia,white,5712958,5302,race,8310301
-51,2016,Virginia,black,1596352,4766,race,8310301
-51,2016,Virginia,aian,21948,1243,race,8310301
-51,2016,Virginia,asian,502878,2906,race,8310301
-51,2016,Virginia,nhpi,5494,454,race,8310301
-51,2016,Virginia,other,190972,5073,race,8310301
-51,2016,Virginia,multi,279699,6294,race,8310301
-51,2016,Virginia,nhwhite,5245259,1312,ethnicity,8310301
-51,2016,Virginia,hispanic,725092,386,ethnicity,8310301
-51,2017,Virginia,white,5720209,6499,race,8365952
-51,2017,Virginia,black,1605447,4024,race,8365952
-51,2017,Virginia,aian,22499,1303,race,8365952
-51,2017,Virginia,asian,520119,2743,race,8365952
-51,2017,Virginia,nhpi,5469,439,race,8365952
-51,2017,Virginia,other,200265,6140,race,8365952
-51,2017,Virginia,multi,291944,5308,race,8365952
-51,2017,Virginia,nhwhite,5238967,1377,ethnicity,8365952
-51,2017,Virginia,hispanic,749458,582,ethnicity,8365952
-51,2018,Virginia,white,5722660,6402,race,8413774
-51,2018,Virginia,black,1613285,5365,race,8413774
-51,2018,Virginia,aian,22972,1339,race,8413774
-51,2018,Virginia,asian,531503,3435,race,8413774
-51,2018,Virginia,nhpi,5677,516,race,8413774
-51,2018,Virginia,other,208464,6457,race,8413774
-51,2018,Virginia,multi,309213,6030,race,8413774
-51,2018,Virginia,nhwhite,5233111,1233,ethnicity,8413774
-51,2018,Virginia,hispanic,771177,504,ethnicity,8413774
-51,2019,Virginia,white,5717617,6871,race,8454463
-51,2019,Virginia,black,1621592,4393,race,8454463
-51,2019,Virginia,aian,23873,1521,race,8454463
-51,2019,Virginia,asian,541133,3118,race,8454463
-51,2019,Virginia,nhpi,6179,562,race,8454463
-51,2019,Virginia,other,223794,6768,race,8454463
-51,2019,Virginia,multi,320275,5841,race,8454463
-51,2019,Virginia,nhwhite,5227569,1102,ethnicity,8454463
-51,2019,Virginia,hispanic,792001,524,ethnicity,8454463
-51,2020,Virginia,white,5643436,6666,race,8509358
-51,2020,Virginia,black,1620649,5144,race,8509358
-51,2020,Virginia,aian,22553,1235,race,8509358
-51,2020,Virginia,asian,570398,3137,race,8509358
-51,2020,Virginia,nhpi,5994,791,race,8509358
-51,2020,Virginia,other,240542,6696,race,8509358
-51,2020,Virginia,multi,405786,7686,race,8509358
-51,2020,Virginia,nhwhite,5209336,2173,ethnicity,8509358
-51,2020,Virginia,hispanic,810770,438,ethnicity,8509358
-51,2021,Virginia,white,5574307,6853,race,8582479
-51,2021,Virginia,black,1631941,5030,race,8582479
-51,2021,Virginia,aian,24007,1684,race,8582479
-51,2021,Virginia,asian,578210,3182,race,8582479
-51,2021,Virginia,nhpi,5313,576,race,8582479
-51,2021,Virginia,other,265361,8225,race,8582479
-51,2021,Virginia,multi,503340,8236,race,8582479
-51,2021,Virginia,nhwhite,5200759,2503,ethnicity,8582479
-51,2021,Virginia,hispanic,840248,343,ethnicity,8582479
-51003,2009,"Albemarle County, Virginia",white,77012,407,race,92866
-51003,2009,"Albemarle County, Virginia",black,8907,256,race,92866
-51003,2009,"Albemarle County, Virginia",aian,68,79,race,92866
-51003,2009,"Albemarle County, Virginia",asian,4137,196,race,92866
-51003,2009,"Albemarle County, Virginia",nhpi,20,31,race,92866
-51003,2009,"Albemarle County, Virginia",other,996,359,race,92866
-51003,2009,"Albemarle County, Virginia",multi,1726,337,race,92866
-51003,2009,"Albemarle County, Virginia",nhwhite,74730,140,ethnicity,92866
-51003,2009,"Albemarle County, Virginia",hispanic,3397,0,ethnicity,92866
-51003,2010,"Albemarle County, Virginia",white,79493,509,race,96633
-51003,2010,"Albemarle County, Virginia",black,9563,328,race,96633
-51003,2010,"Albemarle County, Virginia",aian,168,140,race,96633
-51003,2010,"Albemarle County, Virginia",asian,4146,223,race,96633
-51003,2010,"Albemarle County, Virginia",nhpi,28,43,race,96633
-51003,2010,"Albemarle County, Virginia",other,1164,484,race,96633
-51003,2010,"Albemarle County, Virginia",multi,2071,421,race,96633
-51003,2010,"Albemarle County, Virginia",nhwhite,76042,151,ethnicity,96633
-51003,2010,"Albemarle County, Virginia",hispanic,4790,NA,ethnicity,96633
-51003,2011,"Albemarle County, Virginia",white,80673,403,race,97978
-51003,2011,"Albemarle County, Virginia",black,9875,382,race,97978
-51003,2011,"Albemarle County, Virginia",aian,216,115,race,97978
-51003,2011,"Albemarle County, Virginia",asian,4298,216,race,97978
-51003,2011,"Albemarle County, Virginia",nhpi,0,95,race,97978
-51003,2011,"Albemarle County, Virginia",other,682,292,race,97978
-51003,2011,"Albemarle County, Virginia",multi,2234,486,race,97978
-51003,2011,"Albemarle County, Virginia",nhwhite,76739,89,ethnicity,97978
-51003,2011,"Albemarle County, Virginia",hispanic,5104,NA,ethnicity,97978
-51003,2012,"Albemarle County, Virginia",white,81403,569,race,99484
-51003,2012,"Albemarle County, Virginia",black,9751,383,race,99484
-51003,2012,"Albemarle County, Virginia",aian,313,158,race,99484
-51003,2012,"Albemarle County, Virginia",asian,4240,286,race,99484
-51003,2012,"Albemarle County, Virginia",nhpi,0,29,race,99484
-51003,2012,"Albemarle County, Virginia",other,1027,442,race,99484
-51003,2012,"Albemarle County, Virginia",multi,2750,484,race,99484
-51003,2012,"Albemarle County, Virginia",nhwhite,77470,247,ethnicity,99484
-51003,2012,"Albemarle County, Virginia",hispanic,5343,NA,ethnicity,99484
-51003,2013,"Albemarle County, Virginia",white,82359,512,race,100636
-51003,2013,"Albemarle County, Virginia",black,9607,393,race,100636
-51003,2013,"Albemarle County, Virginia",aian,357,148,race,100636
-51003,2013,"Albemarle County, Virginia",asian,4210,324,race,100636
-51003,2013,"Albemarle County, Virginia",nhpi,14,22,race,100636
-51003,2013,"Albemarle County, Virginia",other,1155,450,race,100636
-51003,2013,"Albemarle County, Virginia",multi,2934,619,race,100636
-51003,2013,"Albemarle County, Virginia",nhwhite,78211,278,ethnicity,100636
-51003,2013,"Albemarle County, Virginia",hispanic,5589,NA,ethnicity,100636
-51003,2014,"Albemarle County, Virginia",white,83125,528,race,101883
-51003,2014,"Albemarle County, Virginia",black,9616,432,race,101883
-51003,2014,"Albemarle County, Virginia",aian,279,173,race,101883
-51003,2014,"Albemarle County, Virginia",asian,4415,288,race,101883
-51003,2014,"Albemarle County, Virginia",nhpi,20,24,race,101883
-51003,2014,"Albemarle County, Virginia",other,1283,461,race,101883
-51003,2014,"Albemarle County, Virginia",multi,3145,481,race,101883
-51003,2014,"Albemarle County, Virginia",nhwhite,78949,310,ethnicity,101883
-51003,2014,"Albemarle County, Virginia",hispanic,5698,NA,ethnicity,101883
-51003,2015,"Albemarle County, Virginia",white,84059,523,race,103108
-51003,2015,"Albemarle County, Virginia",black,9658,413,race,103108
-51003,2015,"Albemarle County, Virginia",aian,258,138,race,103108
-51003,2015,"Albemarle County, Virginia",asian,4578,226,race,103108
-51003,2015,"Albemarle County, Virginia",nhpi,15,17,race,103108
-51003,2015,"Albemarle County, Virginia",other,1389,479,race,103108
-51003,2015,"Albemarle County, Virginia",multi,3151,463,race,103108
-51003,2015,"Albemarle County, Virginia",nhwhite,79817,258,ethnicity,103108
-51003,2015,"Albemarle County, Virginia",hispanic,5851,NA,ethnicity,103108
-51003,2016,"Albemarle County, Virginia",white,84955,598,race,104287
-51003,2016,"Albemarle County, Virginia",black,9747,376,race,104287
-51003,2016,"Albemarle County, Virginia",aian,250,125,race,104287
-51003,2016,"Albemarle County, Virginia",asian,4733,242,race,104287
-51003,2016,"Albemarle County, Virginia",nhpi,34,35,race,104287
-51003,2016,"Albemarle County, Virginia",other,1627,538,race,104287
-51003,2016,"Albemarle County, Virginia",multi,2941,498,race,104287
-51003,2016,"Albemarle County, Virginia",nhwhite,80744,262,ethnicity,104287
-51003,2016,"Albemarle County, Virginia",hispanic,5832,NA,ethnicity,104287
-51003,2017,"Albemarle County, Virginia",white,85656,468,race,105105
-51003,2017,"Albemarle County, Virginia",black,10052,389,race,105105
-51003,2017,"Albemarle County, Virginia",aian,216,94,race,105105
-51003,2017,"Albemarle County, Virginia",asian,5218,186,race,105105
-51003,2017,"Albemarle County, Virginia",nhpi,42,46,race,105105
-51003,2017,"Albemarle County, Virginia",other,1357,457,race,105105
-51003,2017,"Albemarle County, Virginia",multi,2564,410,race,105105
-51003,2017,"Albemarle County, Virginia",nhwhite,81167,102,ethnicity,105105
-51003,2017,"Albemarle County, Virginia",hispanic,5991,NA,ethnicity,105105
-51003,2018,"Albemarle County, Virginia",white,86739,378,race,106355
-51003,2018,"Albemarle County, Virginia",black,10375,291,race,106355
-51003,2018,"Albemarle County, Virginia",aian,209,99,race,106355
-51003,2018,"Albemarle County, Virginia",asian,5626,215,race,106355
-51003,2018,"Albemarle County, Virginia",nhpi,30,37,race,106355
-51003,2018,"Albemarle County, Virginia",other,1131,356,race,106355
-51003,2018,"Albemarle County, Virginia",multi,2245,413,race,106355
-51003,2018,"Albemarle County, Virginia",nhwhite,81835,130,ethnicity,106355
-51003,2018,"Albemarle County, Virginia",hispanic,6168,NA,ethnicity,106355
-51003,2019,"Albemarle County, Virginia",white,87831,359,race,107405
-51003,2019,"Albemarle County, Virginia",black,10245,312,race,107405
-51003,2019,"Albemarle County, Virginia",aian,271,117,race,107405
-51003,2019,"Albemarle County, Virginia",asian,5590,231,race,107405
-51003,2019,"Albemarle County, Virginia",nhpi,41,48,race,107405
-51003,2019,"Albemarle County, Virginia",other,822,356,race,107405
-51003,2019,"Albemarle County, Virginia",multi,2605,376,race,107405
-51003,2019,"Albemarle County, Virginia",nhwhite,82656,72,ethnicity,107405
-51003,2019,"Albemarle County, Virginia",hispanic,6200,NA,ethnicity,107405
-51003,2020,"Albemarle County, Virginia",white,87871,424,race,108819
-51003,2020,"Albemarle County, Virginia",black,10005,338,race,108819
-51003,2020,"Albemarle County, Virginia",aian,315,107,race,108819
-51003,2020,"Albemarle County, Virginia",asian,5981,294,race,108819
-51003,2020,"Albemarle County, Virginia",nhpi,48,28,race,108819
-51003,2020,"Albemarle County, Virginia",other,989,426,race,108819
-51003,2020,"Albemarle County, Virginia",multi,3610,500,race,108819
-51003,2020,"Albemarle County, Virginia",nhwhite,83403,103,ethnicity,108819
-51003,2020,"Albemarle County, Virginia",hispanic,6272,NA,ethnicity,108819
-51003,2021,"Albemarle County, Virginia",white,89074,509,race,111438
-51003,2021,"Albemarle County, Virginia",black,9751,354,race,111438
-51003,2021,"Albemarle County, Virginia",aian,371,109,race,111438
-51003,2021,"Albemarle County, Virginia",asian,6204,263,race,111438
-51003,2021,"Albemarle County, Virginia",nhpi,61,88,race,111438
-51003,2021,"Albemarle County, Virginia",other,1244,432,race,111438
-51003,2021,"Albemarle County, Virginia",multi,4733,565,race,111438
-51003,2021,"Albemarle County, Virginia",nhwhite,85123,120,ethnicity,111438
-51003,2021,"Albemarle County, Virginia",hispanic,6537,NA,ethnicity,111438
-51540,2009,"Charlottesville city, Virginia",white,29167,196,race,41393
-51540,2009,"Charlottesville city, Virginia",black,8274,383,race,41393
-51540,2009,"Charlottesville city, Virginia",aian,82,118,race,41393
-51540,2009,"Charlottesville city, Virginia",asian,1818,83,race,41393
-51540,2009,"Charlottesville city, Virginia",nhpi,34,40,race,41393
-51540,2009,"Charlottesville city, Virginia",other,776,236,race,41393
-51540,2009,"Charlottesville city, Virginia",multi,1242,385,race,41393
-51540,2009,"Charlottesville city, Virginia",nhwhite,28672,41,ethnicity,41393
-51540,2009,"Charlottesville city, Virginia",hispanic,1467,0,ethnicity,41393
-51540,2010,"Charlottesville city, Virginia",white,28860,270,race,42267
-51540,2010,"Charlottesville city, Virginia",black,8477,372,race,42267
-51540,2010,"Charlottesville city, Virginia",aian,169,172,race,42267
-51540,2010,"Charlottesville city, Virginia",asian,2739,91,race,42267
-51540,2010,"Charlottesville city, Virginia",nhpi,43,44,race,42267
-51540,2010,"Charlottesville city, Virginia",other,825,319,race,42267
-51540,2010,"Charlottesville city, Virginia",multi,1154,339,race,42267
-51540,2010,"Charlottesville city, Virginia",nhwhite,28103,32,ethnicity,42267
-51540,2010,"Charlottesville city, Virginia",hispanic,2001,NA,ethnicity,42267
-51540,2011,"Charlottesville city, Virginia",white,29507,289,race,42758
-51540,2011,"Charlottesville city, Virginia",black,8438,387,race,42758
-51540,2011,"Charlottesville city, Virginia",aian,157,168,race,42758
-51540,2011,"Charlottesville city, Virginia",asian,2795,116,race,42758
-51540,2011,"Charlottesville city, Virginia",nhpi,45,44,race,42758
-51540,2011,"Charlottesville city, Virginia",other,624,223,race,42758
-51540,2011,"Charlottesville city, Virginia",multi,1192,405,race,42758
-51540,2011,"Charlottesville city, Virginia",nhwhite,28411,28,ethnicity,42758
-51540,2011,"Charlottesville city, Virginia",hispanic,2104,NA,ethnicity,42758
-51540,2012,"Charlottesville city, Virginia",white,29970,302,race,43223
-51540,2012,"Charlottesville city, Virginia",black,8661,329,race,43223
-51540,2012,"Charlottesville city, Virginia",aian,186,114,race,43223
-51540,2012,"Charlottesville city, Virginia",asian,2818,109,race,43223
-51540,2012,"Charlottesville city, Virginia",nhpi,27,34,race,43223
-51540,2012,"Charlottesville city, Virginia",other,515,254,race,43223
-51540,2012,"Charlottesville city, Virginia",multi,1046,298,race,43223
-51540,2012,"Charlottesville city, Virginia",nhwhite,28701,32,ethnicity,43223
-51540,2012,"Charlottesville city, Virginia",hispanic,2134,NA,ethnicity,43223
-51540,2013,"Charlottesville city, Virginia",white,30602,226,race,43663
-51540,2013,"Charlottesville city, Virginia",black,8646,249,race,43663
-51540,2013,"Charlottesville city, Virginia",aian,220,134,race,43663
-51540,2013,"Charlottesville city, Virginia",asian,2947,137,race,43663
-51540,2013,"Charlottesville city, Virginia",nhpi,37,44,race,43663
-51540,2013,"Charlottesville city, Virginia",other,266,142,race,43663
-51540,2013,"Charlottesville city, Virginia",multi,945,240,race,43663
-51540,2013,"Charlottesville city, Virginia",nhwhite,29043,23,ethnicity,43663
-51540,2013,"Charlottesville city, Virginia",hispanic,2177,NA,ethnicity,43663
-51540,2014,"Charlottesville city, Virginia",white,31415,157,race,44505
-51540,2014,"Charlottesville city, Virginia",black,8743,179,race,44505
-51540,2014,"Charlottesville city, Virginia",aian,109,76,race,44505
-51540,2014,"Charlottesville city, Virginia",asian,3038,157,race,44505
-51540,2014,"Charlottesville city, Virginia",nhpi,59,68,race,44505
-51540,2014,"Charlottesville city, Virginia",other,130,90,race,44505
-51540,2014,"Charlottesville city, Virginia",multi,1011,227,race,44505
-51540,2014,"Charlottesville city, Virginia",nhwhite,29550,25,ethnicity,44505
-51540,2014,"Charlottesville city, Virginia",hispanic,2193,NA,ethnicity,44505
-51540,2015,"Charlottesville city, Virginia",white,31887,137,race,45084
-51540,2015,"Charlottesville city, Virginia",black,8673,237,race,45084
-51540,2015,"Charlottesville city, Virginia",aian,88,73,race,45084
-51540,2015,"Charlottesville city, Virginia",asian,3004,172,race,45084
-51540,2015,"Charlottesville city, Virginia",nhpi,71,87,race,45084
-51540,2015,"Charlottesville city, Virginia",other,140,83,race,45084
-51540,2015,"Charlottesville city, Virginia",multi,1221,255,race,45084
-51540,2015,"Charlottesville city, Virginia",nhwhite,29944,12,ethnicity,45084
-51540,2015,"Charlottesville city, Virginia",hispanic,2237,NA,ethnicity,45084
-51540,2016,"Charlottesville city, Virginia",white,32001,146,race,45538
-51540,2016,"Charlottesville city, Virginia",black,8501,226,race,45538
-51540,2016,"Charlottesville city, Virginia",aian,163,50,race,45538
-51540,2016,"Charlottesville city, Virginia",asian,3164,182,race,45538
-51540,2016,"Charlottesville city, Virginia",nhpi,66,82,race,45538
-51540,2016,"Charlottesville city, Virginia",other,176,91,race,45538
-51540,2016,"Charlottesville city, Virginia",multi,1467,290,race,45538
-51540,2016,"Charlottesville city, Virginia",nhwhite,30038,28,ethnicity,45538
-51540,2016,"Charlottesville city, Virginia",hispanic,2295,NA,ethnicity,45538
-51540,2017,"Charlottesville city, Virginia",white,32565,177,race,46487
-51540,2017,"Charlottesville city, Virginia",black,8782,270,race,46487
-51540,2017,"Charlottesville city, Virginia",aian,141,52,race,46487
-51540,2017,"Charlottesville city, Virginia",asian,3370,192,race,46487
-51540,2017,"Charlottesville city, Virginia",nhpi,17,20,race,46487
-51540,2017,"Charlottesville city, Virginia",other,169,94,race,46487
-51540,2017,"Charlottesville city, Virginia",multi,1443,324,race,46487
-51540,2017,"Charlottesville city, Virginia",nhwhite,30526,24,ethnicity,46487
-51540,2017,"Charlottesville city, Virginia",hispanic,2431,NA,ethnicity,46487
-51540,2018,"Charlottesville city, Virginia",white,33128,137,race,47042
-51540,2018,"Charlottesville city, Virginia",black,8820,213,race,47042
-51540,2018,"Charlottesville city, Virginia",aian,145,65,race,47042
-51540,2018,"Charlottesville city, Virginia",asian,3362,239,race,47042
-51540,2018,"Charlottesville city, Virginia",nhpi,23,28,race,47042
-51540,2018,"Charlottesville city, Virginia",other,169,85,race,47042
-51540,2018,"Charlottesville city, Virginia",multi,1395,327,race,47042
-51540,2018,"Charlottesville city, Virginia",nhwhite,30923,30,ethnicity,47042
-51540,2018,"Charlottesville city, Virginia",hispanic,2531,NA,ethnicity,47042
-51540,2019,"Charlottesville city, Virginia",white,33247,202,race,47096
-51540,2019,"Charlottesville city, Virginia",black,8844,281,race,47096
-51540,2019,"Charlottesville city, Virginia",aian,115,59,race,47096
-51540,2019,"Charlottesville city, Virginia",asian,3327,184,race,47096
-51540,2019,"Charlottesville city, Virginia",nhpi,31,42,race,47096
-51540,2019,"Charlottesville city, Virginia",other,186,118,race,47096
-51540,2019,"Charlottesville city, Virginia",multi,1346,364,race,47096
-51540,2019,"Charlottesville city, Virginia",nhwhite,30961,55,ethnicity,47096
-51540,2019,"Charlottesville city, Virginia",hispanic,2589,NA,ethnicity,47096
-51540,2020,"Charlottesville city, Virginia",white,33046,253,race,47217
-51540,2020,"Charlottesville city, Virginia",black,8760,240,race,47217
-51540,2020,"Charlottesville city, Virginia",aian,147,63,race,47217
-51540,2020,"Charlottesville city, Virginia",asian,3313,214,race,47217
-51540,2020,"Charlottesville city, Virginia",nhpi,5,8,race,47217
-51540,2020,"Charlottesville city, Virginia",other,336,183,race,47217
-51540,2020,"Charlottesville city, Virginia",multi,1610,345,race,47217
-51540,2020,"Charlottesville city, Virginia",nhwhite,30973,134,ethnicity,47217
-51540,2020,"Charlottesville city, Virginia",hispanic,2623,NA,ethnicity,47217
-51540,2021,"Charlottesville city, Virginia",white,32472,304,race,46597
-51540,2021,"Charlottesville city, Virginia",black,8404,300,race,46597
-51540,2021,"Charlottesville city, Virginia",aian,76,47,race,46597
-51540,2021,"Charlottesville city, Virginia",asian,3257,229,race,46597
-51540,2021,"Charlottesville city, Virginia",nhpi,5,9,race,46597
-51540,2021,"Charlottesville city, Virginia",other,419,183,race,46597
-51540,2021,"Charlottesville city, Virginia",multi,1964,443,race,46597
-51540,2021,"Charlottesville city, Virginia",nhwhite,30485,194,ethnicity,46597
-51540,2021,"Charlottesville city, Virginia",hispanic,2650,NA,ethnicity,46597
+GEOID,year,variable,youthpop_count,NAME,pop_count,pop_moe,raceethn,totalpop
+51,2009,aian,8432,Virginia,22932,1401,race,7721730
+51,2009,asian,120796,Virginia,371788,2033,race,7721730
+51,2009,black,582197,Virginia,1510139,3831,race,7721730
+51,2009,hispanic,235802,Virginia,514959,627,ethnicity,7721730
+51,2009,multi,91922,Virginia,159701,4542,race,7721730
+51,2009,nhpi,2673,Virginia,5804,806,race,7721730
+51,2009,other,90832,Virginia,192534,5087,race,7721730
+51,2009,white,1740256,Virginia,5458832,5757,race,7721730
+51,2010,aian,9669,Virginia,24941,1674,race,7841754
+51,2010,asian,138926,Virginia,416549,1970,race,7841754
+51,2010,black,581462,Virginia,1532150,3958,race,7841754
+51,2010,hispanic,262788,Virginia,574966,551,ethnicity,7841754
+51,2010,multi,103257,Virginia,180736,4763,race,7841754
+51,2010,nhpi,2498,Virginia,5711,685,race,7841754
+51,2010,other,93486,Virginia,201692,5907,race,7841754
+51,2010,white,1714845,Virginia,5479975,6073,race,7841754
+51,2011,aian,9554,Virginia,25665,1918,race,7926192
+51,2011,asian,142798,Virginia,430227,2654,race,7926192
+51,2011,black,582781,Virginia,1545568,3885,race,7926192
+51,2011,hispanic,274983,Virginia,604882,495,ethnicity,7926192
+51,2011,multi,112454,Virginia,198171,5956,race,7926192
+51,2011,nhpi,2498,Virginia,5295,545,race,7926192
+51,2011,other,89045,Virginia,194281,6189,race,7926192
+51,2011,white,1724513,Virginia,5526985,6695,race,7926192
+51,2012,aian,9550,Virginia,25205,1709,race,8014955
+51,2012,asian,146078,Virginia,443460,2569,race,8014955
+51,2012,black,584126,Virginia,1561042,4367,race,8014955
+51,2012,hispanic,285570,Virginia,631669,415,ethnicity,8014955
+51,2012,multi,125199,Virginia,219962,5636,race,8014955
+51,2012,nhpi,2540,Virginia,5438,579,race,8014955
+51,2012,other,82244,Virginia,184403,6536,race,8014955
+51,2012,white,1732424,Virginia,5575445,6533,race,8014955
+51,2013,aian,9457,Virginia,24816,1745,race,8100653
+51,2013,asian,150419,Virginia,457792,2615,race,8100653
+51,2013,black,580988,Virginia,1568021,4276,race,8100653
+51,2013,hispanic,296063,Virginia,659599,461,ethnicity,8100653
+51,2013,multi,134539,Virginia,237866,5569,race,8100653
+51,2013,nhpi,2522,Virginia,5633,541,race,8100653
+51,2013,other,78990,Virginia,179449,5553,race,8100653
+51,2013,white,1743769,Virginia,5627076,5673,race,8100653
+51,2014,aian,8477,Virginia,23421,1583,race,8185131
+51,2014,asian,155374,Virginia,475632,3210,race,8185131
+51,2014,black,579321,Virginia,1577943,3956,race,8185131
+51,2014,hispanic,306258,Virginia,687265,341,ethnicity,8185131
+51,2014,multi,143383,Virginia,255121,5604,race,8185131
+51,2014,nhpi,2283,Virginia,5485,547,race,8185131
+51,2014,other,77771,Virginia,179166,5948,race,8185131
+51,2014,white,1749900,Virginia,5668363,6990,race,8185131
+51,2015,aian,8283,Virginia,22570,1347,race,8256630
+51,2015,asian,159374,Virginia,492973,2605,race,8256630
+51,2015,black,578383,Virginia,1589345,3850,race,8256630
+51,2015,hispanic,311453,Virginia,709156,428,ethnicity,8256630
+51,2015,multi,150453,Virginia,268167,5593,race,8256630
+51,2015,nhpi,1949,Virginia,5304,450,race,8256630
+51,2015,other,78542,Virginia,183124,5359,race,8256630
+51,2015,white,1747677,Virginia,5695147,5990,race,8256630
+51,2016,aian,7406,Virginia,21948,1243,race,8310301
+51,2016,asian,161597,Virginia,502878,2906,race,8310301
+51,2016,black,573189,Virginia,1596352,4766,race,8310301
+51,2016,hispanic,315689,Virginia,725092,386,ethnicity,8310301
+51,2016,multi,157007,Virginia,279699,6294,race,8310301
+51,2016,nhpi,1994,Virginia,5494,454,race,8310301
+51,2016,other,81527,Virginia,190972,5073,race,8310301
+51,2016,white,1738508,Virginia,5712958,5302,race,8310301
+51,2017,aian,6884,Virginia,22499,1303,race,8365952
+51,2017,asian,164476,Virginia,520119,2743,race,8365952
+51,2017,black,570930,Virginia,1605447,4024,race,8365952
+51,2017,hispanic,323633,Virginia,749458,582,ethnicity,8365952
+51,2017,multi,163865,Virginia,291944,5308,race,8365952
+51,2017,nhpi,1977,Virginia,5469,439,race,8365952
+51,2017,other,86439,Virginia,200265,6140,race,8365952
+51,2017,white,1725786,Virginia,5720209,6499,race,8365952
+51,2018,aian,7458,Virginia,22972,1339,race,8413774
+51,2018,asian,165640,Virginia,531503,3435,race,8413774
+51,2018,black,566647,Virginia,1613285,5365,race,8413774
+51,2018,hispanic,332153,Virginia,771177,504,ethnicity,8413774
+51,2018,multi,173339,Virginia,309213,6030,race,8413774
+51,2018,nhpi,2199,Virginia,5677,516,race,8413774
+51,2018,other,89919,Virginia,208464,6457,race,8413774
+51,2018,white,1715213,Virginia,5722660,6402,race,8413774
+51,2019,aian,7791,Virginia,23873,1521,race,8454463
+51,2019,asian,165104,Virginia,541133,3118,race,8454463
+51,2019,black,562853,Virginia,1621592,4393,race,8454463
+51,2019,hispanic,340561,Virginia,792001,524,ethnicity,8454463
+51,2019,multi,179939,Virginia,320275,5841,race,8454463
+51,2019,nhpi,2332,Virginia,6179,562,race,8454463
+51,2019,other,95037,Virginia,223794,6768,race,8454463
+51,2019,white,1704070,Virginia,5717617,6871,race,8454463
+51,2020,aian,7104,Virginia,22553,1235,race,8509358
+51,2020,asian,175612,Virginia,570398,3137,race,8509358
+51,2020,black,556484,Virginia,1620649,5144,race,8509358
+51,2020,hispanic,346667,Virginia,810770,438,ethnicity,8509358
+51,2020,multi,214520,Virginia,405786,7686,race,8509358
+51,2020,nhpi,2477,Virginia,5994,791,race,8509358
+51,2020,other,102225,Virginia,240542,6696,race,8509358
+51,2020,white,1661812,Virginia,5643436,6666,race,8509358
+51,2021,aian,8194,Virginia,24007,1684,race,8582479
+51,2021,asian,176959,Virginia,578210,3182,race,8582479
+51,2021,black,555294,Virginia,1631941,5030,race,8582479
+51,2021,hispanic,359261,Virginia,840248,343,ethnicity,8582479
+51,2021,multi,254081,Virginia,503340,8236,race,8582479
+51,2021,nhpi,1954,Virginia,5313,576,race,8582479
+51,2021,other,112882,Virginia,265361,8225,race,8582479
+51,2021,white,1631405,Virginia,5574307,6853,race,8582479
+51003,2009,aian,31,"Albemarle County, Virginia",68,79,race,92866
+51003,2009,asian,1661,"Albemarle County, Virginia",4137,196,race,92866
+51003,2009,black,3480,"Albemarle County, Virginia",8907,256,race,92866
+51003,2009,hispanic,1584,"Albemarle County, Virginia",3397,0,ethnicity,92866
+51003,2009,multi,1208,"Albemarle County, Virginia",1726,337,race,92866
+51003,2009,nhpi,20,"Albemarle County, Virginia",20,31,race,92866
+51003,2009,other,479,"Albemarle County, Virginia",996,359,race,92866
+51003,2009,white,26314,"Albemarle County, Virginia",77012,407,race,92866
+51003,2010,aian,112,"Albemarle County, Virginia",168,140,race,96633
+51003,2010,asian,1805,"Albemarle County, Virginia",4146,223,race,96633
+51003,2010,black,3782,"Albemarle County, Virginia",9563,328,race,96633
+51003,2010,hispanic,2295,"Albemarle County, Virginia",4790,NA,ethnicity,96633
+51003,2010,multi,1541,"Albemarle County, Virginia",2071,421,race,96633
+51003,2010,nhpi,28,"Albemarle County, Virginia",28,43,race,96633
+51003,2010,other,578,"Albemarle County, Virginia",1164,484,race,96633
+51003,2010,white,25777,"Albemarle County, Virginia",79493,509,race,96633
+51003,2011,aian,143,"Albemarle County, Virginia",216,115,race,97978
+51003,2011,asian,1825,"Albemarle County, Virginia",4298,216,race,97978
+51003,2011,black,3890,"Albemarle County, Virginia",9875,382,race,97978
+51003,2011,hispanic,2371,"Albemarle County, Virginia",5104,NA,ethnicity,97978
+51003,2011,multi,1603,"Albemarle County, Virginia",2234,486,race,97978
+51003,2011,nhpi,0,"Albemarle County, Virginia",0,95,race,97978
+51003,2011,other,321,"Albemarle County, Virginia",682,292,race,97978
+51003,2011,white,25964,"Albemarle County, Virginia",80673,403,race,97978
+51003,2012,aian,204,"Albemarle County, Virginia",313,158,race,99484
+51003,2012,asian,1740,"Albemarle County, Virginia",4240,286,race,99484
+51003,2012,black,3819,"Albemarle County, Virginia",9751,383,race,99484
+51003,2012,hispanic,2719,"Albemarle County, Virginia",5343,NA,ethnicity,99484
+51003,2012,multi,1862,"Albemarle County, Virginia",2750,484,race,99484
+51003,2012,nhpi,0,"Albemarle County, Virginia",0,29,race,99484
+51003,2012,other,476,"Albemarle County, Virginia",1027,442,race,99484
+51003,2012,white,26112,"Albemarle County, Virginia",81403,569,race,99484
+51003,2013,aian,237,"Albemarle County, Virginia",357,148,race,100636
+51003,2013,asian,1754,"Albemarle County, Virginia",4210,324,race,100636
+51003,2013,black,3781,"Albemarle County, Virginia",9607,393,race,100636
+51003,2013,hispanic,2748,"Albemarle County, Virginia",5589,NA,ethnicity,100636
+51003,2013,multi,1906,"Albemarle County, Virginia",2934,619,race,100636
+51003,2013,nhpi,0,"Albemarle County, Virginia",14,22,race,100636
+51003,2013,other,491,"Albemarle County, Virginia",1155,450,race,100636
+51003,2013,white,26127,"Albemarle County, Virginia",82359,512,race,100636
+51003,2014,aian,173,"Albemarle County, Virginia",279,173,race,101883
+51003,2014,asian,1933,"Albemarle County, Virginia",4415,288,race,101883
+51003,2014,black,3699,"Albemarle County, Virginia",9616,432,race,101883
+51003,2014,hispanic,2772,"Albemarle County, Virginia",5698,NA,ethnicity,101883
+51003,2014,multi,2061,"Albemarle County, Virginia",3145,481,race,101883
+51003,2014,nhpi,7,"Albemarle County, Virginia",20,24,race,101883
+51003,2014,other,589,"Albemarle County, Virginia",1283,461,race,101883
+51003,2014,white,26042,"Albemarle County, Virginia",83125,528,race,101883
+51003,2015,aian,131,"Albemarle County, Virginia",258,138,race,103108
+51003,2015,asian,2023,"Albemarle County, Virginia",4578,226,race,103108
+51003,2015,black,3666,"Albemarle County, Virginia",9658,413,race,103108
+51003,2015,hispanic,2815,"Albemarle County, Virginia",5851,NA,ethnicity,103108
+51003,2015,multi,1943,"Albemarle County, Virginia",3151,463,race,103108
+51003,2015,nhpi,7,"Albemarle County, Virginia",15,17,race,103108
+51003,2015,other,649,"Albemarle County, Virginia",1389,479,race,103108
+51003,2015,white,26178,"Albemarle County, Virginia",84059,523,race,103108
+51003,2016,aian,135,"Albemarle County, Virginia",250,125,race,104287
+51003,2016,asian,2056,"Albemarle County, Virginia",4733,242,race,104287
+51003,2016,black,3824,"Albemarle County, Virginia",9747,376,race,104287
+51003,2016,hispanic,2807,"Albemarle County, Virginia",5832,NA,ethnicity,104287
+51003,2016,multi,1644,"Albemarle County, Virginia",2941,498,race,104287
+51003,2016,nhpi,9,"Albemarle County, Virginia",34,35,race,104287
+51003,2016,other,828,"Albemarle County, Virginia",1627,538,race,104287
+51003,2016,white,26225,"Albemarle County, Virginia",84955,598,race,104287
+51003,2017,aian,107,"Albemarle County, Virginia",216,94,race,105105
+51003,2017,asian,2313,"Albemarle County, Virginia",5218,186,race,105105
+51003,2017,black,3929,"Albemarle County, Virginia",10052,389,race,105105
+51003,2017,hispanic,2887,"Albemarle County, Virginia",5991,NA,ethnicity,105105
+51003,2017,multi,1480,"Albemarle County, Virginia",2564,410,race,105105
+51003,2017,nhpi,5,"Albemarle County, Virginia",42,46,race,105105
+51003,2017,other,737,"Albemarle County, Virginia",1357,457,race,105105
+51003,2017,white,26309,"Albemarle County, Virginia",85656,468,race,105105
+51003,2018,aian,114,"Albemarle County, Virginia",209,99,race,106355
+51003,2018,asian,2410,"Albemarle County, Virginia",5626,215,race,106355
+51003,2018,black,4034,"Albemarle County, Virginia",10375,291,race,106355
+51003,2018,hispanic,2970,"Albemarle County, Virginia",6168,NA,ethnicity,106355
+51003,2018,multi,1362,"Albemarle County, Virginia",2245,413,race,106355
+51003,2018,nhpi,7,"Albemarle County, Virginia",30,37,race,106355
+51003,2018,other,649,"Albemarle County, Virginia",1131,356,race,106355
+51003,2018,white,26442,"Albemarle County, Virginia",86739,378,race,106355
+51003,2019,aian,96,"Albemarle County, Virginia",271,117,race,107405
+51003,2019,asian,2295,"Albemarle County, Virginia",5590,231,race,107405
+51003,2019,black,3897,"Albemarle County, Virginia",10245,312,race,107405
+51003,2019,hispanic,2952,"Albemarle County, Virginia",6200,NA,ethnicity,107405
+51003,2019,multi,1556,"Albemarle County, Virginia",2605,376,race,107405
+51003,2019,nhpi,0,"Albemarle County, Virginia",41,48,race,107405
+51003,2019,other,473,"Albemarle County, Virginia",822,356,race,107405
+51003,2019,white,26608,"Albemarle County, Virginia",87831,359,race,107405
+51003,2020,aian,124,"Albemarle County, Virginia",315,107,race,108819
+51003,2020,asian,2526,"Albemarle County, Virginia",5981,294,race,108819
+51003,2020,black,3774,"Albemarle County, Virginia",10005,338,race,108819
+51003,2020,hispanic,2952,"Albemarle County, Virginia",6272,NA,ethnicity,108819
+51003,2020,multi,2187,"Albemarle County, Virginia",3610,500,race,108819
+51003,2020,nhpi,0,"Albemarle County, Virginia",48,28,race,108819
+51003,2020,other,622,"Albemarle County, Virginia",989,426,race,108819
+51003,2020,white,26249,"Albemarle County, Virginia",87871,424,race,108819
+51003,2021,aian,172,"Albemarle County, Virginia",371,109,race,111438
+51003,2021,asian,2545,"Albemarle County, Virginia",6204,263,race,111438
+51003,2021,black,3459,"Albemarle County, Virginia",9751,354,race,111438
+51003,2021,hispanic,3031,"Albemarle County, Virginia",6537,NA,ethnicity,111438
+51003,2021,multi,2700,"Albemarle County, Virginia",4733,565,race,111438
+51003,2021,nhpi,0,"Albemarle County, Virginia",61,88,race,111438
+51003,2021,other,714,"Albemarle County, Virginia",1244,432,race,111438
+51003,2021,white,26359,"Albemarle County, Virginia",89074,509,race,111438
+51540,2009,aian,59,"Charlottesville city, Virginia",82,118,race,41393
+51540,2009,asian,1283,"Charlottesville city, Virginia",1818,83,race,41393
+51540,2009,black,3576,"Charlottesville city, Virginia",8274,383,race,41393
+51540,2009,hispanic,986,"Charlottesville city, Virginia",1467,0,ethnicity,41393
+51540,2009,multi,733,"Charlottesville city, Virginia",1242,385,race,41393
+51540,2009,nhpi,0,"Charlottesville city, Virginia",34,40,race,41393
+51540,2009,other,525,"Charlottesville city, Virginia",776,236,race,41393
+51540,2009,white,12834,"Charlottesville city, Virginia",29167,196,race,41393
+51540,2010,aian,87,"Charlottesville city, Virginia",169,172,race,42267
+51540,2010,asian,1860,"Charlottesville city, Virginia",2739,91,race,42267
+51540,2010,black,3566,"Charlottesville city, Virginia",8477,372,race,42267
+51540,2010,hispanic,1252,"Charlottesville city, Virginia",2001,NA,ethnicity,42267
+51540,2010,multi,664,"Charlottesville city, Virginia",1154,339,race,42267
+51540,2010,nhpi,0,"Charlottesville city, Virginia",43,44,race,42267
+51540,2010,other,549,"Charlottesville city, Virginia",825,319,race,42267
+51540,2010,white,13016,"Charlottesville city, Virginia",28860,270,race,42267
+51540,2011,aian,85,"Charlottesville city, Virginia",157,168,race,42758
+51540,2011,asian,1956,"Charlottesville city, Virginia",2795,116,race,42758
+51540,2011,black,3523,"Charlottesville city, Virginia",8438,387,race,42758
+51540,2011,hispanic,1179,"Charlottesville city, Virginia",2104,NA,ethnicity,42758
+51540,2011,multi,693,"Charlottesville city, Virginia",1192,405,race,42758
+51540,2011,nhpi,0,"Charlottesville city, Virginia",45,44,race,42758
+51540,2011,other,391,"Charlottesville city, Virginia",624,223,race,42758
+51540,2011,white,13317,"Charlottesville city, Virginia",29507,289,race,42758
+51540,2012,aian,90,"Charlottesville city, Virginia",186,114,race,43223
+51540,2012,asian,1899,"Charlottesville city, Virginia",2818,109,race,43223
+51540,2012,black,3627,"Charlottesville city, Virginia",8661,329,race,43223
+51540,2012,hispanic,1212,"Charlottesville city, Virginia",2134,NA,ethnicity,43223
+51540,2012,multi,649,"Charlottesville city, Virginia",1046,298,race,43223
+51540,2012,nhpi,0,"Charlottesville city, Virginia",27,34,race,43223
+51540,2012,other,272,"Charlottesville city, Virginia",515,254,race,43223
+51540,2012,white,13187,"Charlottesville city, Virginia",29970,302,race,43223
+51540,2013,aian,111,"Charlottesville city, Virginia",220,134,race,43663
+51540,2013,asian,1954,"Charlottesville city, Virginia",2947,137,race,43663
+51540,2013,black,3575,"Charlottesville city, Virginia",8646,249,race,43663
+51540,2013,hispanic,1209,"Charlottesville city, Virginia",2177,NA,ethnicity,43663
+51540,2013,multi,618,"Charlottesville city, Virginia",945,240,race,43663
+51540,2013,nhpi,0,"Charlottesville city, Virginia",37,44,race,43663
+51540,2013,other,151,"Charlottesville city, Virginia",266,142,race,43663
+51540,2013,white,12987,"Charlottesville city, Virginia",30602,226,race,43663
+51540,2014,aian,58,"Charlottesville city, Virginia",109,76,race,44505
+51540,2014,asian,1991,"Charlottesville city, Virginia",3038,157,race,44505
+51540,2014,black,3545,"Charlottesville city, Virginia",8743,179,race,44505
+51540,2014,hispanic,1195,"Charlottesville city, Virginia",2193,NA,ethnicity,44505
+51540,2014,multi,730,"Charlottesville city, Virginia",1011,227,race,44505
+51540,2014,nhpi,0,"Charlottesville city, Virginia",59,68,race,44505
+51540,2014,other,69,"Charlottesville city, Virginia",130,90,race,44505
+51540,2014,white,12958,"Charlottesville city, Virginia",31415,157,race,44505
+51540,2015,aian,59,"Charlottesville city, Virginia",88,73,race,45084
+51540,2015,asian,1916,"Charlottesville city, Virginia",3004,172,race,45084
+51540,2015,black,3419,"Charlottesville city, Virginia",8673,237,race,45084
+51540,2015,hispanic,1171,"Charlottesville city, Virginia",2237,NA,ethnicity,45084
+51540,2015,multi,820,"Charlottesville city, Virginia",1221,255,race,45084
+51540,2015,nhpi,0,"Charlottesville city, Virginia",71,87,race,45084
+51540,2015,other,68,"Charlottesville city, Virginia",140,83,race,45084
+51540,2015,white,12499,"Charlottesville city, Virginia",31887,137,race,45084
+51540,2016,aian,115,"Charlottesville city, Virginia",163,50,race,45538
+51540,2016,asian,1912,"Charlottesville city, Virginia",3164,182,race,45538
+51540,2016,black,3269,"Charlottesville city, Virginia",8501,226,race,45538
+51540,2016,hispanic,1214,"Charlottesville city, Virginia",2295,NA,ethnicity,45538
+51540,2016,multi,986,"Charlottesville city, Virginia",1467,290,race,45538
+51540,2016,nhpi,0,"Charlottesville city, Virginia",66,82,race,45538
+51540,2016,other,96,"Charlottesville city, Virginia",176,91,race,45538
+51540,2016,white,12165,"Charlottesville city, Virginia",32001,146,race,45538
+51540,2017,aian,90,"Charlottesville city, Virginia",141,52,race,46487
+51540,2017,asian,1997,"Charlottesville city, Virginia",3370,192,race,46487
+51540,2017,black,3289,"Charlottesville city, Virginia",8782,270,race,46487
+51540,2017,hispanic,1326,"Charlottesville city, Virginia",2431,NA,ethnicity,46487
+51540,2017,multi,945,"Charlottesville city, Virginia",1443,324,race,46487
+51540,2017,nhpi,0,"Charlottesville city, Virginia",17,20,race,46487
+51540,2017,other,95,"Charlottesville city, Virginia",169,94,race,46487
+51540,2017,white,12088,"Charlottesville city, Virginia",32565,177,race,46487
+51540,2018,aian,96,"Charlottesville city, Virginia",145,65,race,47042
+51540,2018,asian,1966,"Charlottesville city, Virginia",3362,239,race,47042
+51540,2018,black,3168,"Charlottesville city, Virginia",8820,213,race,47042
+51540,2018,hispanic,1389,"Charlottesville city, Virginia",2531,NA,ethnicity,47042
+51540,2018,multi,892,"Charlottesville city, Virginia",1395,327,race,47042
+51540,2018,nhpi,0,"Charlottesville city, Virginia",23,28,race,47042
+51540,2018,other,106,"Charlottesville city, Virginia",169,85,race,47042
+51540,2018,white,12117,"Charlottesville city, Virginia",33128,137,race,47042
+51540,2019,aian,59,"Charlottesville city, Virginia",115,59,race,47096
+51540,2019,asian,1966,"Charlottesville city, Virginia",3327,184,race,47096
+51540,2019,black,3380,"Charlottesville city, Virginia",8844,281,race,47096
+51540,2019,hispanic,1459,"Charlottesville city, Virginia",2589,NA,ethnicity,47096
+51540,2019,multi,643,"Charlottesville city, Virginia",1346,364,race,47096
+51540,2019,nhpi,0,"Charlottesville city, Virginia",31,42,race,47096
+51540,2019,other,135,"Charlottesville city, Virginia",186,118,race,47096
+51540,2019,white,12112,"Charlottesville city, Virginia",33247,202,race,47096
+51540,2020,aian,76,"Charlottesville city, Virginia",147,63,race,47217
+51540,2020,asian,1979,"Charlottesville city, Virginia",3313,214,race,47217
+51540,2020,black,3250,"Charlottesville city, Virginia",8760,240,race,47217
+51540,2020,hispanic,1406,"Charlottesville city, Virginia",2623,NA,ethnicity,47217
+51540,2020,multi,837,"Charlottesville city, Virginia",1610,345,race,47217
+51540,2020,nhpi,0,"Charlottesville city, Virginia",5,8,race,47217
+51540,2020,other,199,"Charlottesville city, Virginia",336,183,race,47217
+51540,2020,white,11678,"Charlottesville city, Virginia",33046,253,race,47217
+51540,2021,aian,12,"Charlottesville city, Virginia",76,47,race,46597
+51540,2021,asian,1916,"Charlottesville city, Virginia",3257,229,race,46597
+51540,2021,black,3167,"Charlottesville city, Virginia",8404,300,race,46597
+51540,2021,hispanic,1350,"Charlottesville city, Virginia",2650,NA,ethnicity,46597
+51540,2021,multi,794,"Charlottesville city, Virginia",1964,443,race,46597
+51540,2021,nhpi,0,"Charlottesville city, Virginia",5,9,race,46597
+51540,2021,other,217,"Charlottesville city, Virginia",419,183,race,46597
+51540,2021,white,11370,"Charlottesville city, Virginia",32472,304,race,46597
