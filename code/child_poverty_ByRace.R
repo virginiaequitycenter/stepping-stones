@@ -42,18 +42,9 @@ library(stringr)
 # rename function 
 rename <- function(data_names,originals,replacements){
   for(i in 1:length(originals)){
-    data_names <- stri_replace_all_fixed(data_names, originals[i],replacements[i])
+    data_names <- stringi::stri_replace_all_fixed(data_names, originals[i],replacements[i])
   }
   return(data_names)
-}
-
-
-# columns summing function 
-colsumdat <- function(data, disc, cols){
-  for (i in 1:length(disc)) {
-    data[[cols[i]]] <- rowSums(data[, stri_detect_fixed(colnames(data), disc[i])], na.rm = T)
-  }
-  return(data)
 }
 
 # read in variable list
@@ -75,7 +66,7 @@ cpovcounty <- map_dfr(years,
                         county = c("003", "540"),
                         year = .x,
                         survey = "acs5",
-                        var = vars$OldName,
+                        var = varstable$OldName,
                         output = "tidy") %>%
                         mutate(year = .x))
 
@@ -85,11 +76,9 @@ cpovstate <- map_dfr(years,
                        state = "51",
                        year = .x,
                        survey = "acs5",
-                       var = vars$OldName,
+                       var = varstable$OldName,
                        output = "tidy") %>%
                        mutate(year = .x))
-
-# population data 
 
 
 # Prep data ----
@@ -117,11 +106,15 @@ cpov <- rbind(cpovcounty, cpovstate)
 cpov <- cpov %>%
   dplyr::rename(pov_count = estimate)
 
-cpov <- merge(cpov, pop, by = c("GEOID", "year", 'race'))
+cpov <- merge(cpov, pop, by = c("GEOID", "year", 'race'), all.x = T)
 
 cpov <- cpov %>%
   mutate(pov_percent = round(pov_count / pop_count * 100, 2)) %>%
-  select(-ethn)
+  select(-ethn, -pop_percent)
+
+cpov$NAME <- ifelse(cpov$GEOID == "51", "Virginia", 
+                    ifelse(cpov$GEOID == "51003", "Albemarle County, Virginia", 
+                           ifelse(cpov$GEOID == "51540", "Charlottesville city, Virginia", cpov$GEOID)))
 
 # Save data ----
 write_csv(cpov, "child_pov_byRace.csv")
