@@ -1,0 +1,1928 @@
+---
+## comment all before output for pdf
+title: "Stepping Stones"
+subtitle: "A Report on Community Well-Being of Children and Families in the Charlottesville/Albemarle Area"
+date: "June 2023"
+toc-title: Contents
+output:
+  html_document:
+    # self_contained: false
+    template: atlas-rmd-template-toc-test.html
+    toc: true
+    toc_depth: 3
+    toc_float: true
+## uncomment all of below for pdf options:
+#   pdf_document:
+#     toc: true
+#     toc_depth: 2
+#     pandoc_args: --shift-heading-level-by=-1
+# urlcolor: blue
+# linestretch: 1.2
+# header-includes:
+#   \usepackage{titling}
+#   \usepackage[T1]{fontenc}
+#   \usepackage[utf8]{inputenc}
+#   \usepackage{fancyhdr}
+#   \thispagestyle{plain}
+#   \pagestyle{fancy}
+#   \fancyhead[L]{\nouppercase{\leftmark}}
+#   \fancyhead[C]{}
+#   \fancyhead[R]{\thepage}
+#   \fancyfoot[L]{Stepping Stones Report}
+#   \fancyfoot[C]{June 2023}
+#   \fancyfoot[R]{\thepage}
+#   \renewcommand{\footrulewidth}{0.4pt}
+#   \usepackage{roboto}
+#   \renewcommand{\familydefault}{\sfdefault}
+#   \usepackage{titlesec}
+#   \titleformat*{\section}{\LARGE\bfseries}
+#   \titleformat*{\subsection}{\Large\bfseries}
+#   \titleformat*{\subsubsection}{\large\bfseries}
+#   \titleformat*{\paragraph}{\large\bfseries}
+#   \titleformat*{\subparagraph}{\large\bfseries}
+---
+```{css, echo=FALSE}
+/*   .rmd-header {
+    border-left: 6px solid #3991d1;
+    padding: 0px 22px;
+    margin-bottom: 2rem;
+  } */
+.main-container div.section.level2 h2 {
+  /*font-size: 2.35rem;*/
+  padding: 4px 22px;
+margin: 0 0 22px;
+border-left: 6px solid #3991d1;
+}
+/* .main-container div.section.level2 h2::after {
+  display: block;
+  content: " ";
+  height: 5px;
+  width: 100%;
+  background-color: #3991d1;
+  margin: 1.25rem 0;
+} */
+
+h4, h5 {
+  font-family: "Poppins",Arial,sans-serif;
+  font-size: 1.25rem;
+}
+div.small-h3 h3 {
+  font-size: 1.5rem;
+}
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 8.5, fig.height = 5, fig.align = 'left')
+
+library(tidyverse)
+library(scales)
+library(janitor)
+library(ggthemes)
+library(ggrepel)
+library(bslib)
+library(stringr)
+
+str_sort_last <- function(object){
+  last <- str_sort(object)
+  last <- tail(last, 1)
+  last
+}
+
+# three_category_palette <- c("#E57873", "#146A94", "#58C9AB")
+# two_category_palette <- c("#782C6A", "#58C9AB")
+# one_category_palette <- c("#782C6A")
+
+# web colors
+three_category_palette <- c("#E48073", "#2F7E9F", "#83DBD7")
+two_category_palette <- c("#782C6A", "#83DBD7")
+one_category_palette <- c("#782C6A")
+
+```
+\newpage
+
+## Introduction
+
+The first Stepping Stones Report was published by the Charlottesville/Albemarle Commission on Children and Families (CCF) in 2000. The report provides trend data for a selection of measures on the well-being of children and families in the City of Charlottesville and Albemarle County. The goal, then and now, is to create a data-informed understanding of our collective trajectory that stimulates dialogue and promotes action to improve the lives of all who reside in our community. 
+
+After the CCF was dissolved in 2012, the City of Charlottesville’s Department of Human Services (DHS) began stewarding the Stepping Stones Report. This year’s report was completed in partnership with the UVA Equity Center and the Batten School of Leadership and Public Policy. We continue to build on the foundation established by the CCF Data Management Work Group and the knowledge cultivated by the Charlottesville DHS, as well as the administrators and agency experts who have provided insight for the last two decades. 
+
+It is our shared hope that the Stepping Stones Report will continue to prompt community interest and engagement in the well-being of children and families. The presentation of relevant trends is intended to make this data more accessible and encourage our local leaders, administrators, advocates, and residents to use data-informed approaches to identify problems, implement programs, and carry out collective evaluation.
+
+### Approach {.small-h3}
+
+In updating this community resource, we followed key principles of data equity and ethics, including openness, reproducibility, and contextualization. 
+
+__Open:__ Since this report began, there has been a significant movement to make data from public agencies more open and available. We leverage open data as much as possible, gathering measures from publicly maintained sites and collections. This ensures we are measuring the same conditions, behaviors, or outcomes over time. In addition, we use open-source software to ensure our work is openly accessible and reproducible. 
+
+__Reproducible:__ These updates include building processes that are repeatable for future years and are well-documented for future researchers. The data collection and corresponding code are documented and made publicly available in a GitHub repository. When measures could not be acquired computationally, we document our steps; when measures required manual curation, multiple people completed this work so that we could validate manual collection.
+
+__Contextualized:__ The report is divided into sections based on the nature of the measures and their source. For each metric, we provide an overview of how the measure impacts youth and community well-being, present visualizations and highlight key trends, and note the sources and limitations of the data. 
+
+An important piece of context missing from this report is representation of racial disparities in the outcomes shown here. Many of the metrics we highlight in this report disproportionately impact youth of color due to long-standing systemic racial inequality in our region and the country. Although we only display data for the populations as a whole in this report, understanding how these metrics differentially impact youth depending on their racial identity is critical to promoting racial equity in the region. More information about racial disparities in youth well-being can be found in our forthcoming supplemental report. 
+
+### Our Youth {.small-h3}
+
+These data represent the youth in our community–your children and their friends, the children you see at your grocery store or waiting at the bus stop, and all the children you know in your community are included here. Although these graphs show single outcomes in isolation, none of these data exist in a vacuum. The environments we prepare for youth in our community, their families, the neighborhoods where they live, and their intersecting identities all provide important context for understanding each of these individual outcomes. We encourage you to keep the children you know in mind, and consider how we can do better by them and future generations. 
+
+### Contributions {.small-h3}
+
+The 2023 Stepping Stones Report was produced through a collaboration between the City of Charlottesville’s Department of Human Services, the UVA Equity Center, and the Batten School of Leadership and Public Policy class, Public Interest Data: Ethics & Practice. The Charlottesville Department of Human Services sponsored the report. The UVA Equity Center’s Democratization of Data Initiative team collected, validated and visualized the data and wrote the report. The students in the course, Public Interest Data: Ethics & Practice, did the initial work of gathering the metrics and providing background research. 
+
+\newpage
+
+## Education and Civic Engagement
+
+### Kindergarteners At or Above Reading Levels
+
+Virginia screens all incoming kindergartners with a Phonological Awareness Literacy Screening (PALS) tool to understand children’s knowledge of important literacy fundamentals and to identify students who are at risk for reading difficulties. Early intervention is one mechanism to identify and combat disparities from widening as students enter kindergarten. In addition, PALS benchmark scores guide the state’s allocation of Early Intervention Reading Initiative funds. 
+
+  - __Data considerations:__ Administered to all incoming public school kindergartners, PALS-K scores can be used to provide a full picture of the incoming class. However, this measure provides no information on children not enrolled in public schools (e.g., children who are homeschooled or attend private schools).
+  - __How is this measured?:__ This measure represents the number of incoming kindergarten students who are at or above PALS benchmarks as a percent of all incoming kindergarten students screened.
+
+#### Notable Trends {.unnumbered}
+  - The percent of incoming Kindergarteners at or above PALS benchmarks increased from 2003 to 2011 in both Charlottesville City Schools (CCS) and Albemarle County Public Schools (ACPS) but began decreasing again thereafter. 
+  - Prior to 2020, the percentage of students at or above benchmarks in ACPS was notably higher than CCS, but the percentages have remained relatively similar between the two districts since.
+
+##### Percent of Incoming Kindergarteners At or Above PALS benchmarks for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools {.unnumbered}
+```{r, fig.alt = "Line chart comparing percentages of incoming kindergarteners At or Above PALS benchmarks for Albemarle, Charlottesville, and Virginia by school year over the period from 2002-03 to 2019-20. Local trends have been relatively steady and in line with state trends, holding over 75% during the period, with 83% for Charlottesville and 81% for Albemarle in 2019-20."}
+pals_kinder <- read_csv("../data/pals_kindergarten_updated.csv")
+pals_kinder <- pals_kinder %>% 
+  mutate(pct_invert = 100-percent,
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!location %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(pct_invert, digits = 0)), "%"), NA))
+
+pals_kinder %>%
+  ggplot(aes(x = school_year, y = pct_invert, color = location, group = location)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Incoming Kindergarteners") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+__Source:__ Annie E. Casey Foundation, Kids Count Data Center, "Fall PALS-K [before](https://datacenter.kidscount.org/data/tables/3254-fall-pals-k-before-2015-16) and [after](https://datacenter.kidscount.org/data/tables/10181-fall-pals-k-after-2015-16) 2015/16 in Virginia"
+
+### Standards of Learning
+
+The Virginia Department of Education’s Standards of Learning (SOL) outline minimum expectations of what students should know and be able to do at each grade level in a range of subjects. SOL tests are administered in all Virginia public schools starting in 3rd grade, and the resulting pass rates are used to assess student achievement, evaluate school and district performance, and determine whether schools are meeting state and federal standards. Student performance is graded on a scale of 0-600 with 400-499 representing pass proficiency and 500 and above representing advanced proficiency.
+
+The Virginia Board of Education revised both math and reading SOLs to raise standards and implemented these in the math SOL tests in 2012 and the reading SOL tests in 2013. Mirroring the trend in the state as a whole, both Charlottesville and Albemarle divisions saw a notable decline in pass rates for reading and math across 3rd, 5th, and 8th grade in the years these changes were implemented.
+
+  - __Data considerations:__ Because SOL tests are administered to all children enrolled in public schools in Virginia, these data provide a full picture of the population of children in public schools; however, this measure provides no information on children not enrolled in public schools (e.g., children who are homeschooled or attend private schools). Further, SOL tests were not administered at the end of the 2019-2020 school year due to closures during the COVID-19 pandemic. While traditionally participation on the SOL tests has been high (approximately 95%), participation dropped notably in 2020-2021 (approximately 70%) as schools reopened with COVID health precautions.
+  - __How is this measured?:__ The pass rate is the number of students in a given grade who passed the math or reading SOL test (i.e., scoring 400 or above) for that grade level as a percent of the total number of students in that grade who took the math or reading SOL test.
+
+### Math: Grades 3, 5, and 8
+
+Math is a fundamental subject that is necessary for success in many college and career paths, and children who are proficient at math will be able to access a wide range of paths. 
+
+#### Notable Trends {.unnumbered}
+  - Both Charlottesville City School (CCS) and Albemarle County Public Schools (ACPS) saw a steep drop in pass rates in 2021 as schools began reopening after the first wave of the COVID-19 pandemic. Both declines mirror those seen in the state overall. 
+  - CCS and ACPS have experienced similar pass rates in 3rd grade math throughout 2006 to present. 5th grade pass rates in CCS, though, dropped notably below those in ACPS after the 2012 revisions. For 8th grade pass rates, CCS were higher than ACPS from 2014-2018.
+
+##### Percent of Students who Pass the 3rd Grade Math SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of students taking the 3rd grade Math SOL, x-axis showing school year, from 2005-06 to 2021-22, and lines for percent of students passing for Albemarle, Charlottesville, and Virginia. Annotations at 2011-12 for Implementation of revised math standards and at 2019-20 when SOLs not conducted due to COVID-19 Pandemic. In 2021-22 percents were 62% for Albemarle and 57% for Charlottesville."}
+# Read in data
+sols <- read_csv("../data/sol_pass.csv")
+sols <- sols %>% 
+  mutate(division_name = recode(division_name,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"),
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division_name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(pass_rate, digits = 0)), "%"), NA))
+
+miss2021 <- data.frame(division_name = c("Albemarle", "Charlottesville", "Virginia"),
+                       school_year = c("2019-20", "2019-20", "2019-20"))
+
+# Grade 3 Plot
+sols %>% 
+  filter(subject == "Mathematics" & test_level == "Grade 3") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2011-12", linetype = 2, color = "#333333") +
+  annotate("text", x = 7.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Implementation of 
+revised math standards") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students Taking SOL") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+  
+```
+
+##### Percent of Students who Pass the 5th Grade Math SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of students taking the 5th grade Math SOL, x-axis showing school year, from 2005-06 to 2021-22, and lines for percent of students passing for Albemarle, Charlottesville, and Virginia. Annotations at 2011-12 for Implementation of revised math standards and at 2019-20 when SOLs not conducted due to COVID-19 Pandemic. In 2021-22 percents were 63% for Albemarle and 40% for Charlottesville."}
+sols %>% 
+  filter(subject == "Mathematics" & test_level == "Grade 5") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2011-12", linetype = 2, color = "#333333") +
+  annotate("text", x = 7.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Implementation of 
+revised math standards") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students Taking SOL") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+##### Percent of Students who Pass the 8th Grade Math SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of students taking the 8th grade Math SOL, x-axis showing school year, from 2005-06 to 2021-22, and lines for percent of students passing for Albemarle, Charlottesville, and Virginia. Annotations at 2011-12 for Implementation of revised math standards and at 2019-20 when SOLs not conducted due to COVID-19 Pandemic. In 2021-22 percents were 37% for Albemarle and 19% for Charlottesville."}
+sols %>% 
+  filter(subject == "Mathematics" & test_level == "Grade 8") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2011-12", linetype = 2, color = "#333333") +
+  annotate("text", x = 7.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Implementation of 
+revised math standards") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students Taking SOL") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+Source: Virginia Department of Education (VDOE). “[Test Results Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/testresults).” 2006 - 2021.
+
+### Reading: Grades 3, 5, and 8
+
+Reading test scores measure a students’ ability to read at grade level. Not meeting reading proficiency has lasting impacts on student academic success, degree attainment, and future earnings. [Third grade reading](https://www.aecf.org/resources/early-warning-why-reading-by-the-end-of-third-grade-matters) is particularly important as this is when children transition from learning to read to reading to learn. 
+
+#### Notable Trends {.unnumbered}
+  - There was a decline in pass rates in 2020 in 3rd and 8th grade in Charlottesville City Schools (CCS), and in 5th grade for Albemarle County Public Schools (ACPS). These dips reflect similar declines in the state after the first wave of the COVID-19 pandemic.
+  - CCS and ACPS have experienced similar pass rates in 3rd grade reading throughout 2006 to present. 5th and 8th grade passing rates in CCS dropped notably below those in ACPS after the 2013 revisions. These apparent differences in 5th and 8th grade could be, in part, due to the changing population of students during the middle school years, as the Charlottesville region is home to multiple private middle schools.
+
+##### Percent of Students who Pass the 3rd Grade Reading SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of students taking the 3rd grade Reading SOL, x-axis showing school year, from 2005-06 to 2021-22, and lines for percent of students passing for Albemarle, Charlottesville, and Virginia. Annotations at 2012-13 for Implementation of revised reading standards and at 2019-20 when SOLs not conducted due to COVID-19 Pandemic. In 2021-22 percents were 66% for Albemarle and 70% for Charlottesville."}
+# Grade 3 Reading Plot
+sols %>% 
+  filter(subject == "English:Reading" & test_level == "Grade 3") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2012-13", linetype = 2, color = "#333333") +
+  annotate("text", x = 8.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Implementation of 
+revised reading standards") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students Taking SOL") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+##### Percent of Students who Pass the 5th Grade Reading SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of students taking the 5th grade Reading SOL, x-axis showing school year, from 2005-06 to 2021-22, and lines for percent of students passing for Albemarle, Charlottesville, and Virginia. Annotations at 2012-13 for Implementation of revised reading standards and at 2019-20 when SOLs not conducted due to COVID-19 Pandemic. In 2021-22 percents were 72% for Albemarle and 51% for Charlottesville."}
+# Grade 5 Reading Plot
+sols %>% 
+  filter(subject == "English:Reading" & test_level == "Grade 5") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2012-13", linetype = 2, color = "#333333") +
+  annotate("text", x = 8.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Implementation of 
+revised reading standards") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students Taking SOL") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+##### Percent of Students who Pass the 8th Grade Reading SOL Test for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of students taking the 8th grade Reading SOL, x-axis showing school year, from 2005-06 to 2021-22, and lines for percent of students passing for Albemarle, Charlottesville, and Virginia. Annotations at 2012-13 for Implementation of revised reading standards and at 2019-20 when SOLs not conducted due to COVID-19 Pandemic. In 2021-22 percents were 75% for Albemarle and 54% for Charlottesville."}
+# Grade 8 Plot
+sols %>% 
+  filter(subject == "English:Reading" & test_level == "Grade 8") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"SOLs not conducted
+in 2020 due to the 
+COVID-19 Pandemic") +
+  geom_vline(xintercept = "2012-13", linetype = 2, color = "#333333") +
+  annotate("text", x = 8.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Implementation of 
+revised reading standards") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students Taking SOL") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ Virginia Department of Education (VDOE). “[Test Results Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/testresults).” 2006 - 2021.
+
+### Students Eligible for Special Education Services
+
+Special education services are intended to ensure students with disabilities have access to a meaningful public education. The Individuals with Disability Education Act (IDEA) guarantees a free appropriate public education to all eligible children with documented disabilities. Students with a disability – hearing impairment, including deafness; speech or language impairment; visual impairment, including blindness; orthopedic impairment; autism; traumatic brain injury; developmental delay; other health impairment; intellectual disability; specific learning disability; serious emotional disturbance; or multiple disabilities – receive special education and related services outlined in an Individual Education Program (IEP) or other service plan. [See VDOE for more details](https://www.doe.virginia.gov/programs-services/special-education).
+
+  - __Data considerations:__ These data are collected for the administration of special education services and represent the record of children deemed eligible for special education services. Eligibility is determined through evaluation processes to identify disabilities and determine needed services. Increasing numbers of students receiving special education services can reflect increased access to needed resources, as disability diagnoses become less stigmatized.
+  - __How is this measured?:__ This metric is the number of students identified as eligible for special education services as a percent of all students in the school division.
+
+#### Notable Trends {.unnumbered} 
+  - From 2011 through 2017, the percent of students receiving special education services in Albemarle County Public Schools (ACPS) was below that for Charlottesville City Schools (CCS). 
+  - The percent in ACPS increased modestly after 2015 and has been very similar to the percent in CCS since. This modest increase mirrors the trend nationally. From 2009–10 through 2020–21, the number of students ages 3–21 who received special education services under IDEA increased from 13% of total public school enrollment to 15% of total public school enrollment ([NCES](https://nces.ed.gov/programs/coe/indicator/cgg/students-with-disabilities#fn1)).
+
+##### Percent of Students Identified to Receive Special Services for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of enrolled students, x-axis showing school year, from 2010-11 to 2021-22, and lines for percent of students identified to receive special services for Albemarle, Charlottesville, and Virginia. In 2021-22 percents were 13% for Albemarle and 14% for Charlottesville."}
+sped_services <- read_csv("../data/sped_services.csv")
+sped_services <- sped_services %>% 
+  mutate(division_name = recode(division_name,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"),
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division_name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(percent_sped, digits = 0)), "%"), NA))
+
+sped_services %>% 
+  ggplot(aes(x = school_year, y = percent_sped, 
+             color = division_name, group = division_name)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 60),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Enrolled Students") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ Virginia Department of Education, “[December 1 Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/dec1).” 2011-2022.
+
+### English Learners
+
+An English Learner (EL) is a student who is not fully proficient in English and requires language-based accommodations to effectively learn during their K-12 education. Multilingual learners have been a growing segment of the student population in Virginia but [have not always had access to needed resources](https://thecommonwealthinstitute.org/research/changing-gears-addressing-virginias-persistent-lack-of-support-for-english-learner-students/).
+
+  - __Data considerations:__ An English Language Screening assessment is administered to potential EL students during the enrollment process and to all current EL students annually to determine eligibility for English language instructional services. The data can be used to provide a full picture of the current composition of EL students in schools. However, this measure provides no information on children not enrolled in public schools (e.g., children who are homeschooled or attend private schools). 
+  - __How is this measured?:__ The count of identified students who speak English as a second or other language and are emergent in the speaking, reading, writing, and/or understanding of English as a percent of all students in the school division. Former English Learners are not included in the count.
+
+#### Notable Trends {.unnumbered}
+  - The percentage of ELs in both Charlottesville City Schools (CCS) and Albemarle County Public Schools (ACPS) has grown between 2003-2023, mirroring growth in the state overall. While initially at a similar level (around 5%), the increase has been especially sharp in CCS; by the 2022-23 school year, 14% of CCS students were identified as ELs compared to 9% of ACPS students and 11% of students in Virginia.
+
+##### Percent of Students Identified as English Learners for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of enrolled students, x-axis showing school year, from 2003-04 to 2022-23, and lines for percent of students identified as English Learners for Albemarle, Charlottesville, and Virginia. In 2021-22 percents were 9% for Albemarle and 14% for Charlottesville."}
+english_language_learners <- read_csv("../data/english_language_learners.csv")
+english_language_learners <- english_language_learners %>%
+  mutate(school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!locality %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(pct_english_learners, digits = 0)), "%"), NA))
+
+english_language_learners %>% 
+  ggplot(aes(x = school_year, y = pct_english_learners, color = locality, group=locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 60),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Enrolled Students") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ Virginia Department of Education, “[Fall Membership Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/fallmembership).” 2011-2022.
+
+### Average Daily Attendance
+
+High Average Daily Attendance (ADA) indicates that students are attending school regularly, and regular attendance is associated with greater student success. Consequently, [attendance and engagement have been a focus for educators and schools](https://www.doe.virginia.gov/programs-services/student-services/attendance-school-engagement).
+
+  - __Data considerations:__ This metric is derived from data collected as part of the administration of schools and provides a complete description of school attendance to the extent attendance data is recorded consistently and correctly within the schools that make up the division. However, Average Daily Attendance can mask chronic absenteeism as this metric does not incorporate information on who is absent. [The same rate of Average Daily Attendance could result from most students missing a few days or from the same group of students missing many days](https://attendanceworks.org/wp-content/uploads/2017/08/AAM-Policy-Brief-091214-2.pdf).
+  - __How is this measured?:__ ADA is calculated as the sum of daily attendance (children in school) as a percent of the sum of daily membership (children enrolled). It represents the percentage of a school’s student body in attendance on a typical day. 
+
+#### Notable Trends {.unnumbered} 
+  - Both Albemarle County Public Schools (ACPS) and Charlottesville City Schools (CCS) had a consistent rate of Average Daily Attendance from 2008-2019, hovering around 96%, just above the state average of 95%. 
+  - In 2019-20, ACPS saw an increase to 98% as public schools closed and transitioned online due to the COVID-19 Pandemic; attendance rates remained steady in CCS. In 2021-22, with schools fully reopened, the ADA rate dipped to 93-94% in both divisions and the state as a whole.
+
+##### Percent of Students in Attendance on an Average Day for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of students, x-axis showing school year, from 2007-08 to 2021-22, and lines for percent of students in attendance for Albemarle, Charlottesville, and Virginia. In 2021-22 percents were 94% for Albemarle and 93% for Charlottesville. Annotation for school schedules impacted by the COVID-19 Pandemic for the shaded school years 2019-20 to 2020-21."}
+average_daily_attendance <- read_csv("../data/average_daily_attendance.csv")
+average_daily_attendance <- average_daily_attendance %>% 
+  mutate(school_year = paste0(as.character(year-1), "-", as.character(year)),
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(pct_att_total, digits = 0)), "%"), NA))
+
+average_daily_attendance %>%
+  ggplot(aes(x = school_year, y = pct_att_total, color = name, group = name)) +
+  geom_rect(aes(xmin = "2019-20", xmax = "2020-21", ymin = -Inf, ymax = Inf), alpha = .05, color = NA, fill = "#f5f5f5") +
+  annotate("text", x = 10.2, y = 65, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"School schedules 
+impacted by 
+COVID-19 Pandemic") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(50, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "", fill = "")
+```
+
+__Source:__ [Virginia Department of Education, Superintendent’s Annual Report](https://www.doe.virginia.gov/data-policy-funding/data-reports/statistics-reports/superintendent-s-annual-report), Table 8 Number of Days Taught, ADA, ADM. 2002-2022. 
+
+### On-Time Graduation Rates
+
+On-time graduation measures the percentage of students that graduated from public schools within four years of entering high school. On-time graduation is an important indicator of whether localities are preparing most students for college or career readiness, as a high school diploma is a standard requirement for many jobs and for accessing higher education.
+
+  - __Data considerations:__ This rate is derived from Virginia’s longitudinal student data system linking the records of students who entered 9th grade for the first time in a given year (beginning in 2004) with their records four years later to determine their graduation or completion status. The measure accounts for student mobility, retention, and promotion patterns and provides a complete description of completion outcomes for each cohort attending public schools. Students who earn a GED or a certificate of completion are not counted as dropouts or as graduates when calculating the on-time graduation rate. 
+  - __How is this measured?:__ On-time graduation is defined as students who earn a Virginia Board of Education-approved diploma among students who entered 9th grade for the first time together and were scheduled to graduate four years later; the percent represents students in a cohort who graduated on time over all students in that cohort, (multiplied by 100). This measure recognizes that some students with disabilities and limited English proficiency are allowed more than the standard four years to earn a diploma and counts those students as “on-time” graduates. [See VDOE for more](https://www.doe.virginia.gov/home/showpublisheddocument/19836/638042970406400000).
+
+#### Notable Trends {.unnumbered} 
+  - In 2008, when on-time graduate rates were first measured, Albemarle County Public Schools (ACPS) had a considerably higher rate of on-time graduation (88%) than Charlottesville City Schools (CCS) (75%); the Virginia state-wide rate was 82%. On-time graduation rates have increased in both divisions and in the state overall since then, and both divisions saw an on-time graduation rate of about 93-94% in 2022, above the state rate of 92%. 
+  - Improvement in ACPS has been steady throughout this period. In CCS, the rate dipped in 2013 before showing dramatic increases thereafter. Notably, [improving graduation rates](https://www.cityofpromise.org/history) was a priority outlined in Charlottesville City Schools Strategic Plan for 2007-2011.
+
+##### Percent of Student Cohort Graduating in Four Years for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of student cohort, x-axis showing graduation year, from 2008 to 2022, and lines for percent of students graduating for Albemarle, Charlottesville, and Virginia. In 2022 percents were 94% for Albemarle and 93% for Charlottesville."}
+graduation_rates <- read_csv("../data/graduation_rates.csv")
+graduation_rates <- graduation_rates %>% 
+  mutate(school_year = as.character(cohort_year),
+         division_name = recode(division_name,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"),
+         label = ifelse((!division_name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(graduation_rate, digits = 0)), "%"), NA))
+
+graduation_rates %>%
+  ggplot(aes(x = school_year, y = graduation_rate, color = division_name, group = division_name)) +
+  # geom_vline(xintercept = "2013", linetype = 2, color = "#333333") +
+#   annotate("text", x = 6.2, y = 55, size = 3.5, hjust = 0, color = "#333333", 
+#            label = 
+# "Charlottesville City Schools
+# extend WALK program hours") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Student Cohort") + 
+  scale_x_discrete(name = "Graduation Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ Virginia Department of Education, “[Cohort Graduation Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/cohortgraduation)”, Virginia On-Time Graduation Rate, 2008-2022.
+
+### Post-Secondary Enrollment
+
+The rate of post-secondary enrollment measures the percent of graduating high school seniors who enter a higher education institution (e.g., college, university or community college) within 16 months after graduating from high school. It is increasingly common for jobs to require post-secondary education or postsecondary training or certification.
+
+  - __Data considerations:__ This metric tracks each graduating cohort’s enrollment in a two- or four-year college or university anywhere in the United States. It is an accurate and complete reflection of education enrollment immediately following high school, but it does not include information on students who begin college more than 16 months after graduation. 
+  - __How is this measured?:__ The VDOE uses data from the [National Student Clearinghouse](http://www.studentclearinghouse.org/) to track college attendance nationwide among students graduating from Virginia’s public schools. This metric represents the number of students in a division’s graduating cohort who enroll in any institution of higher education within 16 months of graduating as a percent of the number of students in the graduating cohort.
+
+#### Notable Trends {.unnumbered} 
+  - The percentage of graduates enrolling in any post-secondary Institute of Higher Education (IHE) is consistently higher among Albemarle County Public School (ACPS) graduates than Charlottesville City Schools (CCS) or Virginia graduates overall; however, the percentage has declined in CCS, ACPS, and Virginia from 2008 to 2022. In ACPS, the percentage has fallen from 79% in 2008 (with a high of 82% in 2009) to 75% in 2022. In CCS, the percentage has fallen from 73% in 2008 (with a high of 77% in 2013) to 64% in 2022.
+  - The percentage of graduates enrolling in a four-year institution is consistently higher in ACPS graduates than CCS or Virginia graduates. The percentage has fluctuated in both divisions from 2008 to 2020, with the most recent years showing a decline to 52% in ACPS and 43% in CCS, compared to 41% statewide.
+
+##### Percent of Graduating Students Enrolled in a Post-Secondary Institution within 16 months of High School Graduation for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of graduating students, x-axis showing graduation year, from 2008 to 2020, and two sets of lines, solid and dashed, for Albemarle, Charlottesville, and Virginia. Solid lines show percent of students attending any institution, with values in 2020 of 75% for Albemarle and 64% for Charlottesville. Dashed lines show percent of students attending a 4-year institution, with values in 2020 of 52% for Albemarle and 43% for Charlottesville."}
+postsecondary_education <- read_csv("../data/postsecondary_education.csv")
+
+# pivot to stack 2 year and 4 year
+df_long <- postsecondary_education %>% 
+  mutate(enrolled4yr = enrolled4pub + enrolled4priv) %>% 
+  select(year, locality, cohortsize, enrolled4yr, enrolled2yr, enrolledany) %>% 
+  pivot_longer(cols = starts_with("enrolled"), names_to = "type", values_to = "number") %>% 
+  mutate(percent = (number/cohortsize)*100,
+         school_year = as.character(year))
+
+df_long <- df_long %>% 
+  filter(type != "enrolled2yr") %>% 
+  mutate(type = recode(type,
+                          "enrolled4yr" = "4-Yr Institution",
+                          "enrolledany" = "Any Institution"),
+         label = ifelse((!locality %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(percent, digits = 0)), "%"), NA))
+
+# keep only 4yr and any - or - 2yr and 4yr
+
+df_long %>%
+  ggplot(aes(x = school_year, y = percent, 
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_linetype_manual(values = c(2,1)) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Graduating Students") +
+  scale_x_discrete(name = "Graduation Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "", linetype = "")
+```
+
+__Source:__ Virginia Department of Education, State Fiscal Stabilization Fund Indicator (C)(11), "[Postsecondary Enrollment Reports](https://p1pe.doe.virginia.gov/postsec_public/)." 2008-2020.
+
+### High School Degree Attainment
+
+Earning a high school (H.S.) diploma is a minimum requirement for many jobs and to pursue higher education, thus it can have wide-ranging health, social, and economic impacts. The rate of education attainment in a community not only reflects benefits to individuals but is also related to community economic and population health.
+
+  - __Data considerations:__ This metric is derived from the American Community Survey (ACS), a continuous survey given to a sample of housing unit addresses each month. Each year the survey releases 5-year estimates, pooling data from all surveyed households throughout a 60-month period. As a survey, rather than a census, the ACS provides estimates of population characteristics and these estimates have a degree of uncertainty, or sampling error, associated with them. Importantly, this metric does not capture the performance of schools in a given city but rather on the highest level of education achieved by adults who reside in that city, regardless of where they attended school.
+  - __How is this measured?:__ The measure is the count of residents who are 25 or over who have received at least a H.S. diploma or equivalent (including GEDs) over the count of all residents aged 25 or over in the relevant city, county, or state (multiplied by 100).
+
+#### Notable Trends {.unnumbered}
+  - The percentage of residents with a H.S. diploma or more has been high and steady in Albemarle County, starting at 91% in 2010 and increasing slightly to 93% in 2021. 
+  - Among Charlottesville City residents there has been significant growth, with a H.S. diploma attainment rate of 85% in 2010 and a rate of 92% in 2021, essentially matching the rate in Albemarle County. From 2013 onward, the H.S. diploma attainment rate in both localities has exceeded that of the state as a whole.
+
+##### Percent of Residents Age 25 and Older with a High School Degree or Equivalent in Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of residents, x-axis showing ACS survey period, from 2005-2010 to 2016-2021, and lines for percent of residents with a high school degree for Albemarle, Charlottesville, and Virginia. For 2016-2021 percents were 93% for Albemarle and 92% for Charlottesville."}
+hsdegree_attainment <- read_csv("../data/hsdegree_attainment.csv")
+hsdegree_attainment <- hsdegree_attainment %>% 
+  mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
+         locality = str_trim(locality),
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round(pcthshigherE, digits = 0)), "%"), NA))
+
+hsdegree_attainment %>%
+  ggplot(aes(x = survey_period, y = pcthshigherE, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(40, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Residents") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ U.S. Census Bureau, American Community Survey 5-year estimates, “Educational Attainment.” 2010 - 2021. [Table S1501](https://data.census.gov/table?q=s1501&g=050XX00US51003,51540&tid=ACSST5Y2021.S1501).
+
+### Registered Voters
+
+Voting in elections is a central form of participation in a democracy. Until 2022, citizens in Virginia had to be registered voters prior to an election to participate–beginning in 2022, [citizens could register the day of an election and cast a provisional ballot](https://www.elections.virginia.gov/registration/same-day-voter-registration/). While not all registered voters will vote in a given election, the percent of eligible voters who are registered establishes a foundation for engagement and serves as one indicator of the health of local democracy, citizen power, and community engagement.
+
+  - __Data considerations:__ This measure is derived from registration data. Registration data represent an authoritative list of an event (e.g., voters). Registration data is closer to census data in that it attempts to capture all relevant events to accurately reflect the population. While voter registration can speak to political participation among residents, it is also impacted by whether residents are U.S citizens, have access to registration documents, or are ineligible due to policies like felony disenfranchisement; such determinants are known historically to depress registration among racially minoritized residents.
+  - __How is this measured?:__ The number of registered voters was taken from the Virginia Department of Elections for 2000-2021. To calculate the percent of registered voters, we divided the number of registered voters by the population of residents aged 18 and over, as estimated by the [U.S. Department of Health and Human Services](https://wonder.cdc.gov/wonder/help/bridged-race.html) and provided in CDC Wonder.
+
+#### Notable Trends {.unnumbered}
+  - The share of individuals who are registered to vote has been growing consistently over time. In Charlottesville, the percent of residents registered to vote has grown from 63% in 2000 to 88% in 2020. In Albemarle, the voter registration rate has grown from 84% to 95%. Except for the period from 2012 to 2016, Charlottesville has maintained a lower voter registration rate than Virginia as a whole.
+
+##### Percent of Adults (18+) Registered to Vote in Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of adults, x-axis showing year, from 2000 to 2021, and lines for percent of registered voters for Albemarle, Charlottesville, and Virginia. In 2021 percents were 96% for Albemarle and 86% for Charlottesville. Annotations for presidential elections at the years 2000, 2004, 2008, 2012, 2016, and 2020."}
+voter_reg <- read_csv("../data/vote_reg.csv")
+voter_reg <- voter_reg %>% 
+  # filter(year != 2021) %>% 
+  mutate(year = as.character(year),
+         locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         paste0(as.character(round((reg_rate*100), digits = 0)), "%"), NA))
+
+voter_reg %>%
+  ggplot(aes(x = year, y = reg_rate, color = locality, group = locality)) +
+  geom_vline(xintercept = "2000", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2004", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2008", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2012", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2016", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2020", linetype = 2, color = "#333333") +
+  annotate("text", x = 5.2, y = .3, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Presidential
+Elections") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.4, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  # scale_x_continuous("Year", labels = as.character(year), breaks = year) + 
+  scale_y_continuous(limits = c(0, 1),
+                     labels = scales::percent,
+                     name = "Percent of Adults") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Sources:__ Virginia Department of Elections, "[Registration Statistics, 2000-2022](https://www.elections.virginia.gov/resultsreports/registration-statistics/)."; U.S. Department of Health and Human Services, CDC Wonder, "[Bridged-Race Population Estimates, United States July 1st resident population by state, county, age, sex, bridged-race, and Hispanic origin](https://wonder.cdc.gov/wonder/help/bridged-race.html)." 1990-2020 database (Vintage 2020).
+
+\newpage
+
+## Economic Security and Housing
+
+### Income Per Capita
+
+Income Per Capita (IPC) serves as a measure of economic health for a region and is intended to capture the economic development of an area and the standard of living of those residing in the area.
+
+  - __Data considerations:__ These data are derived from administrative data, or data collected for the administration of publicly funded programs or services (e.g., state unemployment insurance, state and federal income taxes), and then combined with government surveys. As such, they capture a relatively complete picture of income among the population subject to formal income reporting. While IPC is a common measure of the average income per person, it does not account for the distribution of that income within the population and so can mask significant income inequality. In addition, IPC doesn’t reflect income in the informal economy where transactions are not reported.
+  - __How is this measured?:__ Area income represents the total sum of the income received by the people in an area. The U.S. Bureau of Economic Analysis measure includes the income that U.S. residents get from paychecks, employer-provided supplements (like insurance), business ownership, rental property, Social Security and other government benefits, interest, and dividends. The Income Per Capita divides this sum by the total population in the area. This calculation distributes the average income across both working populations and populations that do not work or generate income, such as children. The Charlottesville and Albemarle value represents the data from the combined localities of Charlottesville and Albemarle. The inflation-adjusted version uses the Consumer Price Index with 2010 as the base year. 
+
+#### Notable Trends {.unnumbered} 
+  - In the last 20 years, the average per capita income of Charlottesville and Albemarle has increased. The only break in this trend is a dip in 2008 and 2009 reflecting the 2008 recession.
+  - After 2013, the area IPC began increasing at a faster rate than the state of Virginia.
+
+##### Income Per Capita for Charlottesville and Albemarle Combined and Virginia
+```{r, fig.alt = "Line chart with y-axis showing income per capita, x-axis showing year, from 2000 to 2021, and two sets of lines, solid and dashed, for Albemarle and Charlottesville combined and Virginia. Solid lines show raw income, with values in 2021 of 85,867 for Albemarle and Charlottesville combined. Dashed lines show inflation-adjusted income, with values in 2021 of 69,099 for Albemarle and Charlottesville combined. Annotation for economic recession for the shaded years 2007 to 2009."}
+per_cap_income <- read_csv("../data/per_cap_income.csv")
+per_cap_income <- per_cap_income %>% 
+  pivot_longer(cols = c("pci", "adj_pci"), names_to = "type", values_to = "number") %>%
+  mutate(year = as.character(year),
+         locality = recode(GeoName,
+                           "Albemarle + Charlottesville, VA*" = "Albemarle + Charlottesville"),
+         type = recode(type,
+                       "pci" = "Raw Income",
+                       "adj_pci" = "Inflation-Adjusted Income"),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         paste0(as.character(formatC(number, format="d", big.mark=","))), NA))
+
+per_cap_income %>%
+  ggplot(aes(x = year, y = number,
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type)) +
+  geom_rect(aes(xmin = "2007", xmax = "2009", ymin = -Inf, ymax = Inf), alpha = .05, color = NA, fill = "#f5f5f5") +
+  annotate("text", x = 10.2, y = 80000, size = 3.5, hjust = 0, color = "#333333",
+           label =
+"Economic Recession 
+(2007-2009)") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_linetype_manual(values = c(2, 1)) +
+  scale_color_manual(values = two_category_palette) +
+  scale_y_continuous(limits = c(30000,90000),
+                     label = comma,
+                     name = "Income Per Capita") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "", linetype = "", fill = "")
+```
+
+__Sources:__ [U.S. Bureau of Economic Analysis, Regional Economic Accounts](https://www.bea.gov/data/economic-accounts/regional), "CAINC1 County and MSA personal income summary: personal income, population, per capita personal income"; [U.S. Bureau of Economic Analysis, Regional Economic Accounts](https://www.bea.gov/data/economic-accounts/regional), "SASUMMARY State annual summary statistics: personal income, GDP, consumer spending, price indexes, and employment"; [U.S. Bureau of Labor Statistics, Consumer Price Index](https://www.bls.gov/cpi/data.htm), "All items in U.S. city average, all urban consumers, not seasonally adjusted", Series Id CUUR0000SA0.
+
+### Youth Labor Force Participation and Unemployment
+
+Labor force participation among young people and youth unemployment can shed light on both the health of the economy and the well-being of young people. High unemployment rates for youth may suggest economic struggles or a mismatch between the skills that young people possess and the skills employers are seeking.
+
+  - __Data considerations:__ This metric is derived from the American Community Survey (ACS), a continuous survey given to a sample of housing unit addresses each month. Each year the survey releases 5-year estimates, pooling data from all surveyed households throughout a 60-month period. As a survey, rather than a census, the ACS provides estimates of population characteristics and these estimates have a degree of uncertainty, or sampling error, associated with them. Labor force participation and unemployment do not include discouraged workers who have searched for a job in the last year but have given up.
+  - __How is this measured?:__ The youth labor force participation rate is the number of 15-24 year olds who are employed or are seeking employment as a percentage of the number of residents aged 15-24. The youth unemployment rate is the number of 15-24 year olds who have reported that they do not have a job but are ready to work and have been seeking employment within the last 4 weeks as a percentage of the number of residents aged 15-24 in the labor force.
+
+#### Notable Trends {.unnumbered} 
+  - Youth participation in the labor force in both Charlottesville and Albemarle is below that of the state overall. In recent years, labor force participation of Charlottesville youth has grown relative to that of young people in Albemarle. In 2021, 32% of Charlottesville youth were in the labor force compared to 24% of Albemarle youth.
+  - Youth experienced similar rates of unemployment from 2011 to 2015 in both Charlottesville and Albemarle. From 2016 to 2019, the youth unemployment rate in Charlottesville jumped, peaking at 23%, while the youth unemployment rate in Albemarle fell, hovering around 8%. In recent years the youth unemployment rate has declined in both localities.
+
+##### Percent of Youth (15-24) Participating in the Labor Force for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of youth, x-axis showing ACS survey period, from 2005-2010 to 2016-2021, and lines for percent of youth in the labor force for Albemarle, Charlottesville, and Virginia. For 2016-2021 percents were 24% for Albemarle and 32% for Charlottesville."}
+youth_employment <- read_csv("../data/youth_employment_status.csv")
+
+youth_employment <- youth_employment %>% 
+  mutate(locality = recode(name,
+                          "Albemarle County, Virginia" = "Albemarle",
+                          "Charlottesville city, Virginia" = "Charlottesville"),
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label_labor = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round(laborforce_rate, digits = 0)), "%"), NA),
+         label_unempl = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round(unemployment_rate, digits = 0)), "%"), NA))
+
+youth_employment %>%
+  ggplot(aes(x = survey_period, y = laborforce_rate, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label_labor),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Youth") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+##### Percent of Youth (15-24) in the Labor Force Experiencing Unemployment for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of youth in labor force, x-axis showing ACS survey period, from 2005-2010 to 2016-2021, and lines for percent of youth unemployment for Albemarle, Charlottesville, and Virginia. For 2016-2021 percents were 8% for Albemarle and 7% for Charlottesville."}
+youth_employment %>%
+  ggplot(aes(x = survey_period, y = unemployment_rate, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label_unempl),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Youth in Labor Force") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ U.S. Census Bureau, American Community Survey 5-year estimates, "Sex by Age by Employment Status.” 2010-2021. [Table B23001](https://data.census.gov/table?q=b23001&g=050XX00US51540,51003&tid=ACSDT5Y2021.B23001).
+
+### Children Living below Poverty Threshold
+
+When children grow up in poverty, they are more likely to have inadequate nutrition, limited access to health care services, unstable housing, lower quality of schools, and exposure to environmental toxins, all of which have short- and long-term physical and mental impacts.
+
+  - __Data considerations:__ According to the Census, Small Area Income and Poverty Estimates (SAIPE) “are not direct counts from enumerations or administrative records, nor direct estimates from sample surveys. Instead, for counties and states, we model income and poverty estimates by combining survey data with population estimates and administrative records.” As such, these estimates have a degree of uncertainty associated with them.
+  - __How is this measured?:__ This metric is measured as a percentage of families with incomes below the yearly poverty level out of all families. In 2022, the federal poverty level for a family of four was $27,750.
+  
+#### Notable Trends {.unnumbered}
+  - The child poverty rate in Charlottesville is consistently higher than that in the state, ranging between 15% and 24%; the child poverty rate in Albemarle is consistently lower than that in the state, ranging between 7% and 12%. 
+  - Although the percent in the county is lower, due to the difference in population between the City of Charlottesville and Albemarle County, it represents a higher number of children. In 2021, the count in Charlottesville was 1,453 compared to 1,821 in Albemarle.
+  - In 2020, Charlottesville, Albemarle, and Virginia experienced their lowest rates of child poverty in the years measured, as the stimulus payments and child tax credit expansion were in place to provide relief in the midst of the COVID-19 Pandemic. [These policies are widely credited with keeping 3.7 million children out of poverty nationwide](https://www.cbpp.org/research/federal-tax/stimulus-payments-child-tax-credit-expansion-were-critical-parts-of-successful).
+
+##### Percent of Children (0-17) Living below the Poverty Threshold for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of children, x-axis showing year, from 2000 to 2021, and lines for percent of children living below poverty threshold for Albemarle, Charlottesville, and Virginia. In 2021 percents were 20% for Albemarle with n value 1,453, and 8% for Charlottesville with n value 1,821. Annotations for Covid-19 economic stimulus payments at the years 2020 and 2021."}
+child_poverty <- read_csv("../data/child_pov.csv")
+child_poverty <- child_poverty %>%
+  mutate(locality = ifelse(county_fips == "000", "Virginia",
+                       ifelse(county_fips == "003", "Albemarle",
+                              ifelse(county_fips == "540", "Charlottesville", "Unknown"))),
+         year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         paste0(as.character(round(pct_child_pov, digits = 0)), "% (n=", formatC(num_child_pov, format="d", big.mark=","),")"), NA))
+
+child_poverty %>% 
+  ggplot(aes(x = year, y = pct_child_pov, color = locality, group = locality)) +
+  geom_vline(xintercept = "2020", linetype = 2, color = "#333333") +
+  geom_vline(xintercept = "2021", linetype = 2, color = "#333333") +
+  annotate("text", x = 16.7, y = 85, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"COVID-19 Economic
+Stimulus Payments") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 3.5, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Children") + 
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ U.S. Census Bureau, “[Small Area Income and Poverty Estimates (SAIPE), State and County Estimates](https://www.census.gov/programs-surveys/saipe/data/datasets.html).” 2000-2021.
+
+### Students Identified as Economically Disadvantaged
+
+Students are identified as economically disadvantaged if they meet one or more of the following conditions: eligible for free or reduced meals (family income is within 130% or 185% of federal poverty threshold), are eligible for TANF, Medicaid and/or Head Start, or identified as from a migrant family, experiencing homelessness, or in foster care. This measure is an indicator of low-income families. Students in low-income households face additional challenges that can hinder their learning. In addition, education funding is influenced by the presence of economically disadvantaged students [via the At-Risk Add-On](https://thecommonwealthinstitute.org/research/weighing-support-for-virginias-students/).
+
+  - __Data considerations:__ This metric can be used to provide a picture of the current composition of students from low-income families to the extent economic need has been revealed to and verified by the schools. Historically, eligibility for free or reduced lunch has been one of the most frequent indicators of economic disadvantage; the National School Lunch Program has been a key policy to reduce hunger for children from economically insecure families. The USDA Community Eligibility Provision (CEP) was created in 2010 to allow high-poverty schools an opportunity to apply to offer all students at a school free- or reduced-price-meals. [Charlottesville City Schools have been participating in CEP since 2018, and Albemarle County Public Schools began participating in 2022](https://www.doe.virginia.gov/programs-services/school-operations-support-services/school-nutrition/program-statistics-reports).
+  - __How is this measured?:__ This measures the count of students identified as economically disadvantaged as a percentage of all students in the school division.
+
+#### Notable Trends {.unnumbered} 
+  - The percent of economically disadvantaged students has been considerably higher in Charlottesville City Schools throughout this period, hovering around 50%. In Albemarle County Public Schools, the percentage has risen steadily from below 20% in 2004-05 to around 30% in recent years.
+  - Although the percent in the county is lower, due to the difference in population between the City of Charlottesville and Albemarle County, it represents a higher number of children. In the 2022-23 school year, the count in Charlottesville was 2,404 compared to 4,333 in Albemarle.
+
+##### Percent of Students Identified as Economically Disadvantaged for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart with y-axis showing percent of students, x-axis showing school year, from 2004-05 to 2022-23, and lines for percent of economically disadvantaged students for Albemarle, Charlottesville, and Virginia. In 2022-23 percents were 31% for Albemarle with n value 4,333, and 54% for Charlottesville with n value 2,404. Annotations at 2018-19 for CCS begin participating in USDA CEP and 2021-22 for ACPS begin participation in USDA CEP."}
+economically_disadvantaged_students <- read_csv("../data/economically_disadvantaged_students.csv")
+economically_disadvantaged_students <- economically_disadvantaged_students %>% 
+  mutate(division_name = recode(division_name,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"),
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division_name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(percent, digits = 0)), "% (n=", formatC(economically_disadvantaged_students, format="d", big.mark=","),")"), NA))
+
+economically_disadvantaged_students %>%
+  ggplot(aes(x = school_year, y = percent, color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2018-19", linetype = 2, color = "#333333") +
+  annotate("text", x = 15.1, y = 70, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"CCS begin 
+participating 
+in USDA CEP") +
+  geom_vline(xintercept = "2021-22", linetype = 2, color = "#333333") +
+  annotate("text", x = 18.1, y = 10, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"ACPS begin 
+participating 
+in USDA CEP") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 3, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") + 
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14), 
+        axis.text.x = element_text(angle = 45, hjust = 1), 
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position="top") +
+  labs(color = "")
+```
+
+__Source:__ Virginia Department of Education, “[Fall Membership Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/fallmembership).” 2004-2023.
+
+### Cost-Burdened Households: Renters and Homeowners
+
+Cost-burdened renters and homeowners are paying more than 30% of their income for housing (rent and utilities or mortgage payments, taxes, insurance, and utilities). Rent burden is an indicator of housing insecurity, as rent-burdened households may struggle to balance paying housing costs with purchasing other necessities. These are also indicators of housing affordability for a region.
+
+  - __Data considerations:__ This metric is derived from the American Community Survey (ACS), a continuous survey given to a sample of housing unit addresses each month. Each year the survey releases 5-year estimates, pooling data from all surveyed households throughout a 60-month period. As a survey, rather than a census, the ACS provides estimates of population characteristics and these estimates have a degree of uncertainty, or sampling error, associated with them. In addition, this metric does not reflect housing quality – some households may choose to live in lower-quality housing to reduce costs – or other costs associated with housing, like transportation.
+  - __How are these measured?:__
+      - The monthly rent paid by a household is divided by the household’s monthly income. Any renting households for which this ratio exceeds 30% are identified as cost-burdened renters. The percentage of cost-burdened renters is the count of these cost-burdened households over the number of all renter-occupied households in an area. 
+      - The monthly housing costs paid by a household (mortgage, mortgage insurance, real estate taxes, utilities) is divided by the household’s monthly income. Any owner-occupied households for which this ratio exceeds 30% are identified as cost-burdened homeowners. The percentage of cost-burdened homeowners is the count of these cost-burdened households over the number of all owner-occupied households in an area.
+
+#### Notable Trends {.unnumbered}
+  - The percent of renters who are cost burdened is consistently high in Charlottesville, hovering around 50% (with a high of 56% in 2009 and a low of 46% in 2017). In Albemarle, the percentage of cost-burdened renters is slightly lower, hovering in the low 40s (with a high of 44% in 2011 and 2014 and a low of 41% in 2009).
+  - The percent of homeowners who are cost-burdened has declined steadily in both Charlottesville and Albemarle over this period. In Charlottesville, the percent has fallen from 30% in 2010 to 18% in 2021; in Albemarle, the percent has fallen from a similar amount, from 27% in 2010 to 18% in 2021. These trends reflect those statewide.
+  - Nationally, there is a [growing gap between the housing costs for homeowners compared to renters](https://www.prb.org/articles/u-s-housing-cost-burden-declines-among-homeowners-but-remains-high-for-renters/). The decline in homeowner housing costs may be related to stricter credit standards and declining interest rates following the financial crisis in 2007-2009.
+
+##### Percent of Renters Paying more than 30% of their Income on Housing (Rent and Utilities) for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of renters, x-axis showing ACS survey period, from 2004-2009 to 2016-2021, and lines for percent of cost-burdened renters for Albemarle, Charlottesville, and Virginia. For 2016-2021 percents were 43% for Albemarle and 51% for Charlottesville."}
+rent_burdened <- read_csv("../data/rent_burdened.csv")
+rent_burdened <- rent_burdened %>%
+  mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
+         locality = str_trim(locality),
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round((percent_over_30*100), digits = 0)), "%"), NA))
+rent_burdened %>% 
+  ggplot(aes(x = survey_period, y = percent_over_30, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 1),
+                     labels = scales::percent, 
+                     name = "Percent of Renters") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+##### Percent of Homeowners Paying more than 30% of their Income on Housing (Mortgage payments, Taxes, Insurance, and Utilities) for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of homeowners, x-axis showing ACS survey period, from 2005-2010 to 2016-2021, and lines for percent of cost-burdened homeowners for Albemarle, Charlottesville, and Virginia. For 2016-2021 percents were 18% for Albemarle and 18% for Charlottesville."}
+homeowner_burden <- read_csv("../data/homeowner_burden.csv")
+homeowner_burden <- homeowner_burden %>%
+  mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
+         locality = str_trim(locality),
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round(pct_burden, digits = 0)), "%"), NA))
+
+homeowner_burden %>% 
+  ggplot(aes(x = survey_period, y = pct_burden, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Homeowners") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ U.S. Census Bureau, American Community Survey 5-year estimates, "Gross Rent as a Percentage of Household Income in the Past 12 Months." 2009-2021. [Table B25070](https://data.census.gov/table?q=b25070&g=050XX00US51003,51540&tid=ACSDT5Y2021.B25070); U.S. Census Bureau, American Community Survey 5-year estimates, "Tenure by Housing Costs as a Percentage of Household Income in the Past 12 Months." 2009-2021. [Table B25106](https://data.census.gov/table?q=B25106&g=050XX00US51003,51540&tid=ACSDT5Y2021.B25106).
+
+### People Experiencing Homelessness
+
+The Point-in-Time (PIT) count is conducted each year in January to document the scale and nature of homelessness in our area. The U.S. Department of Housing and Urban Development requires that every Continuum of Care (or CoC, the regional or local planning body that coordinates housing and services funding for homeless families and individuals) conduct a Point-in-Time count at least every other year. In addition to identifying needs and informing policy, the PIT count is a reflection of housing affordability in the region.
+
+  - __Data considerations:__ The PIT count is intended to be a complete count of individuals in emergency shelters and who are unsheltered at a given point of time. It cannot capture individuals or families who are without secure housing and staying with family or friends or in short-term hotels.
+  - __How is this measured?:__ The PIT count is a “count of sheltered and unsheltered homeless persons carried out on one night in the last 10 calendar days of January.” The [Blue Ridge Area Coalition for the Homeless](https://blueridgehomeless.org/) (BRACH) is our regional CoC and has conducted the PIT count annually. [See HUD for more](https://www.hud.gov/program_offices/comm_planning/coc/pit-count).
+
+#### Notable Trends {.unnumbered}
+  - In 2010, the count of people in emergency shelter or without shelter reached 228. The count declined in subsequent years, reaching a low in 2016 at 157.
+  - [The Crossings](https://www.virginiasupportivehousing.org/regions/charlottesville/the-crossings/) was opened in 2012 as Charlottesville’s first permanent supportive housing community for formerly homeless individuals and has made a significant impact on the [decrease in chronic homelessness](https://www.youtube.com/watch?v=VnFzOp0RGDI) in the area.
+  - The number increased substantially in 2022 in response to needs arising from the COVID-19 Pandemic and interventions resulting from funding made available for sheltering people in hotels.
+
+##### Point-in-Time Count of People Experiencing Homelessness for the Charlottesville Region, conducted yearly in January
+```{r, fig.alt = "Line chart with y-axis showing number of people, x-axis showing year, from 2009 to 2022, and three lines, solid, dashed and dotted, for the Charlottesville region. Solid line shows total people experiencing homelessness, with value in 2022 of 266. Dashed line shows sheltered, with value in 2022 of 240. Dotted line shows unsheltered with value in 2022 of 26. Annotations for the opening of the Crossings in 2012 and in 2022 for Covid-19 heightened impact of high housing costs and lack of affordable housing."}
+pitcount_homeless <- read_csv("../data/pitcount_homeless.csv")
+pitcount_homeless <- pitcount_homeless %>% 
+  mutate(year = as.character(year),
+         locality = "Charlottesville Region",
+         type = recode(type,
+                       "unsheltered_total_persons" = "Unsheltered",
+                       "sheltered_total_persons" = "Sheltered",
+                       "total_persons" = "Total"),
+         label = ifelse(year %in% str_sort_last(year),
+                         as.character(count), NA))
+
+pitcount_homeless %>% 
+  ggplot(aes(x = year, y = count, 
+             color = locality, 
+             group = interaction(locality, type), 
+             linetype = type)) +
+  geom_vline(xintercept = "2012", linetype = 2, color = "#333333") +
+  annotate("text", x = 4.2, y = 100, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Opening of The Crossings
+(permanent supportive housing)") +
+  geom_vline(xintercept = "2022", linetype = 2, color = "#333333") +
+  annotate("text", x = 10.2, y = 275, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"COVID-19 pandemic hightened
+impact of high housing costs 
+and lack of affordable housing") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_linetype_manual(values = c(2, 6, 1),
+                        limits = c("Sheltered", "Unsheltered", "Total")) +
+  scale_color_manual(values = one_category_palette) +
+  scale_y_continuous(limits = c(0,300),
+                     label = comma,
+                     name = "Number of People") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14), 
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position="top") +
+  labs(color = "", linetype = "")
+```
+
+__Source:__ Blue Ridge Area Coalition for the Homeless, "Point-in-Time Count", 2009-2022.
+
+\newpage
+
+## Health and Family Stability
+
+### Prenatal Care
+
+Prenatal care is the health care that individuals receive while pregnant. Prenatal care typically includes physical exams, weight checks, urine and/or blood samples, ultrasounds, and discussions about the mother’s and fetus’s health. Prenatal care is important to reduce the risk of pregnancy complications. Late prenatal care is defined as pregnancy-related care beginning in the 3rd trimester (7-9 months). [Research has demonstrated that prenatal care dramatically reduces the negative effect of substances during pregnancy](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2011/01/substance-abuse-reporting-and-pregnancy-the-role-of-the-obstetrician-gynecologist#:~:text=Studies%20indicate%20that%20prenatal%20care,birth%20weight%20and%20prematurity%209.), including decreasing the risks of low birth weight and prematurity. Reducing barriers to prenatal care has been a priority of the Blue Ridge Health District’s [MAPP2Health Community Assessment and Improvement Plan](https://www.vdh.virginia.gov/blue-ridge/mapp2health/) since 2008.
+
+  - __Data considerations:__ These data are derived from health registration data. Registration data represent an authoritative list of births known to the Department of Health. Registration data is closer to census data in that it attempts to capture all relevant events to accurately reflect the population. Error may be introduced if relevant events are not captured. 
+  - __How is this measured?:__ This metric is based on Virginia Department of Health’s Vital Events Statistics program and records the number of mothers who have received adequate prenatal care as a percent of the total number of live births with residence in the area. 
+
+#### Notable Trends {.unnumbered} 
+  - In 2010, Charlottesville and Albemarle experienced a nearly 20% increase in the number of mothers receiving prenatal care. This increase is indicative of more mothers having access to necessary care. 
+  - After the passage of the Affordable Care Act (ACA), which defines maternity care as one of ten essential benefits, the [rate of uninsured new mothers decreased by forty-one percent nationally](https://www.americanprogress.org/article/building-aca-administrative-actions-improve-maternal-health/). The ACA also improved the quality of coverage of prenatal care by requiring coverage for maternity and newborn care, securing over 13 million people with maternity services. 
+  - Since 2010, this percentage has slowly decreased from around 97% to around 95%.
+
+##### Percent of People Giving Birth with Prenatal Care for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of people giving birth, x-axis showing year, from 2006 to 2020, and lines for percent of people with prenatal care for Albemarle, Charlottesville, and Virginia. In 2020 percents were 95% for Albemarle and 95% for Charlottesville. Annotations at 2010 for Affordable Care Act passed and 2019 for Virginia expanded medicaid coverage."}
+prenatal_first_trimester <- read_csv("../data/prenatal_first_trimester.csv")
+prenatal_first_trimester <- prenatal_first_trimester %>%
+  mutate(percent_access_to_prenatal_care = 100 - late_no_prenatal_to_birthrates,
+          year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         paste0(as.character(round(percent_access_to_prenatal_care, digits = 0)), "%"), NA))
+
+prenatal_first_trimester %>%
+  ggplot(aes(x = year, y = percent_access_to_prenatal_care, color = locality, group = locality)) +
+  geom_vline(xintercept = "2010", linetype = 2, color = "#333333") +
+  annotate("text", x = 5.2, y = 80, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Affordable Care 
+Act (ACA) passed") +
+  geom_vline(xintercept = "2019", linetype = 2, color = "#333333") +
+  annotate("text", x = 11.5, y = 85, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Virginia expanded 
+Medicaid coverage") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(40, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of People Giving Birth") + 
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14), 
+        axis.text.x = element_text(angle = 45, hjust = 1), 
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position="top") +
+  labs(color = "")
+```
+
+__Sources:__ Virginia Department of Health, “[Maternal & Child Health](https://www.vdh.virginia.gov/data/maternal-child-health/).”, 2006-2017; Community Health Improvement Data Portal, VDH Assessment, “[Maternal and Child Health](https://virginiawellbeing.com/virginia-community-health-improvement-data-portal/vdh-assessment/).” 2018-2020.
+
+### Low Birth-Weight Infants
+
+Low birth-weight is an indicator of current infant and maternal health, as well as future health, as low birth-weight babies are at higher risk of dying early, and long-term health and development issues. Low birthweight is defined as less than 2,500 grams (about 5.5 lbs).
+
+  - __Data considerations:__ These data are derived from health registration data. Registration data represent an authoritative list of births known to the Virginia Department of Health. Registration data is closer to census data in that it attempts to capture all relevant events to accurately reflect the population. Error may be introduced if relevant events are not captured. 
+  - __How is this measured?:__ This metric is based on Virginia Department of Health’s Vital Events Statistics program and records the number of live births of babies weighing less than 2,500 grams as a percent of the total number of live births with residence in the area.
+
+#### Notable Trends {.unnumbered} 
+  - The percent of low birth-weight babies born in Albemarle has held steady over this period hovering around 6-7%, slightly below the Virginia rate of about 8%.
+  - In Charlottesville, the percentage of low birth-weight babies has fallen from rates hovering around 8-9% in the 2000s to rates around 6-7% in the last decade.
+
+##### Percent of Infants Born Weighing Under 2,500 grams (5.5 lbs) for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of infants, x-axis showing three-year period, from 2000-2002 to 2018-2020, and lines for percent of low birth-weight babies for Albemarle, Charlottesville, and Virginia. In 2018-2020 percents were 7% for Albemarle and 6% for Charlottesville."}
+low_birth_weight <- read_csv("../data/low_birth_weight.csv")
+low_birth_weight <- low_birth_weight %>%
+  filter(!year %in% c(2000, 2020)) %>% 
+  mutate(locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville",
+                       "Commonwealth Of Virginia" = "Virginia"),
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)),
+         label = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
+                         paste0(as.character(round(pct_3yr, digits = 0)), "%"), NA))
+
+low_birth_weight %>%
+  ggplot(aes(x = three_yr_period, y = pct_3yr, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.1, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 60),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Infants") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ [Virginia Department of Health, Division of Health Statistics](https://apps.vdh.virginia.gov/HealthStats/stats.htm), “Resident Low Weight Live Births and Very Low Weight Births.” 2000-2022. 
+
+### Infant Deaths
+
+Infant mortality measures the rate at which babies die before their first birthday per 1,000 live births. Infant mortality is an indicator of infant health; the most common causes of infant mortality include birth defects, preterm birth and low birth weight, maternal complications of pregnancy, Sudden Infant Death Syndrome, and injuries.
+
+  - __Data considerations:__ These data are derived from health registration data. Registration data represent an authoritative list of births known to the Virginia Department of Health. Registration data is closer to census data in that it attempts to capture all relevant events to accurately reflect the population. Error may be introduced if relevant events are not captured.
+  - __How is this measured?:__ This metric is based on Virginia Department of Health’s Vital Events Statistics program and records the number of infant deaths as a percent of the total number of live births with residence in the area. 
+
+#### Notable Trends {.unnumbered} 
+  - The rate of infant deaths has declined in each locality and throughout Virginia in the last two decades. The improvement has been especially substantial in Charlottesville where the 3-year rolling average declined steadily between 2006 (12 per 1,000) and 2014 (3 per 1,000), before ticking up again.
+  - In Albemarle, the rate was steady at 5 deaths per 1,000 births from 2001-2005, edged up to 7 per 1,000 in 2006-2009, and fell to 2-3 per 1,000 until 2018, when there was an increase. 
+
+##### Percent of Infants who Died before their 1st Birthday for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart with y-axis showing percent of infants, x-axis showing three-year period, from 2000-2002 to 2018-2020, and lines for percent of infant deaths for Albemarle, Charlottesville, and Virginia. In 2018-2020 percents were 6% for Albemarle and 3% for Charlottesville."}
+infant_mortality <- read_csv("../data/infant_mortality.csv")
+infant_mortality <- infant_mortality %>%
+  filter(!year %in% c(2000, 2020)) %>% 
+  mutate(locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville",
+                       "Commonwealth Of Virginia" = "Virginia"),
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)),
+         label = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
+                         paste0(as.character(round(rate_3yr, digits = 0)), "%"), NA))
+
+infant_mortality %>% 
+  ggplot(aes(x = three_yr_period, y = rate_3yr, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.1, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 60),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Infants") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ [Virginia Department of Health, Division of Health Statistics](https://apps.vdh.virginia.gov/HealthStats/stats.htm), "Total Infant Deaths by Place of Occurrence and Place of Residence." 2000-2022.
+
+### Teen Pregnancies and Births to Teens
+
+According to the VDH, teen pregnancy has unique medical risks – lack of prenatal care, high blood pressure, premature birth, low birth weight, STDs, and postpartum depression. Apart from health concerns, teen pregnancy also has serious social and economic consequences. Teen births are more likely to lead to poor outcomes for both teenage mothers and their children.
+
+  - __Data considerations:__ These data are derived from health registration data. Registration data represent an authoritative list of births known to the Department of Health. Registration data is closer to census data in that it attempts to capture all relevant events to accurately reflect the population. Error may be introduced if relevant events are not captured. 
+  - __How is this measured?:__ The teenage pregnancy rate is the sum of live births, legal induced abortions, and natural fetal deaths per 1,000 women aged 15-17 years. The data presented is based on three-year rolling averages.
+
+#### Notable Trends {.unnumbered}
+  - Teen pregnancy rates show a steady decline in Virginia, Albemarle, and Charlottesville, though the drop is particularly substantial in Charlottesville which experienced an exceptionally high rate in 2004 and 2005 (based on 3-year rolling averages). In the most recent period available, the teen pregnancy rate per 1,000 was 5 in Albemarle, 9 in Charlottesville, and 7 in Virginia. [According to the CDC](https://www.cdc.gov/teenpregnancy/about/index.htm), the national teen pregnancy rate has declined continuously since 1991. [Research suggests](https://crsreports.congress.gov/product/pdf/R/R45184) the declines nationally are a function of increased contraceptive availability and use as well as decreased sexual activity.
+  - Teen birth rates have fallen significantly in the last two decades, mirroring the trend in teen pregnancy rates. The change in Charlottesville was the sharpest, from a high of 37 births per 1,000 teenage girls in 2003 (based on a 3-year rolling average) to low of 3 births per 1,000 in 2015 and 2016. In Albemarle the teen birth rate hovered around 10 births per 1,000 until 2009 when it began dropping to the current rate of 4 births per 1,000 teenage girls.
+
+##### Rate of Pregnancies for Teens, Ages 15-17, for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing rate of teen pregnancy in teens ages 15-17 (per 1,000) for Albemarle, Charlottesville, and Virgina. The y-axis represents the rate per 1,000 teens ages 15-17, and the x-axis represents the three-year period from 2000-2002 to 2018-2020. In 2018-2020, the rate was 5 per 1,000 for Albemarle and 9 per 1,000 for Charlottesville."}
+teen_pregnancy_birth <- read_csv("../data/teen_pregnancy_birth.csv")
+teen_pregnancy_birth <- teen_pregnancy_birth %>%
+  filter(!year %in% c(2000, 2020)) %>%
+  mutate(locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville",
+                          "Commonwealth Of Virginia" = "Virginia"),
+         three_yr_period = paste0(as.character(year-1),"-",as.character(year+1)),
+         label_preg = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
+                         as.character(round(pregnancyrate_3yr, digits = 0)), NA),
+         label_birth = ifelse((!locality %in% "Virginia") & (three_yr_period %in% str_sort_last(three_yr_period)),
+                         as.character(round(birthsrate_3yr, digits = 0)), NA))
+
+teen_pregnancy_birth %>% 
+  ggplot(aes(x = three_yr_period, y = pregnancyrate_3yr, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label_preg),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100), 
+                     name = "Rate per 1,000 Teens (15-17)") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+##### Rate of Births to Teens, Ages 15-17, for Albemarle County, City of Charlottesville, and Virginia 
+```{r, fig.alt = "Line chart comparing rate of births to teens ages 15-17 for Albemarle, Charlottesville, and Virgina. The y-axis represents the rate per 1,000 teens ages 15-17, and the x-axis represents the three-year period from 2000-2002 to 2018-2020. In 2018-2020, the rate was 5 per 1,000 for Albemarle and 9 per 1,000 for Charlottesville."}
+teen_pregnancy_birth %>% 
+  ggplot(aes(x = three_yr_period, y = birthsrate_3yr, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label_birth),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100), 
+                     name = "Rate per 1,000 Teens (15-17)") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Sources:__ [Virginia Department of Health, Division of Health Statistics](https://apps.vdh.virginia.gov/HealthStats/stats.htm), “Teenage pregnancies, live births by city/county.” 2000-2022; U.S. Department of Health and Human Services, CDC Wonder, "[Bridged-Race Population Estimates, United States July 1st resident population by state, county, age, sex, bridged-race, and Hispanic origin](https://wonder.cdc.gov/wonder/help/bridged-race.html)." 1990-2020 database (Vintage 2020). 
+
+### Sexually Transmitted Infections in Youth
+
+Nationally, the rate of sexually transmitted infections has been on the rise. The [CDC estimates](https://www.cdc.gov/std/life-stages-populations/adolescents-youngadults.htm) that youth ages 15-24 account for almost half of new infections. [Adolescents are uniquely at risk for STIs](https://www.guttmacher.org/gpr/2020/04/reducing-sti-cases-young-people-deserve-better-sexual-health-information-and-services) as they are less likely than adults to access and utilize sexual health services and public policies regularly limit young people’s access to sexual health information.
+
+  - __Data considerations:__ These data are derived from health registration data. Registration data represent an authoritative list of diagnoses known to the Virginia Department of Health. Registration data is closer to census data in that it attempts to capture all relevant events to accurately reflect the population. Error may be introduced if relevant events are not captured.
+  - __How is this measured?:__ This measure is the combined incidence of syphilis, gonorrhea, chlamydia, and HIV per 1,000 residents aged 10-19. This incidence rate only counts cases first reported; for HIV, the incidence rate will count a new case in the first year it is diagnosed, but not in the following years, even though a patient still has the condition and is receiving treatment.
+
+#### Notable Trends {.unnumbered} 
+  - The incidence rates of STIs among youth in Charlottesville have been consistently higher than the rate in Albemarle, though in recent years the rate in Charlottesville has fallen steeply and become aligned with the rate in the state overall, 10 cases per 1,000 young people. The incidence rate in Albemarle has hovered around 5 cases per 1,000 young people throughout this period.
+
+##### Rate of Sexually Transmitted Infections in Youth, Ages 10-19, for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing rate of sexually transmitted infections in youth ages 10-19 (per 1,000) for Albemarle, Charlottesville, and Virgina. The y-axis represents the rate per 1,000 youth ages 10-19, and the x-axis represents the three-year rate from 2001-2003 to 2019-2021. In 2019-2021, the rate was 5 per 1,000 for Albemarle and 10 per 1,000 for Charlottesville."}
+youth_sti <- read_csv("../data/youth_sti.csv")
+youth_sti <- youth_sti %>% 
+  mutate(label = ifelse((!locality %in% "Virginia") & (year3 %in% str_sort_last(year3)),
+                         as.character(round(total_incrate_3yr, digits = 0)), NA))
+
+youth_sti %>%
+  ggplot(aes(x = year3, y = total_incrate_3yr, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 100),
+                     name = "Rate per 1,000 Youth (10-19)") + 
+  scale_x_discrete(name = "Three-Year Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ Virginia Department of Health, Division of Disease Prevention, "STD, HIV/AIDS Data Reports." 2001-2022. Data request via https://www.vdh.virginia.gov/disease-prevention/data-request-form/. 
+
+### Children in Two-Parent Households
+
+Research suggests children living in two-parent households, on average, are more advantaged than single-parent households. Married parent households are typically better off financially and family structure can influence children’s socioemotional development and [academic achievement](https://onlinelibrary.wiley.com/doi/full/10.1111/j.1741-3737.2011.00825.x). In addition, lower rates of two-parent households can be indicators of higher rates of divorce/separation or impacted by incarceration trends.
+
+  - __Data considerations:__ This metric is derived from the American Community Survey (ACS), a continuous survey given to a sample of housing unit addresses each month. Each year the survey releases 5-year estimates, pooling data from all surveyed households throughout a 60-month period. As a survey, rather than a census, the ACS provides estimates of population characteristics and these estimates have a degree of uncertainty, or sampling error, associated with them. In addition, this measure does not include children living in households with two adults who are not both parents of the child as children living with two parents.
+  - __How is this measured?:__ The percent of children living with two parents is derived by totaling children ages 0-17 where child/ren are living with both parents and dividing over the total number of children under 18 years in families and subfamilies (multiplied by 100). 
+
+#### Notable Trends {.unnumbered} 
+  - Albemarle consistently has a larger share of two-parent households relative to Charlottesville. County trends show a steady increase from 78% in 2010 to 85% in 2016, followed by a decline to 75% in 2021.
+  - In Charlottesville, the percent of two-parent households fell between 2011 and 2014, to a low of 58%, before gradually rising back to 65% in 2020.
+
+##### Percent of Children in Two-Parent Households for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing the percent of children in two-parent households from the ACS 5-year in Albemarle, Charlottesville, and Virgina. The y-axis represents the percent of children and the x-axis represents time from the 2005-2010 estimate to the 2016-2021 estimate. Rates are fairly consistent in all three localities, hovering between roughly 55% and 77%, though the rate in Charlottesville is consistently the lowest and the rate in Albemarle is consistently the highest."}
+children_twoparents <- read_csv("../data/children_twoparents.csv")
+children_twoparents <- children_twoparents %>%
+  mutate(locality = str_remove(NAME, " County, Virginia| city, Virginia"), 
+         locality = str_trim(locality),
+         survey_period = paste0(as.character(year-5), "-", as.character(year)),
+         label = ifelse((!locality %in% "Virginia") & (survey_period %in% str_sort_last(survey_period)),
+                         paste0(as.character(round((percent*100), digits = 0)), "%"), NA))
+
+children_twoparents %>% 
+  ggplot(aes(x = survey_period, y = percent, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0, 1),
+                     labels = scales::percent, 
+                     name = "Percent of Children") + 
+  scale_x_discrete(name = "ACS Survey Period") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ U.S. Census Bureau, American Community Survey 5-year estimates, “Age And Nativity Of Own Children Under 18 Years In Families And Subfamilies By Number And Nativity Of Parents.” 2010 - 2021. [Table B05009](https://data.census.gov/table?q=B05009:+AGE+AND+NATIVITY+OF+OWN+CHILDREN+UNDER+18+YEARS+IN+FAMILIES+AND+SUBFAMILIES+BY+NUMBER+AND+NATIVITY+OF+PARENTS&g=050XX00US51003,51540). 
+
+### Divorce
+
+Divorce rates are one indicator of the health of families. Divorce impacts not only the individuals who are receiving the divorce, but their dependents, income, and assets. Divorce rates are also shaped by marriage rates, which have been declining nationally over time. Additionally, while divorce rates can indicate household instability, they also represent the ability of a spouse to leave a dangerous household. This is important in a larger understanding of community wellbeing as the reasons for divorce are complicated and nuanced.
+
+  - __Data considerations:__ These data are derived from administrative data, either data from the Virginia Department of Health (VDH) as part of vital events statistics, or data from the Virginia Judicial System on concluded cases in circuit court. Administrative data can provide a full picture of the population experiencing an event like divorce. However, they do not capture family dissolution outside of those that pursue a legal divorce.
+  - __How is this measured?:__ The first measure comes from the health department which  captures the number of divorce certificates registered with the area’s health department as a percentage of the estimated population of the locality. The second measure comes from circuit court records and captures the number of divorce cases concluded in the circuit court for each locality as a percentage of the estimated population of the locality. Both versions provide the crude divorce rate, a commonly used metric that does not correct for the fact that single people and children are not at risk for divorce.
+
+#### Notable Trends {.unnumbered}
+  - Nationally, divorce rates have been falling in the last two decades and this is reflected in the declining state-wide divorce rate, by either measure.
+  - The VDH’s record of divorces also shows a declining rate in Charlottesville and Albemarle, with a larger decrease for Charlottesville.
+  - The circuit court data shows a small increase in divorce rates within Albemarle Circuit Court over time. Both localities (and the state) experienced a small bump in 2021, which could be a function of court delays during the COVID-19 pandemic peak in 2020.
+
+##### Virginia Department of Health: Rate of Divorce for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing annual divorce rate (per 1,000 people) for Albemarle, Charlottesville, and Virgina with data from the Virginia Department of Health. The y-axis represents the rate per 1,000 people and the x-axis represents the year from 2000 to 2018. With the exception of 2001, rates are consistently highest for the state relative to Albemarle and Charlottesville. Overall, for all three localities, rates hover between 1 and 5 per 1,000 people."}
+divorce_vdh <- read_csv("../data/divorce_vdh.csv")
+divorce_vdh <- divorce_vdh %>%
+  mutate(locality = recode(locality,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"),
+         year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(divorce_rate, digits = 1)), NA))
+
+divorce_vdh %>% 
+  ggplot(aes(x = year, y = divorce_rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .9, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,10),
+                     breaks = c(0,2,4,6,8,10),
+                     name = "Rate per 1000 People") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+##### Virginia Circuit Court: Rate of Divorce for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing annual divorce rate (per 1,000 people) for Albemarle, Charlottesville, and Virgina with data from the Virginia Circuit Court. The y-axis represents the rate per 1,000 people and the x-axis represents the year from 2000 to 2018. Data are missing for Virginia from 2014 to 2020. With the exception of 2001, rates are consistently lowest in Charlottesville. Overall, for all three localities, rates hover between 1 and 7 per 1,000 people."}
+divorce_circuit <- read_csv("../data/divorce_circuit.csv")
+dc_missing <- data.frame(locality = c("Virginia", "Virginia", "Virginia", "Virginia", "Virginia", "Virginia"),
+                       year = c(2014, 2015, 2016, 2017, 2018, 2019))
+divorce_circuit <- divorce_circuit %>% 
+  bind_rows(dc_missing) %>%
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(divorce_rate, digits = 1)), NA))
+
+divorce_circuit %>% 
+  ggplot(aes(x = year, y = divorce_rate, 
+             color = locality, 
+             group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1.1, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,10),
+                     breaks = c(0,2,4,6,8,10),
+                     name = "Rate per 1000 People") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Sources:__ [Virginia Department of Health, Division of Health Statistics](https://apps.vdh.virginia.gov/HealthStats/stats.htm), "Recorded Divorces by City/County of Occurrence." 2000-2018; Virginia Judicial System, Caseload Statistical Information, "[Caseload Statistics of the Circuit Courts](https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/home.html)." 2000-2022; University of Virginia Weldon Cooper Center, Demographics Research Group. (2020). [Virginia Population Estimates](https://demographics.coopercenter.org/virginia-population-estimates). 
+
+### Assessments and Investigations by Child Protective Services
+
+Reports of potential child neglect or abuse are one indicator of child wellbeing and may signal that more or fewer children are being identified as potentially at risk or that there is greater awareness of the signs of abuse and neglect within the community. Childhood maltreatment, in addition to having an immediate and negative impact on children, has been linked to later [physical, psychological, and behavioral consequences](https://www.childwelfare.gov/pubpdfs/long_term_consequences.pdf).
+
+   - __Data considerations:__ Child abuse and neglect referrals are made to Child Protective Services who make a determination of whether the referral meets the threshold and criteria for further action and, if so, whether to pursue a family assessment or an investigation. As such, this measure is not reporting the substantiated occurrence of neglect or abuse, but the valid reporting of potential neglect or abuse. These data, then, capture only cases that have been reported to CPS and screened in by social services. Reports to CPS require someone to observe or evaluate behavior as meeting a threshold of neglect or abuse, and [research has demonstrated the deep overlap between the conditions of poverty and of child neglect](https://www.childwelfare.gov/pubPDFs/bulletins-povertyneglect.pdf). The majority of accepted referrals to CPS are made for “physical neglect,” an occurrence open to considerable interpretation.
+   - __How is this measured?:__ This metric captures the number of referrals to Child Protective Services accepted for assessment or investigation in Virginia, regardless of outcome, over the number of children aged 0-17 in the area and multiplied by 1,000.
+
+#### Notable Trends {.unnumbered} 
+  - The rate of child neglect and abuse assessments and investigations has fluctuated in both Charlottesville and Albemarle but is consistently higher in Charlottesville. Poverty has been consistently linked to judgments of neglect used in child welfare, and the rate of poverty is considerably lower in Albemarle than in Charlottesville (e.g., 7% versus 23% based on American Community Survey 2016-2021 estimates).
+  - In Charlottesville, the rate has generally declined from a high of nearly 50 per 1,000 children in 2009 to 34 per 1,000 in the most recent year.
+  - The rate in Albemarle has been as high as 21 per 1,000 in 2009 and as low as 12 per 1,000 in 2011, but jumped back up to 19 per 1,000 by 2020.
+  - Many CPS referrals are made by educational professionals in schools, and COVID-19 caused schools to close for the second half of fiscal year 2020.
+
+##### Rate of Referrals to Child Protective Services Accepted for Assessment or Investigation by Fiscal Year (12mo. period measured from July 1st through June 30th) for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing annual number referrals to child protective services (per 1,000 children) for Albemarle, Charlottesville, and Virgina. The y-axis represents the rate per 1,000 children and the x-axis represents the fiscal year from the 2008-09 fiscal year to the 2019-2020 fiscal year. Rates for all localities stayed between 12 and 50 per 1,000 children. Though rates fluctuate somewhat year to year, they appear to be relatively stable."}
+child_welfare_reports <- read_csv("../data/child_welfare_reports.csv")
+child_welfare_reports <- child_welfare_reports %>%
+  mutate(fiscal_year = paste0(as.character(year-1),"-",as.character(year)),
+         fiscal_year = str_replace_all(fiscal_year, "-20", "-"),
+         # year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (fiscal_year %in% str_sort_last(fiscal_year)),
+                         as.character(round(cps_rate, digits = 0)), NA))
+
+child_welfare_reports %>% 
+  ggplot(aes(x = fiscal_year, y = cps_rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .3, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,100),
+                     name = "Rate per 1000 Children") +
+  scale_x_discrete(name = "Fiscal Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ Virginia Department of Social Services, [Virginia Child Protection and Accountability System Historical and Other Reports](https://cpsaccountability.dss.virginia.gov/index-historical-reports.html), "Annual Summary." 2009-2020.
+
+### Children in Foster Care
+
+Children in foster care are among our most vulnerable children. The rate of family separation is both an indicator of child welfare and of the unmet need or underinvestment in policies and resources to support families in the community. Neglect, often a proxy for the effects of poverty, is [one of the most common reasons for a child’s removal from the home nationally](https://www.childrensdefense.org/state-of-americas-children/soac-2021-child-welfare/), including “failure to provide adequate nutrition, supervision, health care, clothing, or housing.”
+
+   - __Data considerations:__ While this data counts all children in foster care at a point in time, a child’s presence in foster care occurs only after multiple decisions made by people in a position of authority. These data, then, reflect a series of actions, evaluations, and decisions, many of which are subject to interpretation. Research has long shown that minoritized populations, especially Black children, are overrepresented in foster care, and legal and social researchers have [repeatedly](https://www.hachettebookgroup.com/titles/dorothy-roberts/shattered-bonds/9780465070596/) [documented](https://cssp.org/wp-content/uploads/2018/11/CSSP-Entangled-Roots.pdf) the ways child welfare systems are [entangled](https://www.childrensrights.org/wp-content/uploads/2023/04/CR-Racism-at-the-Front-End-of-Child-Welfare-2023-Fact-Sheet.pdf) with [race](https://www.hachettebookgroup.com/titles/dorothy-roberts/torn-apart/9781541675445/).
+   - __How is this measured?:__ This metric reports the number of children in foster care on October 1 of each year divided by the number of children aged 0-17 in the area and multiplied by 1,000.
+
+#### Notable Trends {.unnumbered} 
+  - The rate of children in foster care has been consistently higher in Charlottesville than in Albemarle. The rate in Albemarle has remained relatively steady, at around 5 children per 1,000, during this period. The rate in Charlottesville has fallen substantially over time, from rates above 20 children per 1,000 from 2006 to 2011 to 10 or fewer children per 1,000 in 2021 and 2022.
+
+##### Rate of Children in Foster Care, Measured Yearly on October 1st, for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing annual number of children (per 1,000) in foster care for Albemarle, Charlottesville, and Virgina. The y-axis represents the rate per 1,000 children and the x-axis represents the year from 2006 to 2022. Rates are consistently highest in Charlottesville, though the gap is shrinking between Charlottesville and the other localities. In 2022, the Charlottesville rate was 8 per 1,000 children and the Albemarle rate was 5 per 1,000 children."}
+foster_care <- read_csv("../data/foster_care.csv")
+foster_care <- foster_care %>%
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(fc_rate, digits = 0)), NA))
+
+foster_care %>% 
+  ggplot(aes(x = year, y = fc_rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .6, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,100),
+                     name = "Rate per 1000 Children") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ [Virginia Department of Social Services, Foster Care Reports](https://www.dss.virginia.gov/geninfo/reports/children/fc.cgi), “Children Demographics.” 2006-2022.
+
+\newpage
+
+## School and Community Disciplinary Actions
+
+### School Reports of Discipline (Alcohol and Drug Violations, Physical Violence, and Weapon Possession)
+
+These data capture the recorded student offenses relating to alcohol and drug violations, incidents of physical violence, and possession of weapons in schools. These measures offer insight into student safety and health as well as risk behaviors and involvement with law enforcement. For each metric, it is the rate of incidents per 1,000 students; this is not equivalent to the number of students reported for an offense as an individual student could be reported multiple times.
+
+  - __Data considerations:__ These data are derived from school administrative data from the Virginia Department of Education (VDOE). They capture only incidents observed and reported by school authorities. That is, these records do not occur by default but require someone to observe or evaluate an action or behavior and make a judgment about whether the behavior should be referred to the administrative systems. Consequently, these data provide a picture of characteristics that were captured with discretion – some events are surely not observed, and among observed events some are not reported. These data, then, do not necessarily provide a complete representation of relevant events. Further, the requirements for reporting these disciplinary data have changed over time, as have the categories of behaviors. Thus, the records from earlier reports (2006-07 to 2016-17) may not be completely comparable to the records from recent reports (2017-18 to 2020-21).
+  - __How are these measured?:__ For each measure, the number of relevant incidents from the Discipline, Crime, and Violence (DCV) Annual Report are summed and the total is divided by the number of students in the school division (and multiplied by 1,000). DCV reports for the 2013-14 through 2016-17 school years do not provide school division summaries.
+    - Alcohol and drug violation reporting categories for 2017-18 through 2020-21 are “Alcohol violations” and “Drug violations;” for 2006-2007 through 2016-17 categories are “Alcohol”, “Drug violations”, and “Possession/use/sale/distribution of OTC.”
+    - Physical violence reporting categories for 2017-18 through 2020-21 are “Assault/Battery”, “Fighting/Conflict”, “Kidnapping”, “Robbery/Person/Force or Threat of Force”, “Sexual Offenses”, “Threats/Verbal/Physical;” for 2006-2007 through 2016-17 categories are “Aggravated sexual battery”, “Battery against staff w/o weapon”, “Battery against student w/o weapon”, “Fighting w/o injury”, “Homicide”, “Kidnapping”, “Malicious wounding”, “Robbery using force”, “Sexual assault”, “Sexual battery”, “Sexual offenses”, and “Threat.”
+    - Weapons possession reporting category for 2017-18 through 2020-21 is “Weapons;” for 2006-2007 through 2016-17 categories are “Handgun, rifle/shotgun and other firearms”, “Other weapons and explosive devices”, “Possession of taser/stun gun”, “Possession of razor blades, box cutters”, “Possession of a toy or look alike gun”, and “Possession of fireworks.”
+
+#### Notable Trends {.unnumbered} 
+  - Drug and alcohol violations are consistently at or below 5 per 1,000 students in both Charlottesville City Schools (CCS) (except for 2006-07), Albemarle County Public Schools (ACPS), and Virginia as a whole (except for 2012-13). In the 2020-21 school year, the rate dropped to 0.2 in ACPS and 0 in CCS.
+  - Physical violence in CCS dropped considerably from 2006-07, at 60 incidents per 1,000 students, to 2012-13, at 19 incidents per 1,000 students. In ACPS, the rate of physical violence ranged between 6 to 12 incidents per 1,000 students during this same period. The trend from recent years may not be capturing precisely the same kinds of events given the change in reporting requirements and formats; The rate of recorded incidents of physical violence in the 2020 school year was 0.5 in both divisions.
+  - Weapons possession hovered around 3 to 4 incidents per 1,000 students in CCS and 1 to 2 incidents per 1,000 students in ACPS in the 2006 to 2012 period. The rate has dropped even further in recent years to near zero.
+
+##### Rate of Incidents of Alcohol and Drug Violations for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart comparing annual number of incidents (per 1,000 students) disciplined at school for alcohol and drug violations for Albemarle, Charlottesville, and Virginia, though data are not shown for Charlottesville and Albemarle from 2013 to 2018. The y-axis represents the rate of incidents per 1,000 students and the x-axis represents the school year from the 2006-07 school year to the 2020-2021 school year. The Rates are similar in all three localities, and this outcome is relatively rare, hovering between 0 and roughly 10 per 1,000 students."}
+school_alcdrugs_dcv <- read_csv("../data/school_alcdrugs_dcv.csv")
+school_alcdrugs_dcv <- school_alcdrugs_dcv %>% 
+  mutate(school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         as.character(round(rate, digits = 1)), NA))
+
+school_alcdrugs_dcv %>%
+  ggplot(aes(x = school_year, y = rate, 
+             color = division, group = division)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,50),
+                     name = "Rate of Incidents per 1000 Students") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+ 
+##### Rate of Incidents of Physical Violence for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart comparing annual number of students (per 1,000) disciplined at school for physical violence in Albemarle, Charlottesville, and Virginia, though data are not shown for Charlottesville and Albemarle from 2013 to 2018. The y-axis represents the rate of incidents per 1,000 students and the x-axis represents the school year from the 2006-07 school year to the 2020-2021 school year. Rates in Charlottesville were highest in 2006-07 at over 60 per 1,000, but have declined dramatically. Albemarle rates were much lower from 2006-07 to 2012-13 at less than 15 per 1,000, but rates in all three localities were similar between 2017-18 and 2020-21."}
+school_violence_dcv <- read_csv("../data/school_violence_dcv.csv")
+school_violence_dcv <- school_violence_dcv %>% 
+  mutate(school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         as.character(round(rate, digits = 1)), NA))
+
+school_violence_dcv %>%
+  ggplot(aes(x = school_year, y = rate, 
+             color = division, group = division)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,100),
+                     name = "Rate of Incidents per 1000 Students") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+##### Rate of Incidents of Weapons Possession for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart comparing annual number of students (per 1,000) disciplined at school for possessing a weapon in Albemarle, Charlottesville, and Virginia, though data are not shown for Charlottesville and Albemarle from 2013 to 2018. The y-axis represents the rate of incidents per 1,000 students and the x-axis represents the school year from the 2006-07 school year to the 2020-2021 school year. Rates are similar in all three localities, and this outcome is relatively rare, hovering between 0 and roughly 15 per 1,000 students."}
+school_weapons_dcv <- read_csv("../data/school_weapons_dcv.csv")
+school_weapons_dcv <- school_weapons_dcv %>% 
+  mutate(school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         as.character(round(rate, digits = 1)), NA))
+
+school_weapons_dcv %>%
+  ggplot(aes(x = school_year, y = rate, 
+             color = division, group = division)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,50),
+                     name = "Rate of Incidents per 1000 Students") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ [Virginia Department of Education, School Climate Reports](https://www.doe.virginia.gov/data-policy-funding/data-reports/data-collection/special-education), "Discipline, Crime, and Violence Annual Report." 2006-2020.
+
+### Out-of-School Suspensions
+
+School suspensions are an exclusionary disciplinary tool that temporarily removes students from their schools for a violation of school policies or rules. Being suspended from school is associated with multiple poor outcomes including lower academic achievement, lower quality relationships with teachers, and involvement in the criminal justice system. A 2016 report by the [Legal Aid Justice Center](https://www.justice4all.org/wp-content/uploads/2016/04/Suspended-Progress-2017.pdf) noted the majority of suspensions issued statewide in Virginia were for “non-violent, relatively minor misbehavior.”
+
+  - __Data considerations:__ These data are derived from school administrative data from the Virginia Department of Education (VDOE). They capture only individuals and incidents observed and reported by school authorities. That is, these records do not occur by default but require someone to observe or evaluate an action or behavior and make a judgment about whether the behavior should result in a suspension. Consequently, these data provide a picture of characteristics that were captured with discretion. In addition, VDOE suppresses counts for suspensions if they are less than 10. Data for long-term suspensions was suppressed in several years for both Albemarle County Public Schools (ACPS) and Charlottesville City Schools (CCS), so these counts slightly underestimate the number of suspensions. This metric presents the number of suspensions per 1,000 students; this is not equivalent to the number of students suspended as an individual student could be suspended multiple times.
+  - __How is this measured?:__ Out-of-school suspensions include short-term suspensions, long-term suspensions, and modified expulsions to suspensions. The rate of students suspended is the count of students given an out-of-school suspension divided by the total students enrolled in a school division, multiplied by 1,000.
+
+#### Notable Trends {.unnumbered} 
+  - The suspension rate in CCS was above 200 per 1,000 students before 2009-10 and ACPS was well above 100 in the same period. The suspension rate has dropped dramatically in CCS since 2009. 
+   - In recent years, CCS and ACPS have had a similar suspension rate around 35-40 students per 1,000 enrolled. The rate dropped to near zero during the 2020 school year, when schools implemented hybrid learning schedules in response to the COVID-19 pandemic.
+
+
+##### Rate of Out-of-School Suspensions (Short-term Suspension, Long-term Suspension, or Modified Expulsion to Suspension) for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+```{r, fig.alt = "Line chart comparing annual number of students who received an out of school suspension (per 1,000) in Albemarle, Charlottesville, and Virgina, though data are only shown for Virginia from 2016-17 to 2020-21. The y-axis represents the rate per 1,000 students and the x-axis represents the school year from the 2002-04 school year to the 2020-2021 school year. Rates were highest in Charlottesville from 2003 to 2015, though they have been declining substantially. Since 2016, rates in all three localities have been very similar, and they hovered around 50 students per 1000 between 2016 and 2020, though dropped to 1 or fewer in 2020."}
+school_suspensions <- read_csv("../data/school_suspensions.csv")
+school_suspensions <- school_suspensions %>% 
+  mutate(label = ifelse((!division %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         as.character(round(rate, digits = 1)), NA))
+
+school_suspensions %>%
+  ggplot(aes(x = school_year, y = rate, 
+             color = division, group = division)) +
+  geom_vline(xintercept = "2016-17", linetype = 2, color = "#333333") +
+  annotate("text", x = 14.2, y = 350, size = 3.5, hjust = 0, color = "#333333", 
+           label = 
+"Replicable with 
+available SSIR data") +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_linetype_manual(values = c(2, 1)) +
+  scale_y_continuous(limits = c(0,500),
+                     name = "Rate per 1000 Students") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "", linetype = "")
+```
+
+__Source:__ Virginia Department of Education, “[Safe Schools Information Resource (SSIR)](https://p1pe.doe.virginia.gov/pti/selection.do).” 2017-2021. SSIR maintains only the most recent 5 years of reports at a given time; previously collected SSIR data was appended to see wider trends, but was not further verified for this report. 
+
+### Children in Need of Services or Supervision
+
+This measure tracks the number of judgments of a child in need of supervision, a young person who is truant or has run away from home, and the number of judgments of a child in need of services, a young person whose behavior, conduct, or condition presents or results in a serious threat to himself or another person. A CHINS petition can be filed by parents, police, and school authorities and is adjudicated in Juvenile Court. According to Virginia Code [§ 16.1-278.4](https://law.lis.virginia.gov/vacode/title16.1/chapter11/section16.1-278.4/) and [§ 16.1-278.5](https://law.lis.virginia.gov/vacode/title16.1/chapter11/section16.1-278.5/), a child who has been found in need of services or supervision may be subject to probation, transfer of custody, or rehabilitative treatment.
+
+  - __How is this measured?:__ This metric counts the number of judgments of children in need of supervision and children in need of services issued in a court jurisdiction divided by the number of residents aged 10-17 in the locality (multiplied by 1,000). 
+
+#### Notable Trends {.unnumbered}
+  - The rate has been consistently higher in Charlottesville than in Albemarle, peaking at 29 per 1,000 youth in 2016, and falling to between 4 and 6 per 1,000 youth in 2019 and in the years after.
+  - The rate in Albemarle peaked at 7 in 2014 and has fallen to between 1 and 3 per 1,000 youth in 2022.
+
+
+##### Rate of Youth (Age 10-17) in Need of Services or Supervision for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing annual number of youth ages 10 to 17 (per 1,000) for whom a court has issued a judgment that they are in need of supervision in Albemarle, Charlottesville, and Virginia, though data are only shown for Virginia from 2018 to 2022. The y-axis represents the rate per 1,000 youth and the x-axis represents the year from 2010 to 2022. Since 2019, the rates in Albemarle, Charlottesville, and Virginia have been very similar, though rates were highest in Virginia in 2016."}
+child_need_services <- read_csv("../data/child_need_services.csv")
+child_need_services <- child_need_services %>%
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(rate, digits = 1)), NA))
+
+child_need_services %>% 
+  ggplot(aes(x = year, y = rate, color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .7, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,100),
+                     name = "Rate per 1000 Youth (10-17)") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ [Virginia Judicial System, Caseload Statistical Information](https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/home.html), "Caseload Statistics of the Juvenile and Domestic Relations Courts." 2010-2022. 
+
+### Juvenile Delinquency Judgments
+
+This measure tracks the number of judgments of delinquency in the Juvenile and Domestic Relations court. A delinquent judgment may be passed when someone under age 18 commits an act which would be a crime if committed by an adult (including felonies and misdemeanors) and a ruling of delinquency entails escalated involvement with the justice system. According to [Virginia Code § 16.1-278.8](https://law.lis.virginia.gov/vacode/title16.1/chapter11/section16.1-278.8/), juveniles found to be delinquent may be subject to multiple types of sanctions or services: commitment to juvenile justice, probation, substance abuse treatment, fines and restitution, loss of driver’s license, public service project, and others.
+
+  - __Data considerations:__ These data do not include “status offenses”, behaviors that are not crimes but are prohibited because of a youth’s status as a minor.
+  - __How is this measured?:__ This metric counts the number of juvenile delinquency judgments issued in a court jurisdiction divided by the number of residents aged 10-17 in the locality, multiplied by 1,000. 
+
+#### Notable Trends {.unnumbered}
+  - The rate of juvenile delinquency judgments has decreased steadily in both Charlottesville and Albemarle. In 2010, the rate in Charlottesville was 131 per 1,000 youth, but fell to 42 in 2022. In 2010, the rate in Albemarle was 51 per 1,000 youth, but fell to 12 in 2022.
+
+##### Rate of Juvenile Delinquency Judgments for Youth, Age 10-17, for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing annual number of youth ages 10 to 17 (per 1,000) who received a delinquent judgment in the Juvenile and Domestic Relations court in Albemarle, Charlottesville, and Virginia. The y-axis represents the rate per 1,000 youth ages 10 to 17 and the x-axis represents the year from 2010 to 2022. Data are only shown for Virginia from 2018 to 2022. Charlottesville rates are consistently higher than Albemarle, but both are decreasing over time, and the gap between them is also shrinking."}
+juvenile_delinquency <- read_csv("../data/juvenile_delinquency.csv")
+juvenile_delinquency <- juvenile_delinquency %>%
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(rate, digits = 0)), NA))
+
+juvenile_delinquency %>% 
+  ggplot(aes(x = year, y = rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = .3, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,150),
+                     name = "Rate per 1000 Youth (10-17)") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ [Virginia Judicial System, Caseload Statistical Information](https://www.vacourts.gov/courtadmin/aoc/djs/programs/cpss/csi/home.html), "Caseload Statistics of the Juvenile and Domestic Relations Courts." 2010-2022.
+
+### Underage Alcohol Arrests
+
+This measure tracks the rate of arrests for alcohol use in youth under 18 years old. Underage drinking, while common, is [associated with multiple risks](https://www.cdc.gov/alcohol/fact-sheets/underage-drinking.htm) for young people, including injury, educational struggles, and physical or sexual violence. This measure does not reflect the prevalence of underage drinking, but the intersection of drinking and policing choices and observation. The majority of underage alcohol use does not result in arrest.
+
+  - __Data considerations:__ Arrest data capture only instances observed by or reported to police and instances which policing authorities evaluate as being subject to arrest. Multiple selection mechanisms impact the generation of an arrest, including policies and resources as well as the age, race, gender, and class of youth. Additionally, while the legal drinking age in Virginia is 21, these data do not include individuals aged 18-21 as underage arrests.
+  - __How is this measured?:__ The arrest rate is the sum of arrests among juveniles for driving under the influence, liquor law violations, or drunkenness, divided by the number of residents aged 10-19 (multiplied by 1,000).
+
+#### Notable Trends {.unnumbered}
+  - The rates of juvenile alcohol arrests in Charlottesville and Albemarle are relatively consistent with statewide trends. There is a downward trend in the rate of arrests since 1999, with a drop to 0.4 per 1,000 youth in Albemarle and 0.2 per 1,000 youth in Charlottesville in 2021.
+
+##### Rate of Underage Alcohol Arrests for Youth Under 18 for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing annual number of youth under 18 (per 1,000) who have been arrested for underage alcohol use in Albemarle, Charlottesville, and Virginia from 1999 to 2021. The y-axis represents the rate per 1,000 youth under 18, and the x-axis represents the year  from 2010 to 2022. Since 2015, the number of youths arrested has less than or roughly equal to 5 per 1,000 youth for Albemarle, Charlottesville, and Virginia. Rates have been very similar for all three localities since 2012, though slightly higher in Albemarle from 2006 to 2012."}
+arrests_alcoholrelated <- read_csv("../data/arrests_alcoholrelated.csv")
+arrests_alcoholrelated <- arrests_alcoholrelated %>%
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(arr_rate, digits = 1)), NA))
+
+arrests_alcoholrelated %>% 
+  ggplot(aes(x = year, y = arr_rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,50),
+                     name = "Rate per 1000 Youth (Under 18)") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+__Source:__ [Virginia State Police, Data Analysis and Reporting Team](https://vsp.virginia.gov/sections-units-bureaus/bass/criminal-justice-information-services/uniform-crime-reporting/), "Crime in Virginia." 1999-2021.
+
+### Arrests for Violent Crimes
+
+This measure tracks the rate of arrests of youth under 18 for crimes against persons. Arrest data capture only instances observed by or reported to police and instances which policing authorities evaluate as being subject to arrest.
+
+  - __Data considerations:__ Multiple selection mechanisms impact the generation of an arrest, including policies and resources as well as the age, race, gender, and class of youth. Additionally, not all crimes generate an arrest and not everyone who is arrested has committed the crime for which they were arrested. Thus, it is important not to equate this metric with the occurrence of crime among youth.
+  - __How is this measured?:__ The arrest rate is the sum of arrests among juveniles for crimes against persons including murder, negligent manslaughter, kidnapping, sex offenses, aggravated assault, simple assault, and intimidation among juveniles, divided by the number of residents aged 10-19 (multiplied by 1,000).
+
+#### Notable Trends {.unnumbered}
+  - Arrest rates in both Albemarle and Charlottesville have seen a mostly downward trend since 2001. In Charlottesville the arrest rate peaked at 15 per 1,000 youth in 2001 and has gone down to 1 per 1,000 youth in 2021.
+  - Since 2004, the rate of arrests in both the county and city have mostly remained below statewide trends.
+
+##### Rate of Arrests for Crimes against Persons for Youth Under 18 for Albemarle County, City of Charlottesville, and Virginia
+```{r, fig.alt = "Line chart comparing annual number of youth under 18 (per 1,000) who have been arrested for crimes against persons in Albemarle, Charlottesville, and Virginia. The y-axis represents the rate per 1,000 youth under 18, and the x-axis represents the year from 1999 to 2021. Since 2015, the number of youth arrested has been 5 per 1,000 youth for Albemarle, Charlottesville, and Virginia. Overall, the rate has been steadily declining for all three localities since 2011."}
+arrests_crimesagainstpersons <- read_csv("../data/arrests_crimesagainstpersons.csv")
+arrests_crimesagainstpersons <- arrests_crimesagainstpersons %>%
+  mutate(year = as.character(year),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         as.character(round(arr_rate, digits = 1)), NA))
+
+arrests_crimesagainstpersons %>% 
+  ggplot(aes(x = year, y = arr_rate, 
+             color = locality, group = locality)) +
+  geom_line() +
+  geom_point() +
+  geom_text_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", nudge_x = 1, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(0,50),
+                     name = "Rate per 1000 Youth (Under 18)") +
+  scale_x_discrete(name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(margin = margin(t = 12)),
+        legend.position = "top") +
+  labs(color = "")
+```
+
+__Source:__ [Virginia State Police, Data Analysis and Reporting Team](https://vsp.virginia.gov/sections-units-bureaus/bass/criminal-justice-information-services/uniform-crime-reporting/), "Crime in Virginia." 1999-2021.
+
+\newpage
+
+## Contributors
+
+This report is a collaboration of many contributors, including:
+
+  - The City of Charlottesville’s Department of Human Services: Misty Graves (Director), Daniel Fairley (Youth Opportunity Coordinator)
+  - The UVA Equity Center, Democratization of Data Initiative: Michele Claibourn (Director of Equitable Analysis), Beth Mitchell (Data Scientist for Equitable Analysis), Nina Schoonover (Data Scientist for Educational Equity), and Lee LeBoeuf (Equity Data Fellow)
+  - Batten School of Leadership and Public Policy, Public Interest Data: Ethics & Practice Class: Michele Claibourn (Faculty), Vani Agarwal, Amruta Binoy, Charlie Bruce, Katherine Driebe, Connor Eads, Jayla Hart, Fara Islam, Somin Lee, Michael Lutton, Lekha Mereddy, Maria Morrissey, Owayne Owens, Lily Slonim, Ramya Tella, Mary Katherine West, and Melinda Wong
+
+### About the Department of Human Services (DHS) {.small-h3}
+
+The [Department of Human Services (DHS)](https://charlottesville.org/224/Human-Services) was created in 2010 to serve as a human services policy advisor to the City Manager in order to implement the social policy initiatives of the Charlottesville City Council. The vision of the DHS is to serve as the community’s premier provider in meeting the therapeutic needs of youth and families, supporting the community’s efforts to improve equity, and address poverty and its impacts. 
+
+The DHS manages the Youth Council, Youth Opportunity Project initiative, Juvenile Justice Advisory Committee, and other related community grants and initiatives. They provide services and programs that improve and support the resilience, health, and well-being of youth, families, and community organizations. 
+
+### About the Equity Center and Democratization of Data Initiative {.small-h3}
+
+Established in 2019, the mission of the [UVA Equity Center](https://virginiaequitycenter.org/) is to tangibly redress racial and economic inequity in university communities by advancing a transformative approach to the fundamental research mission. We envision universities that serve local communities by bringing rich research resources to bear on the work of redressing poverty and racial inequality and equip students to lead in building a just society.
+
+The [Democratization of Data Initiative](https://virginiaequitycenter.org/democratization-data) centers community-driven partnership to provide advocates as well as civic and private-sector leaders with data and metrics, contextualized analysis, interactive maps and data visualizations, and narrative storytelling as a resource in pursuit of equity throughout the region.
+
+### About Public Interest Data: Ethics and Practice, UVA Batten School of Leadership and Public Policy {.small-h3}
+
+[Public Interest Data: Ethics & Practice](https://pidep23.mclaibourn.org/static/syllabus/) (LPPS 5730) is intended to provide students experience with data science within a framework of data ethics in service of equity-oriented public policy. The class goals include:
+
+  - Make progress on projects that advance social justice and policy understanding in collaboration with community partners.
+  - Practice working with data to answer pressing questions, including finding, cleaning, and understanding data; exploring, analyzing, modeling data; visualizing, contextualizing, and communicating data; with care and humility and respect for the affected partners and communities throughout.
+  - Develop experience in data workflows that support ethical data science, including processes for working collaboratively, openly, inclusively, and reproducibly.
+
+### Project Repository {.small-h3}
+
+The work supporting this Stepping Stones Report, including our data collection documentation and the corresponding data, is publicly available in the [Virginia Equity Center GitHub Stepping Stones Repository](https://github.com/virginiaequitycenter/stepping-stones/).
+
+### Citation {.small-h3}
+
+Charlottesville Department of Human Services and the UVA Equity Center. _Steppings Stones: A Report on Community Well-Being of Children and Families in the Charlottesville/Albemarle Area_. Published June 2023. [https://equityatlas.virginiaequitycenter.org/reports/stepping-stones](https://equityatlas.virginiaequitycenter.org/reports/stepping-stones).
+
+This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
+
+
