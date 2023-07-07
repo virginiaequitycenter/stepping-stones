@@ -48,7 +48,8 @@ seven_colors_race <- c(
 # "#cf80dd",
 "#E0004E",
 "#ffa600",
-"#9112B8",
+"#2d5192",
+# "#9112B8",
 "#b69cfd"
 )
 
@@ -59,14 +60,14 @@ two_colors_ethn <- c(
 
 # Race/Ethnicity Colors
 # white: "#0cc0aa"
-# black: "#387472"
-# multiracial: "#82d1f4"
-# asian: "#2d5192"
+# black: "#58a2ee"
+# multiracial: "#a942be"
+# asian: "#E0004E"
 # hispanic: "#860967"
-# other:"#b69cfd"
-# american indian: "#8711ac"
-# hawaiian/pacific island:"#eb67f9"
-# total: "black"
+# other:"#ffa600"
+# american indian: "#2d5192"
+# hawaiian/pacific island:"#b69cfd"
+# total: "#5C6068", "#2F3136"
 
 color_test <- c(
 "#0cc0aa",
@@ -337,7 +338,7 @@ plot_poverty_gaps <- ggplot(plot_child_pov, aes(x = pov_percent, y = year_space,
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012.5, ymax = 2013.5), alpha = .05, color = NA, fill = "#f5f5f5") +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2010.5, ymax = 2011.5), alpha = .05, color = NA, fill = "#f5f5f5") +
   geom_point(aes(col = race), position = 'identity', size = 7) +
-  scale_color_manual(values=rep("grey", 6)) +
+  scale_color_manual(values=rep("#5C6068", 6)) +
   new_scale_color() +
   geom_line(aes(color = locality), size = 0.8) +
   geom_point(aes(color = locality), position = 'identity', size = 7) +
@@ -400,13 +401,13 @@ library(plotrix)
 # reading in data
 povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
   rename(locality = NAME) %>%
-  filter(race != "aian" & race != "nhpi" & race != "hispanic" & race != "other") %>% # all NA's for hispanic
+  filter(race != "aian" & race != "nhpi" & race != "hispanic") %>% # all NA's for hispanic
   filter(GEOID != 51) %>%  # filtering out VA 
   clean_names() %>%
   mutate(locality = factor(locality, levels = c("Virginia", "Charlottesville city, Virginia", "Albemarle County, Virginia"), labels = c("Virginia", "Charlottesville", "Albemarle")),
          race = factor(race, 
-                       levels = c("asian", "black", "multi", "white"), 
-                       labels = c("Asian", "Black", "Multiracial", "White")),
+                       levels = c("asian", "black", "multi", "other", "white"), 
+                       labels = c("Asian", "Black", "Multiracial", "Other Racial Identities", "White")),
          label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
                          paste0(as.character(round(pov_percent, digits = 0)), "%"), NA))
 
@@ -431,7 +432,7 @@ ggplot() +
   geom_point(data = povbyrace, aes(x = year, y = pov_percent, color = race)) +
   geom_text_repel(data = povbyrace, aes(x = year, y = pov_percent, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = c(
-       "#E0004E", "#58a2ee", "#a942be", "#0cc0aa"
+       "#E0004E", "#58a2ee", "#a942be", "#ffa600", "#0cc0aa"
     # "#82BAFF", "#FCC66D", "#ef5675", "#cf80dd", "#0cc0aa"
     # "#FCC66D", "#8CD17D", "#A0CBE8", "#E15759", "#D4A6C8"
     # "#2d5192", "#387472", "#82d1f4", "#b69cfd", "#0cc0aa"
@@ -441,10 +442,11 @@ ggplot() +
   geom_line(data = povtot, aes(year, pct_child_pov, color = race), linewidth = 0.8, linetype = "dashed") +
   # geom_point(data = povtot, aes(year, pct_child_pov, color = race)) +
   scale_color_manual(values = c("#5C6068")) +
-  scale_y_continuous(limits = c(0, 100),
+  scale_y_continuous(limits = c(0, 80),
+                     expand = expansion(mult = c(.03, .02)),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Youth") + 
-  scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 2),
+  scale_x_continuous(breaks = seq(from = 2010, to = 2021, by = 1),
                      name = "Year") +
   # xlab("Year") + 
   # ylab("Percent of Youth") + 
@@ -452,10 +454,12 @@ ggplot() +
   # ggtitle("Percent of youth living in poverty by race") + 
   facet_wrap(~ locality, ncol = 2, scales='free_y') +
   theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
         strip.text.x = element_text(size = 16),
         panel.spacing = unit(1, "lines"),
-        axis.text = element_text(size = 13),
-        axis.text.y = element_text(margin = margin(r=-10)),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
         # axis.text.x = element_text(size = 13),
         axis.title = element_text(size = 14),
         axis.title.y = element_text(margin = margin(r=8)),
@@ -508,6 +512,9 @@ povbyrace$Race <- recode(povbyrace$Race,
 povbyrace$Locality <- recode(povbyrace$Locality, 
                          "Albemarle County, Virginia" = "Albemarle",
                          "Charlottesville city, Virginia" = "Charlottesville")
+povbyrace <- povbyrace %>% 
+  mutate(label = ifelse(year %in% str_sort_last(year),
+                         paste0(as.character(round(pov_percent, digits = 0)), "%"), NA))
 
 # getting totals 
 povtot <- read.csv("../data/child_pov.csv") %>%
@@ -520,12 +527,19 @@ povtot$Locality <- ifelse(povtot$county_fips == 0, "Virginia",
 # Plot 
 ggplot() + 
   geom_col(data = povbyrace, aes(y = pov_percent, x = Locality, fill = Locality)) + 
+  geom_text(data = povbyrace, aes(y = pov_percent, x = Locality, color = Locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
   scale_fill_manual(values = three_category_palette) +
   new_scale_color() +
-  geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "Total"), size = 3) + 
+  geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "Total"), size = 3.5) + 
   scale_color_manual("",
                      breaks = c("Total"),
-                     values = c("black")) +
+                     values = c("#2F3136")) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Youth") + 
