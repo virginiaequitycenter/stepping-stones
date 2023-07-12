@@ -732,7 +732,7 @@ grid.draw(g)
 
 ## Special Education Services
 
-## Out-of-School Suspensions ## Post-Secondary Education (no threshold filter)
+## Out-of-School Suspensions (no threshold filter)
 
 ```{r fig.height=7.4, fig.width=10}
 
