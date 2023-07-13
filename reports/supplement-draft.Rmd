@@ -58,75 +58,6 @@ two_colors_ethn <- c(
   "#D3D3D3", 
   "#860967")
 
-# Race/Ethnicity Colors
-# white: "#0cc0aa"
-# black: "#58a2ee"
-# multiracial: "#a942be"
-# asian: "#E0004E"
-# hispanic: "#860967"
-# other:"#ffa600"
-# american indian: "#2d5192"
-# hawaiian/pacific island:"#b69cfd"
-# total: "#5C6068", "#2F3136"
-
-color_test <- c(
-"#0cc0aa",
-"#387472",
-"#82d1f4",
-"#2d5192",
-"#b69cfd",
-"#8711ac",
-"#eb67f9",
-
-"#58C9AB",
-"#40CE93",
-"#A0CBE8",
-"#387472",
-"#82BAFF",
-"#B872C4",
-"#DD4765",
-"#ef5675",
-"#3d4e92",
-"#2d5192",
-"#eb67f9",
-"#8711ac",
-"#cf80dd",
-
-"#FCC66D", "#8CD17D", "#A0CBE8", "#E15759", "#D4A6C8",
-"#2d5192", "#387472", "#82d1f4", "#b69cfd", "#0cc0aa",
-'#457b9d', '#8cb369', '#f4e285', '#590d22', "#3c096c", "#ff595e",
-"#cf80dd",
-"#e84fe1",
-"#36cbd3",
-"#1f3ca6",
-"#58a2ee",
-"#01c472",
-"#166d2a",
-"#36cbd3",
-"#2e8190",
-"#98bddd",
-"#3d4e92",
-"#cf80dd",
-"#56ebd3", "#0a4f4e", "#85c2d4", "#523d6e", "#9e7ee9", "#453cc5", "#eb67f9",
-"#e493b5",
-  "#862593",
-"#e84fe1",
-"#DD4765",
-"#82BAFF",
-"#7a5195"
-)
-
-favs <- c("#E57873", "#2F7E9F", "#83DBD7")
-muted_palette <- c("#96595A", "#DA897C", "#E4E4B2", "#B2E4CF", "#0D6A82")
-# 
-test3 <- c("#003f5c", "#7a5195", "#ef5675", "#ffa600")
-test2 <- c("#E57873", "#2F7E9F","#FFD05B", "#EA7000", "#AF0000", "#BDBF00", "#00878F", "#2bd7e3", "#82BAFF", "#ADE9ED")
-
-test <- c("#EE1C25", "#DD4765", "#6D968A", "#58C9AB", "#D1C627")
-old <- c("#B23B6B", "#5AB48A", "#E7A342")
-two_old <- c("#146A94", "#E7A342")
-one_old <- c("#146A94")
-
 
 ```
 
@@ -290,7 +221,7 @@ ggplot(aes(x = youthperc, y = locality, group = locality, fill = ethnicity, labe
 
 ## Children Living Below Poverty Threshold
 
-```{r fig.height=9, fig.width=10}
+```{r fig.height=14, fig.width=10}
 ################# Children Living Below Poverty Threshold #################
 
 # reading in data
@@ -322,19 +253,20 @@ plot_child_pov <- plot_child_pov %>%
   mutate(race = factor(race, 
                        levels = c("asian", "black", "multi", "white", "Total"),
                        labels = c("Asian", "Black", "Multiracial", "White", "Total")),
-         year_space = ifelse(locality == "Virginia", year - 0.6, 
-                       ifelse(locality == "Albemarle", year + 0.6, 
+         year_space = ifelse(locality == "Virginia", year - 0.3, 
+                       ifelse(locality == "Albemarle", year + 0.3, 
                               year)))
 
 
 plot_child_pov <- plot_child_pov %>% 
-  mutate(pt_label = substr(race, 1,1)) %>% 
-  filter(year %in% c(2011,2013,2015,2017,2019,2021)) # reduce to odd years only
+  mutate(pt_label = substr(race, 1,1)) 
+# %>% 
+#   filter(year %in% c(2011,2013,2015,2017,2019,2021)) # reduce to odd years only
 
 plot_poverty_gaps <- ggplot() + 
-    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020, ymax = 2022), alpha = 0.35, color = NA, fill = "#D3D3D3") +
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  #   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020, ymax = 2022), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
   geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
   scale_color_manual(values=rep("#5C6068", 6)) +
   new_scale_color() +
@@ -348,7 +280,7 @@ plot_poverty_gaps <- ggplot() +
                      name = "Percent of Youth",
                      sec.axis = dup_axis()) +
   scale_y_continuous(expand = expansion(mult = c(.03, .02)),
-                     breaks = seq(2011, 2021, by = 2),
+                     breaks = seq(2010, 2021, by = 1),
                      name = "Year") + 
   theme_minimal() +
   new_scale_color() +
@@ -535,9 +467,9 @@ ggplot() +
   scale_color_manual(values = three_category_palette) +
   scale_fill_manual(values = three_category_palette) +
   new_scale_color() +
-  geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "Total"), size = 3.5) + 
+  geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "% of Whole Population"), size = 4) + 
   scale_color_manual("",
-                     breaks = c("Total"),
+                     breaks = c("% of Whole Population"),
                      values = c("#2F3136")) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -570,6 +502,221 @@ ggplot() +
 ```
 
 ## Students Identified as Economically Disadvantaged
+
+```{r fig.height=14, fig.width=10}
+# reading in data
+econbyrace <- read.csv("../data/econ_disad_students_Race.csv") %>%
+  filter(race != "American Indian or Alaska Native" & 
+           race != "Unknown - Race/Ethnicity not provided" &
+           race != "Native Hawaiian  or Pacific Islander") %>%
+  # filter(division_name != "Virginia") %>%
+  filter(school_year != "2003-2004") %>%  # The total data doesn't include this year
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia")),
+         plot_year = as.numeric(substr(school_year, 6, 9))) %>% 
+  select(c(school_year, division_name, race, econdis_students, percent, plot_year))
+
+# getting totals 
+econtot <- read.csv("../data/economically_disadvantaged_students.csv") %>% 
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia")),
+         race = "Total",
+         econdis_students = economically_disadvantaged_students,
+         plot_year = as.numeric(substr(school_year, 6, 9))) %>% 
+  select(c(school_year, division_name, race, econdis_students, percent, plot_year))
+
+plot_econ_disadvan <- rbind(econbyrace, econtot)
+
+plot_econ_disadvan <- plot_econ_disadvan %>% 
+  mutate(race = factor(race, 
+                       levels = c("Asian", "Black, not of Hispanic origin", "Hispanic", "Non-Hispanic, two or more races", "White, not of Hispanic origin", "Total"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total")),
+         year_space = ifelse(division_name == "Virginia", plot_year - 0.3, 
+                       ifelse(division_name == "Albemarle", plot_year + 0.3, 
+                              plot_year)))
+
+
+plot_econ_disadvan <- plot_econ_disadvan %>% 
+  mutate(pt_label = substr(race, 1,1)) %>%
+  filter(plot_year >= 2014) # starts with 2004-2005 school year
+
+plot_econ_gaps <- ggplot() + 
+  #   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020, ymax = 2022), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_point(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 6)) +
+  new_scale_color() +
+  geom_line(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, color = division_name), size = 0.8) +
+  geom_point(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, color = division_name), position = 'identity', size = 7) +
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(limits = c(0, 100),
+                     expand = expansion(mult = c(.075, .02)),
+                     breaks = seq(0, 100, by = 10),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Students",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(expand = expansion(mult = c(.03, .02)),
+                     breaks = seq(2014, 2023, by = 1),
+                     name = "School Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
+  scale_color_manual(values=rep("white",6)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-38)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_econ_gaps)
+lbls <- c("A", "B", "H", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+# g$grobs[[grep("guide", g$layout$name)]]
+
+```
+
+
+### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity, 2005-2023 
+
+```{r fig.height=8, fig.width=10}
+# reading in data
+econbyrace <- read.csv("../data/econ_disad_students_Race.csv") %>%
+  filter(race != "American Indian or Alaska Native" & 
+           race != "Unknown - Race/Ethnicity not provided" &
+           race != "Native Hawaiian  or Pacific Islander") %>%
+  filter(division_name != "Virginia") %>%
+  filter(school_year != "2003-2004") %>%  # The total data doesn't include this year
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City"), labels = c("Albemarle", "Charlottesville")),
+         race = factor(race, 
+                       levels = c("Asian", "Black, not of Hispanic origin", "Hispanic", "Non-Hispanic, two or more races", "White, not of Hispanic origin"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White")),
+         plot_year = as.numeric(substr(school_year, 6, 9)),
+         label = ifelse((!division_name %in% "Virginia") & (plot_year %in% str_sort_last(plot_year)),
+                         paste0(as.character(round(percent, digits = 0)), "%"), NA))
+
+# getting totals 
+econtot <- read.csv("../data/economically_disadvantaged_students.csv") %>%
+  filter(division_name != "Virginia") %>% 
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City"), labels = c("Albemarle", "Charlottesville")),
+         race = "Total",
+         plot_year = as.numeric(substr(school_year, 6, 9)))
+# Plot 
+
+ggplot() + 
+  geom_line(data = econbyrace, aes(x = plot_year, y = percent, color = race), linewidth = 0.8) +
+  geom_point(data = econbyrace, aes(x = plot_year, y = percent, color = race)) +
+  geom_text_repel(data = econbyrace, aes(x = plot_year, y = percent, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = econtot, aes(plot_year, percent, color = race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 100),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") +
+  scale_x_continuous(breaks = seq(from = 2005, to = 2023, by = 1),
+                     name = "School Year") +
+  theme_minimal() +  
+  facet_wrap(~ division_name, ncol = 2, scales='free_y') +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity in 2023
+
+```{r fig.height = 9, fig.width=10}
+# reading in data
+econbyrace <- read.csv("../data/econ_disad_students_Race.csv") %>%
+  filter(race != "American Indian or Alaska Native" & 
+           race != "Unknown - Race/Ethnicity not provided" &
+           race != "Native Hawaiian  or Pacific Islander") %>% 
+  rename(Race = race) %>%
+  filter(school_year == '2022-2023')
+
+econbyrace$Race <- recode(econbyrace$Race, 
+                         "Black, not of Hispanic origin" = "Black",
+                         "Non-Hispanic, two or more races" = "Multiracial",
+                         "White, not of Hispanic origin" = "White")
+
+econbyrace$division_name <- recode(econbyrace$division_name, 
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville")
+
+econbyrace <- econbyrace %>% 
+  mutate(label = paste0(as.character(round(percent, digits = 0)), "%"))
+
+# getting totals 
+econtot <- read.csv("../data/economically_disadvantaged_students.csv") %>%
+  filter(school_year == '2022-2023') 
+
+econtot$division_name <- recode(econtot$division_name, 
+                                   "Albemarle County" = "Albemarle",
+                                   "Charlottesville City" = "Charlottesville")
+
+# Plot 
+ggplot() + 
+  geom_col(data = econbyrace, aes(y = percent, x = division_name, fill = division_name)) + 
+  geom_text(data = econbyrace, aes(y = percent, x = division_name, color = division_name, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = econtot, aes(y = percent, x = division_name, color = "% of Whole Population"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("% of Whole Population"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
 
 ## People Experiencing Homelessness
 
