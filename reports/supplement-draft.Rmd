@@ -719,6 +719,194 @@ ggplot() +
 ```
 
 ## People Experiencing Homelessness
+```{r fig.height=8, fig.width=10}
+# reading in data
+homelesssbyrace <- read.csv("../data/pit_homelessness_race.csv") %>%
+  filter(group != "aian" & group != "nhpi") %>% 
+  mutate(race = factor(group, 
+                       levels = c("asian", "black", "hispanic", "multi", "nonhispanic", "white", "total"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "Non-Hispanic", "White", "Rate for Total Population")),
+         locality = "Charlottesville Region",
+         pt_label = substr(race, 1,1))
+
+
+plot_homeless_gaps <- ggplot() + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020.5, ymax = 2021.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2018.5, ymax = 2019.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016.5, ymax = 2017.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2014.5, ymax = 2015.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_point(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col = race), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 7)) +
+  new_scale_color() +
+  geom_line(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, color=locality), size = 0.8) +
+  geom_point(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, color=locality), position = 'identity', size = 7) +
+  scale_color_manual(values = one_category_palette) +
+  scale_x_continuous(limits = c(0, 4),
+                     expand = expansion(mult = c(.075, .02)),
+                     breaks = seq(0, 4, by = 1),
+                     name = "Rate per 1000 People",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(expand = expansion(mult = c(.03, .02)),
+                     breaks = seq(2014, 2022, by = 1),
+                     name = "Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col = race, label = pt_label), size = 4) +
+  scale_color_manual(values=rep("white",7)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-38)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_homeless_gaps)
+lbls <- c("A", "B", "H", "M", "N", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+```
+
+### Rate of People Experiencing Homelessness in the Charlottesville Region by Race and Ethnicity, 2014-2022 
+
+```{r fig.height=8, fig.width=10}
+
+homelesssbyrace <- read.csv("../data/pit_homelessness_race.csv") %>%
+  filter(group != "aian" & group != "nhpi") %>% 
+  mutate(race = factor(group, 
+                       levels = c("asian", "black", "hispanic", "multi", "nonhispanic", "white", "total"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "Non-Hispanic", "White", "Rate for Total Population")))
+
+homelesssbyrace <- homelesssbyrace %>% 
+  pivot_longer(cols = c('rate_cvlalb', 'rate_region'),
+                                  names_to = c('.value','Locality'),
+                                  names_pattern = '(.+)_(cvlalb|region)') %>% 
+  mutate(Locality = factor(Locality, levels = c("cvlalb", "region"), labels = c("Charlottesville and Albemarle", "Wider Charlottesville Region")))
+
+homelesssbyrace_filter <- homelesssbyrace %>% 
+  filter(group != "total") %>% 
+  mutate(label = ifelse(year %in% str_sort_last(year),
+                         as.character(round(rate, digits = 1)), NA))
+
+homelesssbyrace_total <- homelesssbyrace %>% 
+  filter(group == "total")
+
+# Plot 
+
+ggplot() + 
+  geom_line(data = homelesssbyrace_filter, aes(x = year, y = rate, color = race), linewidth = 0.8) +
+  geom_point(data = homelesssbyrace_filter, aes(x = year, y = rate, color = race)) +
+  geom_text_repel(data = homelesssbyrace_filter, aes(x = year, y = rate, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#D3D3D3", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = homelesssbyrace_total, aes(x = year, y = rate, color = race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 7),
+                     breaks = seq(0, 7, by = 1),
+                     name = "Rate per 1000 People",
+                     expand = expansion(mult = c(.03, .02))) +
+  scale_x_continuous(breaks = seq(from = 2014, to = 2022, by = 1),
+                     name = "Year") +
+  theme_minimal() +  
+  facet_wrap(~ Locality, ncol = 2, scales='free_y') +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+### Rate of People Experiencing Homelessness by Race and Ethnicity in 2022
+
+```{r fig.height = 9, fig.width=10}
+# reading in data
+hombyrace <- read.csv("../data/pit_homelessness_race.csv")  %>%
+  filter(year == 2022) %>%
+  filter(group != "aian" & group != "nhpi") %>%
+  rename(Race = group)
+
+hombyrace$Race <- recode(hombyrace$Race, 
+                          "black" = "Black",
+                          "nonhispanic" = "Non-Hispanic",
+                          "white" = "White",
+                          "multi" = "Multiracial",
+                          "total" = "Total",
+                          "hispanic" = "Hispanic",
+                          "asian" = "Asian") 
+
+hombyrace <- pivot_longer(hombyrace, cols = c('rate_cvlalb', 'rate_region'),
+                                  names_to = c('.value','Locality'),
+                                  names_pattern = '(.+)_(cvlalb|region)') %>% 
+  mutate(Locality = factor(Locality, levels = c("cvlalb", "region"), labels = c("Charlottesville & Albemarle", "Wider Charlottesville Region")),
+         label = ifelse(year %in% str_sort_last(year),
+                         as.character(round(rate, digits = 1)), NA))
+
+# total
+homtotal <- hombyrace %>%
+  filter(Race == "Total") %>%
+  rename(Group = Race)
+
+# by race
+hombyrace <- hombyrace %>%
+  filter(Race != "Total")
+
+# Plot 
+ggplot() + 
+  geom_col(data = hombyrace, aes(y = rate, x = Locality, fill = Locality)) + 
+  geom_text(data = hombyrace, aes(y = rate, x = Locality, color = Locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = homtotal, aes(y = rate, x = Locality, color = "Rate for Whole Population"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Rate for Whole Population"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 8),
+                     breaks = seq(0, 8, by = 2),
+                     name = "Rate per 1000 People") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
 
 ## Low Birth-Weight Infants
 
