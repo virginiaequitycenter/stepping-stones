@@ -529,13 +529,15 @@ plot_econ_gaps <- ggplot() +
   geom_point(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, color = division_name), position = 'identity', size = 7) +
   scale_color_manual(values = three_category_palette) +
   scale_x_continuous(limits = c(0, 100),
-                     expand = expansion(mult = c(.075, .02)),
+                     expand = expansion(mult = c(.09, .03)),
+                     # expand = expansion(mult = c(.075, .02)),
                      breaks = seq(0, 100, by = 10),
                      labels = label_percent(scale = 1),
                      name = "Percent of Students",
                      sec.axis = dup_axis()) +
   scale_y_continuous(expand = expansion(mult = c(.03, .02)),
                      breaks = seq(2011, 2023, by = 2),
+                     labels = c("2010-11", "2012-13", "2014-15", "2016-17", "2018-19", "2020-21", "2022-23"),
                      name = "School Year") + 
   theme_minimal() +
   new_scale_color() +
@@ -545,7 +547,7 @@ plot_econ_gaps <- ggplot() +
         panel.grid.major.y = element_blank(),
         text = element_text(size = 14),
         axis.text = element_text(size = 13),
-        axis.text.y = element_text(margin = margin(r=-38)),
+        axis.text.y = element_text(margin = margin(r=-52)),
         axis.title = element_text(size = 14),
         axis.title.y = element_text(margin = margin(r=10)),
         axis.title.x = element_text(margin = margin(t=12)),
@@ -569,7 +571,7 @@ grid.draw(g)
 ```
 
 
-### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity, 2005-2023 
+### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity, 2010-2023 
 
 ```{r fig.height=8, fig.width=10}
 # reading in data
@@ -596,9 +598,21 @@ econtot <- read.csv("../data/economically_disadvantaged_students.csv") %>%
          plot_year = as.numeric(substr(school_year, 6, 9)))%>% 
   filter(plot_year >= 2011)
 
+# facet annotations
+fannotate <- data.frame(division_name = c("Albemarle", "Charlottesville"), x = c(2018.7, 2019.3), y = c(90, 93), label = c("ACPS begin 
+participating 
+in USDA CEP", "CCS begin 
+participating 
+in USDA CEP"))
+
+# facet annotation vline
+fline <- data.frame(division_name = c("Albemarle", "Charlottesville"), x = c(2022, 2019))
+
 # Plot 
 
 ggplot() + 
+  geom_text(data = fannotate, aes(x = x, y=y, label = label), hjust = 0, color = "#333333") +
+  geom_vline(data = fline, aes(xintercept = x), linetype = 2, color = "#333333") +
   geom_line(data = econbyrace, aes(x = plot_year, y = percent, color = race), linewidth = 0.8) +
   geom_point(data = econbyrace, aes(x = plot_year, y = percent, color = race)) +
   geom_text_repel(data = econbyrace, aes(x = plot_year, y = percent, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
@@ -610,7 +624,9 @@ ggplot() +
                      expand = expansion(mult = c(.03, .02)),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students") +
-  scale_x_continuous(breaks = seq(from = 2005, to = 2023, by = 1),
+  scale_x_continuous(breaks = seq(from = 2011, to = 2023, by = 1),
+                     labels = c("2010-11", "2011-12", "2012-13", "2013-14", "2014-15", "2015-16", 
+                                "2016-17", "2017-18", "2018-19", "2019-20", "2020-21", "2021-22", "2022-23"),
                      name = "School Year") +
   theme_minimal() +  
   facet_wrap(~ division_name, ncol = 2, scales='free_y') +
@@ -634,7 +650,7 @@ ggplot() +
 
 ```
 
-### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity in 2023
+### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity for the 2022-23 School Year
 
 ```{r fig.height = 9, fig.width=10}
 # reading in data
@@ -721,9 +737,9 @@ plot_homeless_gaps <- ggplot() +
   geom_point(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col = race), position = 'identity', size = 7) +
   scale_color_manual(values=rep("#5C6068", 7)) +
   new_scale_color() +
-  geom_line(data = homelesssbyrace, aes(x = rate_region, y = year, group = year), size = 0.8, color = "#2F3136") +
-  geom_point(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, color=race), position = 'identity', size = 7) +
-  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa", "#5C6068")) +
+  geom_line(data = homelesssbyrace, aes(x = rate_region, y = year, group = year), linewidth = 0.8, color="#2F7E9F") +
+  geom_point(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col=race), position = 'identity', size = 7) +
+  scale_color_manual(values = c("#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F")) +
   scale_x_continuous(limits = c(0, 5),
                      expand = expansion(mult = c(.075, .02)),
                      breaks = seq(0, 5, by = 1),
@@ -1104,9 +1120,9 @@ plot_IM <- ggplot(infant_mortality_race, aes(x = rate_3yr, y = year_space, group
   geom_line(aes(color = locality), size = 0.8) +
   geom_point(aes(color = locality), position = 'identity', size = 7) +
   scale_color_manual(values = three_category_palette) +
-  scale_x_continuous(limits = c(0, 25),
+  scale_x_continuous(limits = c(0, 30),
                      expand = expansion(mult = c(.09, .03)),
-                     breaks = seq(0, 25, by = 5),
+                     breaks = seq(0, 30, by = 5),
                      labels = label_percent(scale = 1),
                      name = "Percent of Infants",
                      sec.axis = dup_axis()) +
@@ -1287,9 +1303,6 @@ sped_services_race <- sped_race_dat %>%
   filter(race != "American Indian or Alaska Native" & 
            race != "Native Hawaiian  or Pacific Islander") %>%
   mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia")),
-         # total_sped = as.numeric(sub(",", "", total_sped, fixed = TRUE)),
-         # total_count = as.numeric(sub(",", "", total_count, fixed = TRUE)),
-         # percent_sped = round(total_sped / total_count * 100, 2),
          plot_year = as.numeric(substr(school_year, 6, 9))) %>% 
   select(c(school_year, division_name, race, total_sped, percent_sped, plot_year))
 
@@ -1326,13 +1339,14 @@ plot_sped_gaps <- ggplot() +
   geom_point(data = sped_services_alldat, aes(x = percent_sped, y = year_space, group = year_space, color = division_name), position = 'identity', size = 7) +
   scale_color_manual(values = three_category_palette) +
   scale_x_continuous(limits = c(0, 30),
-                     expand = expansion(mult = c(.075, .02)),
+                     expand = expansion(mult = c(.08, .02)),
                      breaks = seq(0, 30, by = 5),
                      labels = label_percent(scale = 1),
                      name = "Percent of Students",
                      sec.axis = dup_axis()) +
   scale_y_continuous(expand = expansion(mult = c(.03, .02)),
                      breaks = seq(2014, 2022, by = 2),
+                     labels = c("2013-14", "2015-16", "2017-18", "2019-20", "2021-22"),
                      name = "School Year") + 
   theme_minimal() +
   new_scale_color() +
@@ -1342,7 +1356,7 @@ plot_sped_gaps <- ggplot() +
         panel.grid.major.y = element_blank(),
         text = element_text(size = 14),
         axis.text = element_text(size = 13),
-        axis.text.y = element_text(margin = margin(r=-38)),
+        axis.text.y = element_text(margin = margin(r=-52)),
         axis.title = element_text(size = 14),
         axis.title.y = element_text(margin = margin(r=10)),
         axis.title.x = element_text(margin = margin(t=12)),
@@ -1404,7 +1418,9 @@ ggplot() +
                      expand = expansion(mult = c(.03, .02)),
                      labels = label_percent(scale = 1), 
                      name = "Percent of Students") +
-  scale_x_continuous(breaks = seq(from = 2013, to = 2022, by = 1),
+  scale_x_continuous(breaks = seq(from = 2014, to = 2022, by = 1),
+                     labels = c("2013-14", "2014-15", "2015-16", "2016-17", "2017-18", 
+                                "2018-19", "2019-20", "2020-21", "2021-22"),
                      name = "School Year") +
   theme_minimal() +  
   facet_wrap(~ division_name, ncol = 2, scales='free_y') +
@@ -1602,9 +1618,9 @@ plot_OSS <- ggplot(dat_OSS, aes(x = meanpercsus, y = Year, group = Year)) +
   geom_point(aes(color = Locality), position = 'identity', size = 7) +
   # geom_label(aes(label = pt_label), fill = NA, color = "white", fontface = "bold") +
   scale_color_manual(values = three_category_palette) +
-  scale_x_continuous(limits = c(0, 15),
+  scale_x_continuous(limits = c(0, 20),
                      expand = expansion(mult = c(.11, .03)),
-                     breaks = seq(0, 15, by = 5),
+                     breaks = seq(0, 20, by = 5),
                      labels = label_percent(scale = 1),
                      name = "Average Percent of Students Receiving OSS",
                      sec.axis = dup_axis()) +
@@ -1652,7 +1668,7 @@ grid.draw(g)
 
 ### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity, 2011-2018 
 
-```{r fig.height=8, fig.width=10}
+```{r fig.height=7, fig.width=10}
 # reading in data from previous plot
 oss_by_race <- dat %>%
   filter(Locality != "Virginia") %>%
@@ -1676,7 +1692,7 @@ oss_tot <- oss_by_race %>%
 ggplot() + 
   geom_line(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race), linewidth = 0.8) +
   geom_point(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race)) +
-  geom_text_repel(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race, label = label), size = 3.5, fontface = "bold", nudge_x = .3, show.legend = FALSE, min.segment.length = Inf) +
+  geom_text_repel(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race, label = label), size = 3.5, fontface = "bold", nudge_x = .4, show.legend = FALSE, min.segment.length = Inf) +
   scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) + 
   new_scale_color() +
   geom_line(data = oss_tot, aes(Year, meanpercsus, color = Race), linewidth = 0.8, linetype = "dashed") +
@@ -1697,7 +1713,7 @@ ggplot() +
         panel.spacing = unit(1, "lines"),
         axis.text = element_text(size = 12),
         axis.text.y = element_text(margin = margin(r=-8)),
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        # axis.text.x = element_text(angle = 45, hjust = 1),
         axis.title = element_text(size = 14),
         axis.title.y = element_text(margin = margin(r=8)),
         axis.title.x = element_text(margin = margin(t=12)),
