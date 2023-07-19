@@ -344,7 +344,7 @@ povtot <- read.csv("../data/child_pov.csv") %>%
   clean_names() %>% 
   mutate(locality = ifelse(county_fips == 3, "Albemarle",
                           ifelse(county_fips == 540, "Charlottesville", county_fips)),
-         race = "Total")
+         race = "Percent for All Youth")
 
 # Plot 
 
@@ -352,16 +352,9 @@ ggplot() +
   geom_line(data = povbyrace, aes(x = year, y = pov_percent, color = race), linewidth = 0.8) +
   geom_point(data = povbyrace, aes(x = year, y = pov_percent, color = race)) +
   geom_text_repel(data = povbyrace, aes(x = year, y = pov_percent, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
-  scale_color_manual(values = c(
-       "#E0004E", "#58a2ee", "#a942be", "#0cc0aa"
-    # "#82BAFF", "#FCC66D", "#ef5675", "#cf80dd", "#0cc0aa"
-    # "#FCC66D", "#8CD17D", "#A0CBE8", "#E15759", "#D4A6C8"
-    # "#2d5192", "#387472", "#82d1f4", "#b69cfd", "#0cc0aa"
-    )
-    ) + 
+  scale_color_manual(values = c("#E0004E", "#58a2ee", "#a942be", "#0cc0aa")) + 
   new_scale_color() +
   geom_line(data = povtot, aes(year, pct_child_pov, color = race), linewidth = 0.8, linetype = "dashed") +
-  # geom_point(data = povtot, aes(year, pct_child_pov, color = race)) +
   scale_color_manual(values = c("#5C6068")) +
   scale_y_continuous(limits = c(0, 80),
                      expand = expansion(mult = c(.03, .02)),
@@ -369,10 +362,7 @@ ggplot() +
                      name = "Percent of Youth") + 
   scale_x_continuous(breaks = seq(from = 2011, to = 2021, by = 1),
                      name = "Year") +
-  # xlab("Year") + 
-  # ylab("Percent of Youth") + 
   theme_minimal() + 
-  # ggtitle("Percent of youth living in poverty by race") + 
   facet_wrap(~ locality, ncol = 2, scales='free_y') +
   theme(text = element_text(size = 14),
         panel.grid.minor.x = element_blank(),
@@ -457,9 +447,9 @@ ggplot() +
   scale_color_manual(values = three_category_palette) +
   scale_fill_manual(values = three_category_palette) +
   new_scale_color() +
-  geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "% of Whole Population"), size = 4) + 
+  geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "Percent for All Youth"), size = 4) + 
   scale_color_manual("",
-                     breaks = c("% of Whole Population"),
+                     breaks = c("Percent for All Youth"),
                      values = c("#2F3136")) +
   scale_y_continuous(limits = c(0, 100),
                      labels = label_percent(scale = 1), 
@@ -518,7 +508,7 @@ plot_econ_disadvan <- rbind(econbyrace, econtot)
 plot_econ_disadvan <- plot_econ_disadvan %>% 
   mutate(race = factor(race, 
                        levels = c("Asian", "Black, not of Hispanic origin", "Hispanic", "Non-Hispanic, two or more races", "White, not of Hispanic origin", "Total"),
-                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (All) Students")),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (Percent for All Students)")),
          year_space = ifelse(division_name == "Virginia", plot_year - 0.5, 
                        ifelse(division_name == "Albemarle", plot_year + 0.5, 
                               plot_year)))
@@ -895,7 +885,7 @@ lbw_race <- lbw_race %>%
          year_space = ifelse(locality == "Virginia", year - 0.7, 
                        ifelse(locality == "Albemarle", year + 0.7, 
                               year)),
-         group = recode(group, "All" = "Total (All Groups)")
+         group = recode(group, "All" = "Total (Percent for All Infants)")
          ) %>% 
   filter(year %in% c(2001,2004,2007,2010,2013,2016,2019) ) 
 
@@ -969,7 +959,7 @@ lbw_race <- lbw_race %>%
   mutate(race = factor(group, levels = c("black", "white", "all"), labels = c("Black", "White", "All")),
          locality = recode(locality, "Albemarle County" = "Albemarle",
                            "Charlottesville City" = "Charlottesville"),
-         race = recode(race, "All" = "Total (All Groups)")) %>% 
+         race = recode(race, "All" = "Total (Percent for All Infants)")) %>% 
   filter(year %in% c(2001,2004,2007,2010,2013,2016,2019) )
 
 lbw_race_only <- lbw_race %>% 
@@ -1058,9 +1048,9 @@ ggplot() +
   scale_color_manual(values = three_category_palette) +
   scale_fill_manual(values = three_category_palette) +
   new_scale_color() +
-  geom_point(data = lbw_race_total, aes(y = percent_3yr, x = locality, color = "% of Whole Population"), size = 4) + 
+  geom_point(data = lbw_race_total, aes(y = percent_3yr, x = locality, color = "Percent for All Infants"), size = 4) + 
   scale_color_manual("",
-                     breaks = c("% of Whole Population"),
+                     breaks = c("Percent for All Infants"),
                      values = c("#2F3136")) +
   scale_y_continuous(limits = c(0, 30),
                      labels = label_percent(scale = 1), 
@@ -1096,7 +1086,7 @@ infant_mortality_race <- infant_mortality_race %>%
          year_space = ifelse(locality == "Virginia", year - 0.7, 
                        ifelse(locality == "Albemarle", year + 0.7, 
                               year)),
-         group = recode(group, "All" = "Total (All Groups)")
+         group = recode(group, "All" = "Total (Percent for All Infants)")
          ) %>% 
   filter(year %in% c(2001,2004,2007,2010,2013,2016,2019)) 
 
@@ -1113,7 +1103,6 @@ plot_IM <- ggplot(infant_mortality_race, aes(x = rate_3yr, y = year_space, group
   new_scale_color() +
   geom_line(aes(color = locality), size = 0.8) +
   geom_point(aes(color = locality), position = 'identity', size = 7) +
-  # geom_label(aes(label = pt_label), fill = NA, color = "white", fontface = "bold") +
   scale_color_manual(values = three_category_palette) +
   scale_x_continuous(limits = c(0, 25),
                      expand = expansion(mult = c(.09, .03)),
@@ -1171,7 +1160,7 @@ infant_mortality_race <- infant_mortality_race %>%
   mutate(race = factor(group, levels = c("black", "white", "all"), labels = c("Black", "White", "All")),
          locality = recode(locality, "Albemarle County" = "Albemarle",
                            "Charlottesville City" = "Charlottesville"),
-         race = recode(race, "All" = "Total (All Groups)")) %>% 
+         race = recode(race, "All" = "Total (Percent for All Infants)")) %>% 
   filter(year %in% c(2001,2004,2007,2010,2013,2016,2019) )
 
 im_race_only <- infant_mortality_race %>% 
@@ -1258,9 +1247,9 @@ ggplot() +
   scale_color_manual(values = three_category_palette) +
   scale_fill_manual(values = three_category_palette) +
   new_scale_color() +
-  geom_point(data = idtot, aes(y = rate_3yr, x = locality, color = "% of Whole Population"), size = 4) + 
+  geom_point(data = idtot, aes(y = rate_3yr, x = locality, color = "Percent for All Infants"), size = 4) + 
   scale_color_manual("",
-                     breaks = c("% of Whole Population"),
+                     breaks = c("Percent for All Infants"),
                      values = c("#2F3136")) +
   scale_y_continuous(limits = c(0, 30),
                      labels = label_percent(scale = 1), 
@@ -1317,7 +1306,7 @@ sped_services_alldat <- rbind(sped_services_race, sped_services_tot)
 sped_services_alldat <- sped_services_alldat %>% 
   mutate(race = factor(race, 
                        levels = c("Asian", "Black, not of Hispanic origin", "Hispanic", "Non-Hispanic, two or more races", "White, not of Hispanic origin", "Total"),
-                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total")),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (Percent for All Students)")),
          year_space = ifelse(division_name == "Virginia", plot_year - 0.5, 
                        ifelse(division_name == "Albemarle", plot_year + 0.5, 
                               plot_year)))
@@ -1374,7 +1363,7 @@ grid.draw(g)
 
 ```
 
-### Percent of Students Recieving Special Education Services by Race and Ethnicity, 2013-2022 
+### Percent of Students Recieving Special Education Services by Race and Ethnicity, 2014-2022 
 
 ```{r fig.height=8, fig.width=10}
 # reading in data
@@ -1389,14 +1378,14 @@ sped_services_race <- sped_race_dat %>%
          plot_year = as.numeric(substr(school_year, 6, 9)),
          label = ifelse((plot_year %in% str_sort_last(plot_year)),
                          paste0(as.character(round(percent_sped, digits = 0)), "%"), NA)) %>% 
-  filter(plot_year >= 2013)
+  filter(plot_year >= 2014)
 
 
 # getting totals 
 sped_services_tot <- read.csv("../data/sped_services.csv") %>% 
   filter(division_name != "Virginia") %>%
   mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City"), labels = c("Albemarle", "Charlottesville")),
-         race = "Total",
+         race = "Percent for All Students",
          plot_year = as.numeric(substr(school_year, 6, 9))) %>% 
   filter(plot_year >= 2014)
 
@@ -1479,9 +1468,9 @@ ggplot() +
   scale_color_manual(values = three_category_palette) +
   scale_fill_manual(values = three_category_palette) +
   new_scale_color() +
-  geom_point(data = sped_services_tot, aes(y = percent_sped, x = division_name, color = "% of Whole Population"), size = 4) + 
+  geom_point(data = sped_services_tot, aes(y = percent_sped, x = division_name, color = "Percent for All Students"), size = 4) + 
   scale_color_manual("",
-                     breaks = c("% of Whole Population"),
+                     breaks = c("Percent for All Students"),
                      values = c("#2F3136")) +
   scale_y_continuous(limits = c(0, 30),
                      labels = label_percent(scale = 1), 
@@ -1661,6 +1650,163 @@ grid.draw(g)
 
 ```
 
+### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity, 2011-2018 
+
+```{r fig.height=8, fig.width=10}
+# reading in data from previous plot
+oss_by_race <- dat %>%
+  filter(Locality != "Virginia") %>%
+  mutate(
+    # Locality = factor(division_name, levels = c("Albemarle County", "Charlottesville City"), labels = c("Albemarle", "Charlottesville")),
+         Race = factor(Race, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total")),
+         label = ifelse((Year %in% str_sort_last(Year)),
+                         paste0(as.character(round(meanpercsus, digits = 0)), "%"), NA),
+         school_year = paste0(as.character(Year), "-", as.character(Year + 1)))
+
+# race only
+oss_race_only <- oss_by_race %>% 
+  filter(Race != "Total")
+# totals only 
+oss_tot <- oss_by_race %>% 
+  filter(Race == "Total") %>% 
+  mutate(Race = "Percent for All Students")
+
+# Plot 
+
+ggplot() + 
+  geom_line(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race), linewidth = 0.8) +
+  geom_point(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race)) +
+  geom_text_repel(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race, label = label), size = 3.5, fontface = "bold", nudge_x = .3, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = oss_tot, aes(Year, meanpercsus, color = Race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 30),
+                     breaks = seq(0, 30, by = 5),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") +
+  scale_x_continuous(breaks = seq(from = 2011, to = 2017, by = 2),
+                     labels = c("2011-12", "2013-14", "2015-16", "2017-18"),
+                     name = "School Year") +
+  theme_minimal() +  
+  facet_wrap(~ Locality, ncol = 2, scales='free_y') +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity for the 2017-2018 School Year
+
+```{r fig.height = 9, fig.width=10}
+# reading in data
+nonprekVAall <- read.csv("../data/school_suspension_CRDCnonprek.csv")
+
+nonprekVAall$OSS_Total <- rowSums(nonprekVAall[,c('OSS_Black','OSS_Hispanic','OSS_White','OSS_TwoOrMore', 'OSS_Asian')], na.rm = T)
+
+nonprekVAall$totalstudents <- nonprekVAall$num_Total
+
+nonprekVAall <- nonprekVAall %>%
+  filter(Year != 2009)
+
+## Re-shaping them to long format 
+k12long_count_oss <- pivot_longer(nonprekVAall, cols = c('num_Black', 'num_Hispanic', 'num_White',
+                                                         'num_TwoOrMore', 'num_Asian', 'num_Total',
+                                                         'OSS_Black', 'OSS_Hispanic', 'OSS_White',
+                                                         'OSS_TwoOrMore','OSS_Asian', 'OSS_Total'),
+                                  names_to = c('.value','Race'),
+                                  names_pattern = '(.+)_(Black|White|Hispanic|Asian|TwoOrMore|Total)')
+
+k12long_count_oss$Race <- ifelse(k12long_count_oss$Race == "TwoOrMore", "Two or more", k12long_count_oss$Race)
+
+# Calculating the percent of students suspended in each racial group 
+k12long_count_oss$percsus <- round(k12long_count_oss$OSS / k12long_count_oss$num * 100, 2)
+# Calculating the percent of the students enrolled in each racial group 
+k12long_count_oss$percenroll <- round(k12long_count_oss$num / k12long_count_oss$totalstudents * 100, 2)
+
+allva <- k12long_count_oss %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+
+# Filtering to just Charlottesville and Albemarle 
+
+albcville <- k12long_count_oss %>%
+  filter(LEA == "ALBEMARLE CO PBLC SCHS" | LEA == "CHARLOTTESVILLE CTY PBLC SCHS")
+
+albcville$Locality <- ifelse(albcville$LEA == "ALBEMARLE CO PBLC SCHS", "Albemarle", "Charlottesville")
+
+albcville <- albcville %>%
+  group_by(Locality, Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+
+fulldat <- rbind(allva, albcville)
+fulldat$Locality <- ifelse(is.na(fulldat$Locality) == T, "Virginia", fulldat$Locality)
+
+mostrecentTot <- fulldat %>%
+  filter(Year == 2017) %>%
+  filter(Race == 'Total') %>%
+  rename(group = Race)
+
+mostrecent <- fulldat %>%
+  filter(Year == 2017) %>%
+  filter(Race != 'Total') %>% 
+  mutate(label = paste0(as.character(round(meanpercsus, digits = 0)), "%"))
+
+# Plot 
+ggplot() + 
+  geom_col(data = mostrecent, aes(y = meanpercsus, x = Locality, fill = Locality)) + 
+  geom_text(data = mostrecent, aes(y = meanpercsus, x = Locality, color = Locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = mostrecentTot, aes(y = meanpercsus, x = Locality, color = "Percent for All Students"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Students"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 30),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
+
 ## Post-Secondary Education (no threshold filter)
 
 ### Enrollment in Any Post-Secondary Education
@@ -1671,7 +1817,7 @@ dat <- read.csv("../data/postsecondary_education_race.csv")
 # We have 9 racial categories
 # I'm filtering out a couple for now
 # NOTE - There are only values for "American Indian" for the state overall, not in the county or city
-# I'm adding it here for mow
+# I'm adding it here for now
 dat <- dat %>%
   filter(group != "Race Unknown") %>% # No values in Charlottesville or Albermarle
   filter(group != "Native Hawaiian") %>% # No values in Charlottesville or Albemarle
@@ -1748,8 +1894,8 @@ plot_PSE <- ggplot(plotdatAny, aes(x = percent_any, y = year, group = year)) +
   new_scale_color() +
   geom_text(aes(label = pt_label, col = group), size = 4) +
   scale_color_manual(values=rep("white",6)) +
-#   labs(caption = "Note: Racial groups were only included for a given year and locality when the number of students enrolled was high enough such 
-# that you would expect to see at least one student enrolled in a 4-year institution if the overall rate were true for each racial group") +
+  labs(caption = "Note: No data available for Charlottesville for Asian students in 2008 and 2020, for Hispanic students 2008-12 and 2014, 
+and for Multiracial students 2008-14 and 2018.") +
   theme(panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         text = element_text(size = 14),
@@ -1773,4 +1919,121 @@ for(i in 1:length(idx)){
 g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
 }
 grid.draw(g)
+```
+
+### Percent of Students Enrolled in Post-Secondary Education by Race and Ethnicity, 2008-2020 
+
+```{r fig.height=8, fig.width=10}
+# reading in data 
+psenroll <- read.csv("../data/postsecondary_education_race.csv") %>%
+  filter(group != "American Indian" & group != "Native Hawaiian" & group != "Race Unknown") %>%
+  rename(Race = group) %>%
+  filter(locality != "Virginia")
+
+psenrollrace <- psenroll %>%
+  filter(Race != "All Students") %>% 
+  mutate(Race = factor(Race, levels = c("Asian", "Black", "Hispanic", "2 or More", "White"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White")),
+         label = ifelse((year %in% str_sort_last(year)),
+                         paste0(as.character(round(percent_any, digits = 0)), "%"), NA))
+
+psenrolltot <- psenroll %>%
+  filter(Race == "All Students") %>% 
+  mutate(Race = "Percent for All Students")
+
+
+# Plot 
+
+ggplot() + 
+  geom_line(data = psenrollrace, aes(x = year, y = percent_any, color = Race), linewidth = 0.8) +
+  geom_point(data = psenrollrace, aes(x = year, y = percent_any, color = Race)) +
+  geom_text_repel(data = psenrollrace, aes(x = year, y = percent_any, color = Race, label = label), size = 3.5, fontface = "bold", nudge_x = .3, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = psenrolltot, aes(year, percent_any, color = Race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(30, 100),
+                     breaks = seq(30, 100, by = 10),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") +
+  scale_x_continuous(breaks = seq(from = 2008, to = 2020, by = 1),
+                     # labels = c("2011-12", "2013-14", "2015-16", "2017-18"),
+                     name = "School Year") +
+  theme_minimal() +  
+  facet_wrap(~ locality, ncol = 2, scales='free_y') +
+  labs(caption = "Note: No data available for Charlottesville for Asian students in 2008, 2015 and 2020, for Hispanic students 2008-12 and 2014, 
+and for Multiracial students 2008-15 and 2018.") +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+### Percent of Students Enrolled in Post-Secondary Education by Race and Ethnicity in 2020
+
+```{r fig.height = 9, fig.width=10}
+# reading in data 
+psenroll <- read.csv("../data/postsecondary_education_race.csv") %>%
+  filter(group != "American Indian" & group != "Native Hawaiian") %>%
+  rename(race = group) %>% 
+  filter(year == 2020)
+
+psenroll$race <- ifelse(psenroll$race == "2 or More", "Multiracial", psenroll$race)
+
+psenrollrace <- psenroll %>%
+  filter(race != "All Students") %>% 
+  mutate(label = ifelse(!is.na(percent_any),
+                         paste0(as.character(round(percent_any, digits = 0)), "%"), NA))
+
+psenrolltot <- psenroll %>%
+  filter(race == "All Students") %>%
+  select(-race)
+
+# Plot 
+ggplot() + 
+  geom_col(data = psenrollrace, aes(y = percent_any, x = locality, fill = locality)) + 
+  geom_text(data = psenrollrace, aes(y = percent_any, x = locality, color = locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = psenrolltot, aes(y = percent_any, x = locality, color = "Percent for All Students"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Students"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ race, ncol = 2, scales='free_x') +
+  labs(caption = "Note: No data available for Charlottesville for Asian students in 2020.") +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
 ```
