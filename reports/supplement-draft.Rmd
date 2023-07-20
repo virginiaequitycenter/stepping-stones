@@ -219,169 +219,169 @@ ggplot(aes(x = youthperc, y = locality, group = locality, fill = ethnicity, labe
 
 ### Reading the Gap Charts
 
+![Example Gap Chart](gapchart1-example.png)
+
+![Example Gap Bar Chart](gapchart2-example.png)
+
 ```{r fig.height=3.5, fig.width=10}
 
-# reading in data
-povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
-  rename(locality = NAME) %>%
-  filter(race != "aian" & race != "nhpi" & race != "hispanic" & race != "other") %>% # all NA's for hispanic
-  clean_names() %>%
-  mutate(locality = factor(locality, levels = c("Albemarle County, Virginia", "Charlottesville city, Virginia", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia"))) %>% 
-  select(c(year, locality, race, pov_count, pov_percent))
-
-# getting totals 
-povtot <- read.csv("../data/child_pov.csv") %>%
-  filter(year >= 2010) %>%  # only have data by race for 2010 and later 
-  clean_names() %>% 
-  mutate(locality = ifelse(county_fips == 3, "Albemarle",
-                          ifelse(county_fips == 540, "Charlottesville", "Virginia")),
-         race = "Total",
-         pov_count = num_child_pov, 
-         pov_percent = pct_child_pov) %>% 
-  select(c(year, locality, race, pov_count, pov_percent))
-
-plot_child_pov <- rbind(povbyrace, povtot)
-
-plot_child_pov <- plot_child_pov %>% 
-  mutate(race = factor(race, 
-                       levels = c("asian", "black", "multi", "white", "Total"),
-                       labels = c("Asian", "Black", "Multiracial", "White", "Total (Percent for All Youth)")),
-         year_space = ifelse(locality == "Virginia", year - 0.6, 
-                       ifelse(locality == "Albemarle", year + 0.6, 
-                              year)))
-
-
-plot_child_pov <- plot_child_pov %>% 
-  mutate(pt_label = substr(race, 1,1)) %>% 
-  filter(year ==2021) # one year for example purposes
-
-plot_poverty_gaps <- ggplot() + 
-  #   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020, ymax = 2022), alpha = 0.35, color = NA, fill = "#D3D3D3") +
-  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
-  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
-  geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
-  scale_color_manual(values=rep("#5C6068", 6)) +
-  new_scale_color() +
-  geom_line(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), linewidth = 0.8) +
-  geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), position = 'identity', size = 7) +
-  scale_color_manual(values = three_category_palette) +
-  scale_x_continuous(limits = c(0, 65),
-                     expand = expansion(mult = c(.075, .02)),
-                     breaks = seq(0, 65, by = 10),
-                     labels = label_percent(scale = 1),
-                     name = "Percent of Youth",
-                     sec.axis = dup_axis()) +
-  scale_y_continuous(
-    expand = expansion(mult = c(.2, .2)),
-                     breaks = 2021,
-                     name = "Year") + 
-  theme_minimal() +
-  new_scale_color() +
-  geom_text(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
-  scale_color_manual(values=rep("white",6)) +
-  theme(panel.grid.minor.y = element_blank(),
-        panel.grid.major.y = element_blank(),
-        text = element_text(size = 14),
-        axis.text = element_text(size = 13),
-        axis.text.y = element_text(margin = margin(r=-38)),
-        axis.title = element_text(size = 14),
-        axis.title.y = element_text(margin = margin(r=10)),
-        axis.title.x = element_text(margin = margin(t=12)),
-        # axis.title.x.bottom = element_blank(),
-        axis.title.x.top = element_text(margin = margin(b=12)),
-        plot.caption = element_text(hjust=0, margin = margin(t=12)),
-        legend.title=element_blank(),
-        legend.box="vertical", legend.margin=margin(),
-        legend.position = "top"
-        )
-
-g <- ggplotGrob(plot_poverty_gaps)
-lbls <- c("A", "B", "M", "W", "T")
-idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
-  "label" %in% names(i)}))
-for(i in 1:length(idx)){
-g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
-}
-grid.draw(g)
+# # reading in data
+# povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
+#   rename(locality = NAME) %>%
+#   filter(race != "aian" & race != "nhpi" & race != "hispanic" & race != "other") %>% # all NA's for hispanic
+#   clean_names() %>%
+#   mutate(locality = factor(locality, levels = c("Albemarle County, Virginia", "Charlottesville city, Virginia", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia"))) %>% 
+#   select(c(year, locality, race, pov_count, pov_percent))
+# 
+# # getting totals 
+# povtot <- read.csv("../data/child_pov.csv") %>%
+#   filter(year >= 2010) %>%  # only have data by race for 2010 and later 
+#   clean_names() %>% 
+#   mutate(locality = ifelse(county_fips == 3, "Albemarle",
+#                           ifelse(county_fips == 540, "Charlottesville", "Virginia")),
+#          race = "Total",
+#          pov_count = num_child_pov, 
+#          pov_percent = pct_child_pov) %>% 
+#   select(c(year, locality, race, pov_count, pov_percent))
+# 
+# plot_child_pov <- rbind(povbyrace, povtot)
+# 
+# plot_child_pov <- plot_child_pov %>% 
+#   mutate(race = factor(race, 
+#                        levels = c("asian", "black", "multi", "white", "Total"),
+#                        labels = c("Asian", "Black", "Multiracial", "White", "Total (Percent for All Youth)")),
+#          year_space = ifelse(locality == "Virginia", year - 0.6, 
+#                        ifelse(locality == "Albemarle", year + 0.6, 
+#                               year)))
+# 
+# 
+# plot_child_pov <- plot_child_pov %>% 
+#   mutate(pt_label = substr(race, 1,1)) %>% 
+#   filter(year ==2021) # one year for example purposes
+# 
+# plot_poverty_gaps <- ggplot() + 
+#   #   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020, ymax = 2022), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+#   # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+#   # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+#   geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
+#   scale_color_manual(values=rep("#5C6068", 6)) +
+#   new_scale_color() +
+#   geom_line(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), linewidth = 0.8) +
+#   geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), position = 'identity', size = 7) +
+#   scale_color_manual(values = three_category_palette) +
+#   scale_x_continuous(limits = c(0, 65),
+#                      expand = expansion(mult = c(.075, .02)),
+#                      breaks = seq(0, 65, by = 10),
+#                      labels = label_percent(scale = 1),
+#                      name = "Percent of Youth",
+#                      sec.axis = dup_axis()) +
+#   scale_y_continuous(
+#     expand = expansion(mult = c(.2, .2)),
+#                      breaks = 2021,
+#                      name = "Year") + 
+#   theme_minimal() +
+#   new_scale_color() +
+#   geom_text(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
+#   scale_color_manual(values=rep("white",6)) +
+#   theme(panel.grid.minor.y = element_blank(),
+#         panel.grid.major.y = element_blank(),
+#         text = element_text(size = 14),
+#         axis.text = element_text(size = 13),
+#         axis.text.y = element_text(margin = margin(r=-38)),
+#         axis.title = element_text(size = 14),
+#         axis.title.y = element_text(margin = margin(r=10)),
+#         axis.title.x = element_text(margin = margin(t=12)),
+#         # axis.title.x.bottom = element_blank(),
+#         axis.title.x.top = element_text(margin = margin(b=12)),
+#         plot.caption = element_text(hjust=0, margin = margin(t=12)),
+#         legend.title=element_blank(),
+#         legend.box="vertical", legend.margin=margin(),
+#         legend.position = "top"
+#         )
+# 
+# g <- ggplotGrob(plot_poverty_gaps)
+# lbls <- c("A", "B", "M", "W", "T")
+# idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
+#   "label" %in% names(i)}))
+# for(i in 1:length(idx)){
+# g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
+# }
+# grid.draw(g)
 
 ```
 
 ```{r fig.height = 4, fig.width=10}
-# Creating data viz for stepping stones supplemental report by race 
-# removing NHPI and AIAN for all plots because they represent such a small portion of the population 
-# Contributor: Lee LeBoeuf
-
-library(tidyverse)
-library(stats)
-library(plotrix)
-
-# reading in data
-povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
-  rename(Race = race,
-         Locality = NAME) %>%
-  filter(Race == "black" | Race == "white") %>% # all NA's for hispanic
-  filter(year == 2021)
-
-povbyrace$Race <- recode(povbyrace$Race, 
-                   "black" = "Black", "white" = "White")
-
-povbyrace$Locality <- recode(povbyrace$Locality, 
-                         "Albemarle County, Virginia" = "Albemarle",
-                         "Charlottesville city, Virginia" = "Charlottesville")
-povbyrace <- povbyrace %>% 
-  mutate(label = ifelse(year %in% str_sort_last(year),
-                         paste0(as.character(round(pov_percent, digits = 0)), "%"), NA))
-
-# getting totals 
-povtot <- read.csv("../data/child_pov.csv") %>%
-  filter(year == 2021)
-povtot$Locality <- ifelse(povtot$county_fips == 0, "Virginia", 
-                          ifelse(povtot$county_fips == 3, "Albemarle",
-                                 ifelse(povtot$county_fips == 540, "Charlottesville", povtot$county_fips)))
-
-
-# Plot 
-ggplot() + 
-  geom_col(data = povbyrace, aes(y = pov_percent, x = Locality, fill = Locality)) + 
-  geom_text(data = povbyrace, aes(y = pov_percent, x = Locality, color = Locality, label = label), 
-                  size = 4, 
-                  vjust = -0.5,
-                  hjust = -0.85,
-                  fontface = "bold",
-            show.legend = FALSE) +
-  scale_color_manual(values = three_category_palette) +
-  scale_fill_manual(values = three_category_palette) +
-  new_scale_color() +
-  geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "Percent for All Youth"), size = 4) + 
-  scale_color_manual("",
-                     breaks = c("Percent for All Youth"),
-                     values = c("#2F3136")) +
-  scale_y_continuous(limits = c(0, 100),
-                     labels = label_percent(scale = 1), 
-                     name = "Percent of Youth") + 
-  scale_x_discrete(name = "") + 
-  facet_wrap(~ Race, ncol = 2, scales='free_x') +
-  theme_minimal() +
-  theme(panel.grid.minor.x = element_blank(),
-        # panel.grid.major.x = element_blank(),
-        # text = element_text(size = 14),
-        strip.text.x = element_text(size = 16),
-        # strip.background = element_rect(fill = "grey90", linewidth = 0),
-        panel.spacing = unit(1, "lines"),
-        axis.text = element_text(size = 12),
-        # axis.text.y = element_text(margin = margin(r=-10)),
-        # axis.text.x = element_text(size = 13),
-        axis.title = element_text(size = 13),
-        axis.title.y = element_text(margin = margin(r=8)),
-        axis.title.x = element_text(margin = margin(t=12)),
-        # axis.title.x.bottom = element_blank(),
-        # axis.title.y.right = element_text(margin = margin(l=12)),
-        plot.caption = element_text(hjust=0, margin = margin(t=12)),
-        # plot.title = element_text(size = 16),
-        legend.title=element_blank(),
-        legend.text = element_text(size = 12),
-        legend.position = "top") +
-  labs(fill = "")
+# library(tidyverse)
+# library(stats)
+# library(plotrix)
+# 
+# # reading in data
+# povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
+#   rename(Race = race,
+#          Locality = NAME) %>%
+#   filter(Race == "black" | Race == "white") %>% # all NA's for hispanic
+#   filter(year == 2021)
+# 
+# povbyrace$Race <- recode(povbyrace$Race, 
+#                    "black" = "Black", "white" = "White")
+# 
+# povbyrace$Locality <- recode(povbyrace$Locality, 
+#                          "Albemarle County, Virginia" = "Albemarle",
+#                          "Charlottesville city, Virginia" = "Charlottesville")
+# povbyrace <- povbyrace %>% 
+#   mutate(label = ifelse(year %in% str_sort_last(year),
+#                          paste0(as.character(round(pov_percent, digits = 0)), "%"), NA))
+# 
+# # getting totals 
+# povtot <- read.csv("../data/child_pov.csv") %>%
+#   filter(year == 2021)
+# povtot$Locality <- ifelse(povtot$county_fips == 0, "Virginia", 
+#                           ifelse(povtot$county_fips == 3, "Albemarle",
+#                                  ifelse(povtot$county_fips == 540, "Charlottesville", povtot$county_fips)))
+# 
+# 
+# # Plot 
+# ggplot() + 
+#   geom_col(data = povbyrace, aes(y = pov_percent, x = Locality, fill = Locality)) + 
+#   geom_text(data = povbyrace, aes(y = pov_percent, x = Locality, color = Locality, label = label), 
+#                   size = 4, 
+#                   vjust = -0.5,
+#                   hjust = -0.85,
+#                   fontface = "bold",
+#             show.legend = FALSE) +
+#   scale_color_manual(values = three_category_palette) +
+#   scale_fill_manual(values = three_category_palette) +
+#   new_scale_color() +
+#   geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "Percent for All Youth"), size = 4) + 
+#   scale_color_manual("",
+#                      breaks = c("Percent for All Youth"),
+#                      values = c("#2F3136")) +
+#   scale_y_continuous(limits = c(0, 100),
+#                      labels = label_percent(scale = 1), 
+#                      name = "Percent of Youth") + 
+#   scale_x_discrete(name = "") + 
+#   facet_wrap(~ Race, ncol = 2, scales='free_x') +
+#   theme_minimal() +
+#   theme(panel.grid.minor.x = element_blank(),
+#         # panel.grid.major.x = element_blank(),
+#         # text = element_text(size = 14),
+#         strip.text.x = element_text(size = 16),
+#         # strip.background = element_rect(fill = "grey90", linewidth = 0),
+#         panel.spacing = unit(1, "lines"),
+#         axis.text = element_text(size = 12),
+#         # axis.text.y = element_text(margin = margin(r=-10)),
+#         # axis.text.x = element_text(size = 13),
+#         axis.title = element_text(size = 13),
+#         axis.title.y = element_text(margin = margin(r=8)),
+#         axis.title.x = element_text(margin = margin(t=12)),
+#         # axis.title.x.bottom = element_blank(),
+#         # axis.title.y.right = element_text(margin = margin(l=12)),
+#         plot.caption = element_text(hjust=0, margin = margin(t=12)),
+#         # plot.title = element_text(size = 16),
+#         legend.title=element_blank(),
+#         legend.text = element_text(size = 12),
+#         legend.position = "top") +
+#   labs(fill = "")
 
 ```
 
