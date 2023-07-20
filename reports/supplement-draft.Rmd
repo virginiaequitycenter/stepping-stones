@@ -61,9 +61,9 @@ two_colors_ethn <- c(
 
 ```
 
-## Youth Population in Albemarle County, City of Charlottesville and Statewide by Race and Ethnicity 
+## Race and Ethnicity in Charlottesville and Albemarle
 
-### Racial breakdown of youth population in each locality in 2021
+### Youth Population by Race in Albemarle County, City of Charlottesville and Virginia in 2021
 
 ```{r fig.height=6.5, fig.width=10}
 # Showing the youth population racial and enthic demographics for the stepping stone supplemental report
@@ -123,9 +123,7 @@ popdatethn$ethnicity <- ifelse(popdatethn$raceethn == "ethnicity", "Hispanic", "
 
 popdatethn$youthperc <- round(popdatethn$groupcount / popdatethn$totalyouthpop * 100, 2)
 
-# plots -- stacked bars faceted by locality 
 
-###### Race ######
 # youth plot 
 popdatrace %>% 
   mutate(race = factor(race, 
@@ -173,10 +171,9 @@ popdatrace %>%
 
 ```
 
-### Ethnic breakdown of youth population in each locality in 2021
+### Youth Population by Ethnicity in Albemarle County, City of Charlottesville and Virginia in 2021
 
 ```{r}
-###### Ethnicity ######
 # youth plot 
 popdatethn %>%
   mutate(ethnicity = factor(ethnicity, levels = c("Non-Hispanic", "Hispanic"), labels = c("Non-Hispanic", "Hispanic")),
@@ -218,11 +215,11 @@ ggplot(aes(x = youthperc, y = locality, group = locality, fill = ethnicity, labe
 
 ```
 
+## Measures
 
-## Children Living Below Poverty Threshold
+### Reading the Gap Charts
 
-```{r fig.height=9, fig.width=10}
-################# Children Living Below Poverty Threshold #################
+```{r fig.height=3.5, fig.width=10}
 
 # reading in data
 povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
@@ -248,7 +245,175 @@ plot_child_pov <- rbind(povbyrace, povtot)
 plot_child_pov <- plot_child_pov %>% 
   mutate(race = factor(race, 
                        levels = c("asian", "black", "multi", "white", "Total"),
-                       labels = c("Asian", "Black", "Multiracial", "White", "Total")),
+                       labels = c("Asian", "Black", "Multiracial", "White", "Total (Percent for All Youth)")),
+         year_space = ifelse(locality == "Virginia", year - 0.6, 
+                       ifelse(locality == "Albemarle", year + 0.6, 
+                              year)))
+
+
+plot_child_pov <- plot_child_pov %>% 
+  mutate(pt_label = substr(race, 1,1)) %>% 
+  filter(year ==2021) # one year for example purposes
+
+plot_poverty_gaps <- ggplot() + 
+  #   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020, ymax = 2022), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 6)) +
+  new_scale_color() +
+  geom_line(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), linewidth = 0.8) +
+  geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), position = 'identity', size = 7) +
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(limits = c(0, 65),
+                     expand = expansion(mult = c(.075, .02)),
+                     breaks = seq(0, 65, by = 10),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Youth",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(
+    expand = expansion(mult = c(.2, .2)),
+                     breaks = 2021,
+                     name = "Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
+  scale_color_manual(values=rep("white",6)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-38)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.box="vertical", legend.margin=margin(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_poverty_gaps)
+lbls <- c("A", "B", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+```
+
+```{r fig.height = 4, fig.width=10}
+# Creating data viz for stepping stones supplemental report by race 
+# removing NHPI and AIAN for all plots because they represent such a small portion of the population 
+# Contributor: Lee LeBoeuf
+
+library(tidyverse)
+library(stats)
+library(plotrix)
+
+# reading in data
+povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
+  rename(Race = race,
+         Locality = NAME) %>%
+  filter(Race == "black" | Race == "white") %>% # all NA's for hispanic
+  filter(year == 2021)
+
+povbyrace$Race <- recode(povbyrace$Race, 
+                   "black" = "Black", "white" = "White")
+
+povbyrace$Locality <- recode(povbyrace$Locality, 
+                         "Albemarle County, Virginia" = "Albemarle",
+                         "Charlottesville city, Virginia" = "Charlottesville")
+povbyrace <- povbyrace %>% 
+  mutate(label = ifelse(year %in% str_sort_last(year),
+                         paste0(as.character(round(pov_percent, digits = 0)), "%"), NA))
+
+# getting totals 
+povtot <- read.csv("../data/child_pov.csv") %>%
+  filter(year == 2021)
+povtot$Locality <- ifelse(povtot$county_fips == 0, "Virginia", 
+                          ifelse(povtot$county_fips == 3, "Albemarle",
+                                 ifelse(povtot$county_fips == 540, "Charlottesville", povtot$county_fips)))
+
+
+# Plot 
+ggplot() + 
+  geom_col(data = povbyrace, aes(y = pov_percent, x = Locality, fill = Locality)) + 
+  geom_text(data = povbyrace, aes(y = pov_percent, x = Locality, color = Locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "Percent for All Youth"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Youth"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Youth") + 
+  scale_x_discrete(name = "") + 
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        # text = element_text(size = 14),
+        strip.text.x = element_text(size = 16),
+        # strip.background = element_rect(fill = "grey90", linewidth = 0),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        # axis.text.y = element_text(margin = margin(r=-10)),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        # axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        # plot.title = element_text(size = 16),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+
+```
+
+### Children Living Below Poverty Threshold
+
+```{r fig.height=9, fig.width=10}
+
+# reading in data
+povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
+  rename(locality = NAME) %>%
+  filter(race != "aian" & race != "nhpi" & race != "hispanic" & race != "other") %>% # all NA's for hispanic
+  clean_names() %>%
+  mutate(locality = factor(locality, levels = c("Albemarle County, Virginia", "Charlottesville city, Virginia", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia"))) %>% 
+  select(c(year, locality, race, pov_count, pov_percent))
+
+# getting totals 
+povtot <- read.csv("../data/child_pov.csv") %>%
+  filter(year >= 2010) %>%  # only have data by race for 2010 and later 
+  clean_names() %>% 
+  mutate(locality = ifelse(county_fips == 3, "Albemarle",
+                          ifelse(county_fips == 540, "Charlottesville", "Virginia")),
+         race = "Total",
+         pov_count = num_child_pov, 
+         pov_percent = pct_child_pov) %>% 
+  select(c(year, locality, race, pov_count, pov_percent))
+
+plot_child_pov <- rbind(povbyrace, povtot)
+
+plot_child_pov <- plot_child_pov %>% 
+  mutate(race = factor(race, 
+                       levels = c("asian", "black", "multi", "white", "Total"),
+                       labels = c("Asian", "Black", "Multiracial", "White", "Total (Percent for All Youth)")),
          year_space = ifelse(locality == "Virginia", year - 0.6, 
                        ifelse(locality == "Albemarle", year + 0.6, 
                               year)))
@@ -265,7 +430,7 @@ plot_poverty_gaps <- ggplot() +
   geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
   scale_color_manual(values=rep("#5C6068", 6)) +
   new_scale_color() +
-  geom_line(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), size = 0.8) +
+  geom_line(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), linewidth = 0.8) +
   geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), position = 'identity', size = 7) +
   scale_color_manual(values = three_category_palette) +
   scale_x_continuous(limits = c(0, 65),
@@ -293,15 +458,16 @@ plot_poverty_gaps <- ggplot() +
         axis.title.x.top = element_text(margin = margin(b=12)),
         plot.caption = element_text(hjust=0, margin = margin(t=12)),
         legend.title=element_blank(),
+        legend.box="vertical", legend.margin=margin(),
         legend.position = "top"
         )
 
 g <- ggplotGrob(plot_poverty_gaps)
 lbls <- c("A", "B", "M", "W", "T")
-idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
   "label" %in% names(i)}))
 for(i in 1:length(idx)){
-g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
 }
 grid.draw(g)
 
@@ -310,7 +476,7 @@ grid.draw(g)
 ```
 
 
-### Percent of Youth Living in Poverty by Race, 2010-2021 
+#### Percent of Youth Living in Poverty by Race, 2010-2021 
 
 ```{r fig.height=8, fig.width=10}
 # Creating data viz for stepping stones supplemental report by race 
@@ -319,9 +485,6 @@ grid.draw(g)
 
 library(stats)
 library(plotrix)
-
-
-################# Children Living Below Poverty Threshold #################
 
 # reading in data
 povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
@@ -391,7 +554,7 @@ ggplot() +
 
 ```
 
-### Percent of Youth Living in Poverty by Race in 2021
+#### Percent of Youth Living in Poverty by Race in 2021
 
 ```{r fig.height = 9, fig.width=10}
 # Creating data viz for stepping stones supplemental report by race 
@@ -401,9 +564,6 @@ ggplot() +
 library(tidyverse)
 library(stats)
 library(plotrix)
-
-
-################# Children Living Below Poverty Threshold #################
 
 # reading in data
 povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
@@ -481,7 +641,7 @@ ggplot() +
 # Charlottesville has 0 for Other race, it's not a missing value 
 ```
 
-## Students Identified as Economically Disadvantaged
+### Students Identified as Economically Disadvantaged
 
 ```{r fig.height=9.5, fig.width=10}
 # reading in data
@@ -523,11 +683,11 @@ plot_econ_gaps <- ggplot() +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
   geom_point(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
-  scale_color_manual(values=rep("#5C6068", 6)) +
+  scale_color_manual(values=rep("#5C6068", 6), guide = guide_legend(nrow = 1)) +
   new_scale_color() +
   geom_line(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, color = division_name), linewidth = 0.8) +
   geom_point(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, color = division_name), position = 'identity', size = 7) +
-  scale_color_manual(values = three_category_palette) +
+  scale_color_manual(values = three_category_palette, guide = guide_legend(nrow = 1)) +
   scale_x_continuous(limits = c(0, 100),
                      expand = expansion(mult = c(.09, .03)),
                      # expand = expansion(mult = c(.075, .02)),
@@ -542,7 +702,8 @@ plot_econ_gaps <- ggplot() +
   theme_minimal() +
   new_scale_color() +
   geom_text(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
-  scale_color_manual(values=rep("white",6)) +
+  scale_color_manual(values=rep("white",6), guide = guide_legend(nrow = 1)) +
+  # guides(col = guide_legend(nrow = 1)) +
   theme(panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         text = element_text(size = 14),
@@ -554,6 +715,7 @@ plot_econ_gaps <- ggplot() +
         axis.title.x.top = element_text(margin = margin(b=12)),
         plot.caption = element_text(hjust=0, margin = margin(t=12)),
         legend.title=element_blank(),
+        legend.box="vertical", legend.direction="horizontal", legend.margin=margin(),
         legend.position = "top"
         )
 
@@ -571,7 +733,7 @@ grid.draw(g)
 ```
 
 
-### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity, 2010-2023 
+#### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity, 2010-2023 
 
 ```{r fig.height=8, fig.width=10}
 # reading in data
@@ -650,7 +812,7 @@ ggplot() +
 
 ```
 
-### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity for the 2022-23 School Year
+#### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity for the 2022-23 School Year
 
 ```{r fig.height = 9, fig.width=10}
 # reading in data
@@ -717,7 +879,7 @@ ggplot() +
   labs(fill = "")
 ```
 
-## People Experiencing Homelessness
+### People Experiencing Homelessness
 ```{r fig.height=8, fig.width=10}
 # reading in data
 homelesssbyrace <- read.csv("../data/pit_homelessness_race.csv") %>%
@@ -735,11 +897,11 @@ plot_homeless_gaps <- ggplot() +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016.5, ymax = 2017.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2014.5, ymax = 2015.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
   geom_point(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col = race), position = 'identity', size = 7) +
-  scale_color_manual(values=rep("#5C6068", 7)) +
+  scale_color_manual(values=rep("#5C6068", 7), guide = guide_legend(nrow = 1)) +
   new_scale_color() +
   geom_line(data = homelesssbyrace, aes(x = rate_region, y = year, group = year), linewidth = 0.8, color="#2F7E9F") +
   geom_point(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col=race), position = 'identity', size = 7) +
-  scale_color_manual(values = c("#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F")) +
+  scale_color_manual(values = c("#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F"), guide = guide_legend(nrow = 1)) +
   scale_x_continuous(limits = c(0, 5),
                      expand = expansion(mult = c(.075, .02)),
                      breaks = seq(0, 5, by = 1),
@@ -751,7 +913,7 @@ plot_homeless_gaps <- ggplot() +
   theme_minimal() +
   new_scale_color() +
   geom_text(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col = race, label = pt_label), size = 4) +
-  scale_color_manual(values=rep("white",7)) +
+  scale_color_manual(values=rep("white",7), guide = guide_legend(nrow = 1)) +
   theme(panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         text = element_text(size = 14),
@@ -763,6 +925,7 @@ plot_homeless_gaps <- ggplot() +
         axis.title.x.top = element_text(margin = margin(b=12)),
         plot.caption = element_text(hjust=0, margin = margin(t=12)),
         legend.title=element_blank(),
+        legend.box="vertical", legend.direction="horizontal", legend.margin=margin(),
         legend.position = "top"
         )
 
@@ -777,7 +940,7 @@ grid.draw(g)
 
 ```
 
-### Rate of People Experiencing Homelessness in the Charlottesville Region by Race and Ethnicity, 2014-2022 
+#### Rate of People Experiencing Homelessness in the Charlottesville Region by Race and Ethnicity, 2014-2022 
 
 ```{r fig.height=7, fig.width=10}
 
@@ -830,7 +993,7 @@ ggplot() +
 
 ```
 
-### Rate of People Experiencing Homelessness by Race and Ethnicity in 2022
+#### Rate of People Experiencing Homelessness by Race and Ethnicity in 2022
 
 ```{r fig.height = 6, fig.width=10}
 # reading in data
@@ -887,7 +1050,7 @@ ggplot() +
 ```
 
 
-## Low Birth-Weight Infants
+### Low Birth-Weight Infants
 
 ``` {r fig.height=9, fig.width=10}
 lbw_race <- read.csv("../data/low_birth_weight_race.csv")
@@ -946,8 +1109,7 @@ plot_LBW <- ggplot(lbw_race, aes(x = percent_3yr, y = year_space, group = year_s
         axis.title.x.top = element_text(margin = margin(b=12)),
         plot.caption = element_text(hjust=0, margin = margin(t=12)),
         legend.title=element_blank(),
-        # legend.box = 'horizontal',
-        # legend.position = c(0.01, 0.2)
+        legend.box="vertical", legend.margin=margin(),
         legend.position = "top"
         )
 
@@ -962,7 +1124,7 @@ grid.draw(g)
 
 ```
 
-### Percent of Low Birth-Weight Infants by Race, 2000-2020 
+#### Percent of Low Birth-Weight Infants by Race, 2000-2020 
 
 ```{r fig.height=7, fig.width=10}
 # reading in data
@@ -1022,7 +1184,7 @@ ggplot() +
 
 ```
 
-### Percent of Low Birth-Weight Infants by Race for 2018-2020
+#### Percent of Low Birth-Weight Infants by Race for 2018-2020
 
 ```{r fig.height = 5, fig.width=10}
 # reading in data 
@@ -1088,7 +1250,7 @@ ggplot() +
   labs(fill = "")
 ```
 
-## Infant Deaths
+### Infant Deaths
 
 ``` {r fig.height=9, fig.width=10}
 infant_mortality_race <- read.csv("../data/infant_mortality_race.csv")
@@ -1147,8 +1309,7 @@ plot_IM <- ggplot(infant_mortality_race, aes(x = rate_3yr, y = year_space, group
         axis.title.x.top = element_text(margin = margin(b=12)),
         plot.caption = element_text(hjust=0, margin = margin(t=12)),
         legend.title=element_blank(),
-        # legend.box = 'horizontal',
-        # legend.position = c(0.01, 0.2)
+        legend.box="vertical", legend.margin=margin(),
         legend.position = "top"
         )
 
@@ -1163,7 +1324,7 @@ grid.draw(g)
 
 ```
 
-### Percent of Infant Deaths by Race, 2000-2020 
+#### Percent of Infant Deaths by Race, 2000-2020 
 
 ```{r fig.height=7, fig.width=10}
 # reading in data
@@ -1223,7 +1384,7 @@ ggplot() +
 
 ```
 
-### Percent of Infant Deaths by Race for 2018-2020
+#### Percent of Infant Deaths by Race for 2018-2020
 
 ```{r fig.height = 5, fig.width=10}
 # reading in data 
@@ -1289,7 +1450,7 @@ ggplot() +
 
 ```
 
-## Special Education Services
+### Special Education Services
 
 ```{r fig.height=8.5, fig.width=10}
 #for all sped visualizations
@@ -1333,11 +1494,11 @@ plot_sped_gaps <- ggplot() +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2019, ymax = 2021), alpha = 0.35, color = NA, fill = "#D3D3D3") +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2015, ymax = 2017), alpha = 0.35, color = NA, fill = "#D3D3D3") +
   geom_point(data = sped_services_alldat, aes(x = percent_sped, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
-  scale_color_manual(values=rep("#5C6068", 6)) +
+  scale_color_manual(values=rep("#5C6068", 6), guide = guide_legend(nrow = 1)) +
   new_scale_color() +
   geom_line(data = sped_services_alldat, aes(x = percent_sped, y = year_space, group = year_space, color = division_name), size = 0.8) +
   geom_point(data = sped_services_alldat, aes(x = percent_sped, y = year_space, group = year_space, color = division_name), position = 'identity', size = 7) +
-  scale_color_manual(values = three_category_palette) +
+  scale_color_manual(values = three_category_palette, guide = guide_legend(nrow = 1)) +
   scale_x_continuous(limits = c(0, 30),
                      expand = expansion(mult = c(.08, .02)),
                      breaks = seq(0, 30, by = 5),
@@ -1351,7 +1512,7 @@ plot_sped_gaps <- ggplot() +
   theme_minimal() +
   new_scale_color() +
   geom_text(data = sped_services_alldat, aes(x = percent_sped, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
-  scale_color_manual(values=rep("white",6)) +
+  scale_color_manual(values=rep("white",6), guide = guide_legend(nrow = 1)) +
   theme(panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         text = element_text(size = 14),
@@ -1363,6 +1524,7 @@ plot_sped_gaps <- ggplot() +
         axis.title.x.top = element_text(margin = margin(b=12)),
         plot.caption = element_text(hjust=0, margin = margin(t=12)),
         legend.title=element_blank(),
+        legend.box="vertical", legend.direction="horizontal", legend.margin=margin(),
         legend.position = "top"
         )
 
@@ -1377,7 +1539,7 @@ grid.draw(g)
 
 ```
 
-### Percent of Students Recieving Special Education Services by Race and Ethnicity, 2014-2022 
+#### Percent of Students Recieving Special Education Services by Race and Ethnicity, 2014-2022 
 
 ```{r fig.height=8, fig.width=10}
 # reading in data
@@ -1442,7 +1604,7 @@ ggplot() +
 
 ```
 
-### Percent of Students Recieving Special Education Services by Race and Ethnicity for the 2021-2022 School Year
+#### Percent of Students Recieving Special Education Services by Race and Ethnicity for the 2021-2022 School Year
 
 ```{r fig.height = 9, fig.width=10}
 # reading in data
@@ -1508,7 +1670,7 @@ ggplot() +
   labs(fill = "")
 ```
 
-## Out-of-School Suspensions (no threshold filter)
+### Out-of-School Suspensions (no threshold filter)
 
 ```{r fig.height=7.4, fig.width=10}
 
@@ -1605,19 +1767,18 @@ dat_OSS$Year <- ifelse(dat_OSS$Locality == "Virginia", dat_OSS$Year - 0.5,
 # all levels together 
 
 dat_OSS <- dat_OSS %>% 
-  mutate(Race = factor(Race, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total")),
+  mutate(Race = factor(Race, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (Percent for All Students)")),
        pt_label = substr(Race, 1,1))
 
 plot_OSS <- ggplot(dat_OSS, aes(x = meanpercsus, y = Year, group = Year)) + 
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = .05, color = NA, fill = "#f5f5f5") +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = .05, color = NA, fill = "#f5f5f5") +
   geom_point(aes(col = Race), position = 'identity', size = 7) +
-  scale_color_manual(values=rep("#5C6068", 6)) +
+  scale_color_manual(values=rep("#5C6068", 6), guide = guide_legend(nrow = 1)) +
   new_scale_color() +
   geom_line(aes(color = Locality), size = 0.8) +
   geom_point(aes(color = Locality), position = 'identity', size = 7) +
-  # geom_label(aes(label = pt_label), fill = NA, color = "white", fontface = "bold") +
-  scale_color_manual(values = three_category_palette) +
+  scale_color_manual(values = three_category_palette, guide = guide_legend(nrow = 1)) +
   scale_x_continuous(limits = c(0, 20),
                      expand = expansion(mult = c(.11, .03)),
                      breaks = seq(0, 20, by = 5),
@@ -1631,9 +1792,7 @@ plot_OSS <- ggplot(dat_OSS, aes(x = meanpercsus, y = Year, group = Year)) +
   theme_minimal() +
   new_scale_color() +
   geom_text(aes(label = pt_label, col = Race), size = 4) +
-  scale_color_manual(values=rep("white",6)) +
-#   labs(caption = "Note: Racial groups were only included for a given year and locality when the average number of students enrolled was high enough
-# such that you would expect to see at least one suspension if the average overall rate were true for each racial group") +
+  scale_color_manual(values=rep("white",6), guide = guide_legend(nrow = 1)) +
   theme(panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         text = element_text(size = 14),
@@ -1647,17 +1806,16 @@ plot_OSS <- ggplot(dat_OSS, aes(x = meanpercsus, y = Year, group = Year)) +
         axis.title.x.top = element_text(margin = margin(b=12)),
         plot.caption = element_text(hjust=0, margin = margin(t=12)),
         legend.title=element_blank(),
-        # legend.box = 'horizontal',
-        # legend.position = c(0.01, 0.2)
+        legend.box="vertical", legend.margin=margin(),
         legend.position = "top"
         )
 
 g <- ggplotGrob(plot_OSS)
 lbls <- c("A", "B", "H", "M", "W", "T")
-idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
   "label" %in% names(i)}))
 for(i in 1:length(idx)){
-g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
 }
 grid.draw(g)
 
@@ -1666,7 +1824,7 @@ grid.draw(g)
 
 ```
 
-### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity, 2011-2018 
+#### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity, 2011-2018 
 
 ```{r fig.height=7, fig.width=10}
 # reading in data from previous plot
@@ -1725,7 +1883,7 @@ ggplot() +
 
 ```
 
-### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity for the 2017-2018 School Year
+#### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity for the 2017-2018 School Year
 
 ```{r fig.height = 9, fig.width=10}
 # reading in data
@@ -1823,9 +1981,9 @@ ggplot() +
   labs(fill = "")
 ```
 
-## Post-Secondary Education (no threshold filter)
+### Post-Secondary Education (no threshold filter)
 
-### Enrollment in Any Post-Secondary Education
+#### Enrollment in Any Post-Secondary Education
 ```{r fig.height=9, fig.width=10}
 
 dat <- read.csv("../data/postsecondary_education_race.csv")
@@ -1882,7 +2040,7 @@ plotdatAny <- plotdatAny %>%
 # Rename "All Students" to "Total" but idk if this is accurate per above
 plotdatAny$group <- ifelse(plotdatAny$group == "All Students", "Total", plotdatAny$group)
 plotdatAny <- plotdatAny %>% 
-   mutate(group = factor(group, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total")),
+   mutate(group = factor(group, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (Percent for All Students)")),
        pt_label = substr(group, 1,1))
 
 plot_PSE <- ggplot(plotdatAny, aes(x = percent_any, y = year, group = year)) + 
@@ -1890,12 +2048,11 @@ plot_PSE <- ggplot(plotdatAny, aes(x = percent_any, y = year, group = year)) +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2013, ymax = 2015), alpha = .05, color = NA, fill = "#f5f5f5") +
   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2009, ymax = 2011), alpha = .05, color = NA, fill = "#f5f5f5") +
   geom_point(aes(col = group), position = 'identity', size = 7) +
-  scale_color_manual(values=rep("#5C6068", 6)) +
+  scale_color_manual(values=rep("#5C6068", 6), guide = guide_legend(nrow = 1)) +
   new_scale_color() +
   geom_line(aes(color = locality), size = 0.8) +
   geom_point(aes(color = locality), position = 'identity', size = 7) +
-  # geom_label(aes(label = pt_label), fill = NA, color = "white", fontface = "bold") +
-  scale_color_manual(values = three_category_palette) +
+  scale_color_manual(values = three_category_palette, guide = guide_legend(nrow = 1)) +
   scale_x_continuous(limits = c(40,100),
                      breaks = seq(40, 100, by = 10),
                      expand = expansion(mult = c(.06, .02)),
@@ -1904,12 +2061,11 @@ plot_PSE <- ggplot(plotdatAny, aes(x = percent_any, y = year, group = year)) +
                      sec.axis = dup_axis()) +
   scale_y_continuous(breaks = seq(2008, 2020, by = 2),
                      expand = expansion(mult = c(.03, .03)),
-                     # labels = c("2011-12", "2013-14", "2015-16", "2017-18"),
                      name = "Year") + 
   theme_minimal() +
   new_scale_color() +
   geom_text(aes(label = pt_label, col = group), size = 4) +
-  scale_color_manual(values=rep("white",6)) +
+  scale_color_manual(values=rep("white",6), guide = guide_legend(nrow = 1)) +
   labs(caption = "Note: No data available for Charlottesville for Asian students in 2008 and 2020, for Hispanic students 2008-12 and 2014, 
 and for Multiracial students 2008-14 and 2018.") +
   theme(panel.grid.minor.y = element_blank(),
@@ -1924,20 +2080,21 @@ and for Multiracial students 2008-14 and 2018.") +
         axis.title.x.top = element_text(margin = margin(b=12)),
         plot.caption = element_text(hjust=0, margin = margin(t=12)),
         legend.title=element_blank(),
+        legend.box="vertical", legend.margin=margin(),
         legend.position = "top"
         )
 
 g <- ggplotGrob(plot_PSE)
 lbls <- c("A", "B", "H", "M", "W", "T")
-idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
   "label" %in% names(i)}))
 for(i in 1:length(idx)){
-g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
 }
 grid.draw(g)
 ```
 
-### Percent of Students Enrolled in Post-Secondary Education by Race and Ethnicity, 2008-2020 
+#### Percent of Students Enrolled in Post-Secondary Education by Race and Ethnicity, 2008-2020 
 
 ```{r fig.height=8, fig.width=10}
 # reading in data 
@@ -1997,7 +2154,7 @@ and for Multiracial students 2008-15 and 2018.") +
 
 ```
 
-### Percent of Students Enrolled in Post-Secondary Education by Race and Ethnicity in 2020
+#### Percent of Students Enrolled in Post-Secondary Education by Race and Ethnicity in 2020
 
 ```{r fig.height = 9, fig.width=10}
 # reading in data 
