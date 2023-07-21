@@ -60,164 +60,10 @@ two_colors_ethn <- c(
 
 
 ```
+## Introduction
 
-## Race and Ethnicity in Charlottesville and Albemarle
+## Approach
 
-### Youth Population by Race in Albemarle County, City of Charlottesville and Virginia in 2021
-
-```{r fig.height=6.5, fig.width=10}
-# Showing the youth population racial and enthic demographics for the stepping stone supplemental report
-# Contributor: Lee LeBoeuf
-
-# reading in data
-popdat <- read.csv("../data/pop_race_ethn.csv") %>%
-  rename(race = variable) %>%
-  filter(year == 2021) %>% 
-  clean_names() %>% 
-  mutate(locality = factor(name, levels = c("Virginia", "Charlottesville city, Virginia", "Albemarle County, Virginia"), labels = c("Virginia", "Charlottesville", "Albemarle")))
-           
-         #   recode(name, "Albemarle County, Virginia" = "Albemarle",
-         #                   "Charlottesville city, Virginia" = "Charlottesville",
-         #                   "Virginia" = "Virginia")
-         # )
-
-# popdat <- popdat %>% 
-#   mutate(race = factor(race, levels = c("white", "black", "multi", "asian", "other", "aian", "nhpi", "hispanic"), labels = c("White", "Black", "Multiracial", "Asian", "Other Races", "American Indian/Alaskan Native", "Native Hawaiian/Pacific Islander", "Hispanic")),
-#          # recode(race, "aian" = "American Indian/Alaskan Native",
-#          #              "asian" = "Asian",
-#          #              "black" = "Black",
-#          #              "multi" = "Multiracial",
-#          #              "nhpi" = "Native Hawaiian/Pacific Islander",
-#          #              "other" = "Other Races",
-#          #              "white" = "White",
-#          #              "hispanic" = "Hispanic"),
-#          locality = factor(locality, levels = c("Virginia", "Charlottesville", "Albemarle"), labels = c("Virginia", "Charlottesville", "Albemarle"))
-#            
-#         
-#          ) 
-
-
-# dataframe for race
-popdatrace <- popdat %>%
-  filter(raceethn == 'race') %>%
-  group_by(locality) %>%
-  mutate(totalyouthpop = sum(youthpop_count)) %>%
-  ungroup()
-
-popdatrace$youthperc <- round(popdatrace$youthpop_count / popdatrace$totalyouthpop * 100, 2)
-popdatrace$allperc <- round(popdatrace$pop_count / popdatrace$totalpop * 100, 2)
-
-# dataframe for ethnicity 
-popdatethn <- popdat %>%
-  group_by(locality) %>%
-  mutate(totalyouthpop = sum(youthpop_count)) %>%
-  ungroup()
-
-popdatethn <- popdatethn %>%
-  group_by(raceethn, locality) %>%
-  mutate(groupcount = sum(youthpop_count)) %>%
-  select(locality, groupcount, totalyouthpop) %>%
-  distinct()
-
-popdatethn$ethnicity <- ifelse(popdatethn$raceethn == "ethnicity", "Hispanic", "Non-Hispanic")
-
-popdatethn$youthperc <- round(popdatethn$groupcount / popdatethn$totalyouthpop * 100, 2)
-
-
-# youth plot 
-popdatrace %>% 
-  mutate(race = factor(race, 
-                       levels = c("white", "black", "multi", "asian", "other", "aian", "nhpi", "hispanic"), 
-                       labels = c("White", "Black", "Multiracial", "Asian", "Other Racial Identities", "American Indian/Alaskan Native", "Native Hawaiian/Pacific Islander", "Hispanic")),
-         label = ifelse(youthperc >= 1, paste0(as.character(round(youthperc, digits = 0)), "%"), paste0(as.character(round(youthperc, digits = 1)), "%"))) %>% 
-  arrange(race) %>% 
-  ggplot(aes(x = youthperc, y = locality, group = locality, fill = race)) +
-  geom_bar(stat = "identity") +
-  geom_label_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", show.legend = FALSE,
-                  min.segment.length = Inf,
-                  position = position_stack(vjust = 0.45), 
-                  box.padding = 0.1,
-                  force_pull = 100,
-                  # direction = "x",
-                  color = "white") +
-  # geom_text(size = 4, position = position_stack(vjust = 0.5), color = "white") +
-  scale_x_continuous(limits = c(0, 100),
-                     labels = label_percent(scale = 1), 
-                     name = "Percent of Population",
-                     sec.axis = dup_axis()) + 
-  scale_y_discrete(name = "") +
-  scale_fill_manual(values = c(seven_colors_race
-    # "#D4A6C8", "#FCC66D", "#8CD17D", "#A0CBE8", "#E15759", "#5C6068", "#D3D3D3"
-    )) +
-  theme_minimal() +
-  theme(panel.grid.minor.y = element_blank(),
-        panel.grid.major.y = element_blank(),
-        text = element_text(size = 14),
-        axis.text = element_text(size = 13),
-        axis.text.y = element_text(margin = margin(r=-10)),
-        # axis.text.x = element_text(size = 13),
-        axis.title = element_text(size = 14),
-        axis.title.y = element_text(margin = margin(r=10)),
-        axis.title.x = element_text(margin = margin(t=12)),
-        # axis.title.x.bottom = element_blank(),
-        axis.title.x.top = element_text(margin = margin(b=12)),
-        plot.caption = element_text(hjust=0, margin = margin(t=12)),
-        legend.title=element_blank(),
-        legend.position = "top") +
-  labs(fill = "")
-
-
-
-```
-
-### Youth Population by Ethnicity in Albemarle County, City of Charlottesville and Virginia in 2021
-
-```{r}
-# youth plot 
-popdatethn %>%
-  mutate(ethnicity = factor(ethnicity, levels = c("Non-Hispanic", "Hispanic"), labels = c("Non-Hispanic", "Hispanic")),
-         label = ifelse(youthperc >= 1, paste0(as.character(round(youthperc, digits = 0)), "%"), paste0(as.character(round(youthperc, digits = 1)), "%"))) %>% 
-  arrange(ethnicity) %>% 
-ggplot(aes(x = youthperc, y = locality, group = locality, fill = ethnicity, label = label)) +
-  geom_bar(stat = "identity") +
-  geom_label_repel(aes(label = label),
-                  size = 3.5, fontface = "bold", show.legend = FALSE,
-                  # min.segment.length = Inf,
-                  position = position_stack(vjust = 0.5), 
-                  box.padding = 0.05,
-                  force_pull = 100,
-                  direction = "x",
-                  color = "white") +
-  # geom_text(size = 4, position = position_stack(vjust = 0.5), color = "white") +
-  scale_x_continuous(limits = c(0, 100),
-                     labels = label_percent(scale = 1), 
-                     name = "Percent of Population",
-                     sec.axis = dup_axis()) + 
-  scale_y_discrete(name = "") +
-  scale_fill_manual(values = two_colors_ethn) +
-  theme_minimal() +
-  theme(panel.grid.minor.y = element_blank(),
-        panel.grid.major.y = element_blank(),
-        text = element_text(size = 14),
-        axis.text = element_text(size = 13),
-        axis.text.y = element_text(margin = margin(r=-10)),
-        # axis.text.x = element_text(size = 13),
-        axis.title = element_text(size = 14),
-        axis.title.y = element_text(margin = margin(r=10)),
-        axis.title.x = element_text(margin = margin(t=12)),
-        # axis.title.x.bottom = element_blank(),
-        axis.title.x.top = element_text(margin = margin(b=12)),
-        plot.caption = element_text(hjust=0, margin = margin(t=12)),
-        legend.title=element_blank(),
-        legend.position = "top") +
-  labs(fill = "")
-
-```
-
-## Measures
-
-### Reading the Gap Charts
 
 ![Example Gap Chart](gapchart1-example.png)
 
@@ -384,6 +230,163 @@ ggplot(aes(x = youthperc, y = locality, group = locality, fill = ethnicity, labe
 #   labs(fill = "")
 
 ```
+
+
+## Race and Ethnicity in Charlottesville and Albemarle
+
+### Youth Population by Race in Albemarle County, City of Charlottesville and Virginia in 2021
+
+```{r fig.height=6.5, fig.width=10}
+# Showing the youth population racial and enthic demographics for the stepping stone supplemental report
+# Contributor: Lee LeBoeuf
+
+# reading in data
+popdat <- read.csv("../data/pop_race_ethn.csv") %>%
+  rename(race = variable) %>%
+  filter(year == 2021) %>% 
+  clean_names() %>% 
+  mutate(locality = factor(name, levels = c("Virginia", "Charlottesville city, Virginia", "Albemarle County, Virginia"), labels = c("Virginia", "Charlottesville", "Albemarle")))
+           
+         #   recode(name, "Albemarle County, Virginia" = "Albemarle",
+         #                   "Charlottesville city, Virginia" = "Charlottesville",
+         #                   "Virginia" = "Virginia")
+         # )
+
+# popdat <- popdat %>% 
+#   mutate(race = factor(race, levels = c("white", "black", "multi", "asian", "other", "aian", "nhpi", "hispanic"), labels = c("White", "Black", "Multiracial", "Asian", "Other Races", "American Indian/Alaskan Native", "Native Hawaiian/Pacific Islander", "Hispanic")),
+#          # recode(race, "aian" = "American Indian/Alaskan Native",
+#          #              "asian" = "Asian",
+#          #              "black" = "Black",
+#          #              "multi" = "Multiracial",
+#          #              "nhpi" = "Native Hawaiian/Pacific Islander",
+#          #              "other" = "Other Races",
+#          #              "white" = "White",
+#          #              "hispanic" = "Hispanic"),
+#          locality = factor(locality, levels = c("Virginia", "Charlottesville", "Albemarle"), labels = c("Virginia", "Charlottesville", "Albemarle"))
+#            
+#         
+#          ) 
+
+
+# dataframe for race
+popdatrace <- popdat %>%
+  filter(raceethn == 'race') %>%
+  group_by(locality) %>%
+  mutate(totalyouthpop = sum(youthpop_count)) %>%
+  ungroup()
+
+popdatrace$youthperc <- round(popdatrace$youthpop_count / popdatrace$totalyouthpop * 100, 2)
+popdatrace$allperc <- round(popdatrace$pop_count / popdatrace$totalpop * 100, 2)
+
+# dataframe for ethnicity 
+popdatethn <- popdat %>%
+  group_by(locality) %>%
+  mutate(totalyouthpop = sum(youthpop_count)) %>%
+  ungroup()
+
+popdatethn <- popdatethn %>%
+  group_by(raceethn, locality) %>%
+  mutate(groupcount = sum(youthpop_count)) %>%
+  select(locality, groupcount, totalyouthpop) %>%
+  distinct()
+
+popdatethn$ethnicity <- ifelse(popdatethn$raceethn == "ethnicity", "Hispanic", "Non-Hispanic")
+
+popdatethn$youthperc <- round(popdatethn$groupcount / popdatethn$totalyouthpop * 100, 2)
+
+
+# youth plot 
+popdatrace %>% 
+  mutate(race = factor(race, 
+                       levels = c("white", "black", "multi", "asian", "other", "aian", "nhpi", "hispanic"), 
+                       labels = c("White", "Black", "Multiracial", "Asian", "Other Racial Identities", "American Indian/Alaskan Native", "Native Hawaiian/Pacific Islander", "Hispanic")),
+         label = ifelse(youthperc >= 1, paste0(as.character(round(youthperc, digits = 0)), "%"), paste0(as.character(round(youthperc, digits = 1)), "%"))) %>% 
+  arrange(race) %>% 
+  ggplot(aes(x = youthperc, y = locality, group = locality, fill = race)) +
+  geom_bar(stat = "identity") +
+  geom_label_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", show.legend = FALSE,
+                  min.segment.length = Inf,
+                  position = position_stack(vjust = 0.45), 
+                  box.padding = 0.1,
+                  force_pull = 100,
+                  # direction = "x",
+                  color = "white") +
+  # geom_text(size = 4, position = position_stack(vjust = 0.5), color = "white") +
+  scale_x_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Population",
+                     sec.axis = dup_axis()) + 
+  scale_y_discrete(name = "") +
+  scale_fill_manual(values = c(seven_colors_race
+    # "#D4A6C8", "#FCC66D", "#8CD17D", "#A0CBE8", "#E15759", "#5C6068", "#D3D3D3"
+    )) +
+  theme_minimal() +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-10)),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(fill = "")
+
+
+
+```
+
+### Youth Population by Ethnicity in Albemarle County, City of Charlottesville and Virginia in 2021
+
+```{r}
+# youth plot 
+popdatethn %>%
+  mutate(ethnicity = factor(ethnicity, levels = c("Non-Hispanic", "Hispanic"), labels = c("Non-Hispanic", "Hispanic")),
+         label = ifelse(youthperc >= 1, paste0(as.character(round(youthperc, digits = 0)), "%"), paste0(as.character(round(youthperc, digits = 1)), "%"))) %>% 
+  arrange(ethnicity) %>% 
+ggplot(aes(x = youthperc, y = locality, group = locality, fill = ethnicity, label = label)) +
+  geom_bar(stat = "identity") +
+  geom_label_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", show.legend = FALSE,
+                  # min.segment.length = Inf,
+                  position = position_stack(vjust = 0.5), 
+                  box.padding = 0.05,
+                  force_pull = 100,
+                  direction = "x",
+                  color = "white") +
+  # geom_text(size = 4, position = position_stack(vjust = 0.5), color = "white") +
+  scale_x_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Population",
+                     sec.axis = dup_axis()) + 
+  scale_y_discrete(name = "") +
+  scale_fill_manual(values = two_colors_ethn) +
+  theme_minimal() +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-10)),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(fill = "")
+
+```
+
+## Measures
 
 ### Children Living Below Poverty Threshold
 
@@ -2066,8 +2069,9 @@ plot_PSE <- ggplot(plotdatAny, aes(x = percent_any, y = year, group = year)) +
   new_scale_color() +
   geom_text(aes(label = pt_label, col = group), size = 4) +
   scale_color_manual(values=rep("white",6), guide = guide_legend(nrow = 1)) +
-  labs(caption = "Note: No data available for Charlottesville for Asian students in 2008 and 2020, for Hispanic students 2008-12 and 2014, 
-and for Multiracial students 2008-14 and 2018.") +
+  labs(caption = "Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid 
+potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008 and 2020, for Hispanic 
+students 2008-12 and 2014, and for Multiracial students 2008-14 and 2018.") +
   theme(panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         text = element_text(size = 14),
@@ -2134,8 +2138,9 @@ ggplot() +
                      name = "School Year") +
   theme_minimal() +  
   facet_wrap(~ locality, ncol = 2, scales='free_y') +
-  labs(caption = "Note: No data available for Charlottesville for Asian students in 2008, 2015 and 2020, for Hispanic students 2008-12 and 2014, 
-and for Multiracial students 2008-15 and 2018.") +
+  labs(caption = "Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid 
+potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008, 2015 and 2020, for 
+Hispanic students 2008-12 and 2014, and for Multiracial students 2008-15 and 2018.") +
   theme(text = element_text(size = 14),
         panel.grid.minor.x = element_blank(),
         strip.text.x = element_text(size = 16),
@@ -2195,7 +2200,8 @@ ggplot() +
                      name = "Percent of Students") + 
   scale_x_discrete(name = "") +
   facet_wrap(~ race, ncol = 2, scales='free_x') +
-  labs(caption = "Note: No data available for Charlottesville for Asian students in 2020.") +
+  labs(caption = "Note: The counts for Asian students in Charlottesville is not provided because the number of Asian students 
+graduating in 2020 was below the threshold the state uses to avoid potentially identifiable data.") +
   theme_minimal() +
   theme(panel.grid.minor.x = element_blank(),
         strip.text.x = element_text(size = 16),
