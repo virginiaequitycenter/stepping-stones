@@ -17,7 +17,8 @@ output:
 .main-container div.section.level2 h2 {
   /*font-size: 2.35rem;*/
   padding: 4px 22px;
-margin: 0 0 22px;
+/*margin: 0 0 22px;*/
+margin: 22px 0;
 border-left: 6px solid #3991d1;
 }
 
@@ -34,6 +35,7 @@ div.figure p.caption {
   font-size: smaller;
   font-style: oblique; 
   text-align: right;
+  margin-left: 8%;
 }
 ```
 
