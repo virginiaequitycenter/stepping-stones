@@ -22,10 +22,10 @@ margin: 22px 0;
 border-left: 6px solid #3991d1;
 }
 
-h4, h5 {
-  /*font-family: "Poppins",Arial,sans-serif;*/
+/*h4, h5 {
+  font-family: "Poppins",Arial,sans-serif;
   font-size: 1.25rem;
-}
+}*/
 div.small-h3 h3 {
 font-size: 1.25rem;
   /*font-size: 1.5rem;*/
@@ -37,6 +37,13 @@ div.figure p.caption {
   text-align: right;
   margin-left: 8%;
 }
+
+.fa-circle-question {
+vertical-align: super;
+color: #0370b7;
+cursor: pointer;
+}
+
 ```
 
 ```{r setup, include=FALSE}
@@ -53,6 +60,9 @@ library(grid)
 library(ggnewscale)
 library(stats)
 library(plotrix)
+library(shiny)
+library(fontawesome)
+library(tippy)
 
 str_sort_last <- function(object){
   last <- str_sort(object)
@@ -83,6 +93,22 @@ two_colors_ethn <- c(
 
 
 ```
+
+```{r, echo=FALSE}
+tippy::tippy_this(elementId = "qset1", tooltip = 
+  "<b>Question Set 1:</b><br/>
+  How large is the gap between the racial groups experiencing the best and worst outcomes in Charlottesville, Albemarle, and Virginia?<br/>Is the size of the gap changing over time?<br/>Are the same groups consistently benefited or harmed?<br/>", allowHTML = 'true', theme = "light", arrow = "true")
+
+tippy::tippy_this(elementId = "qset2", tooltip = 
+  "<b>Question Set 2:</b><br/>
+  How is the outcome changing over time for each racial group? What groups are experiencing the best/worst outcomes? And how do these results compare across localities?<br/>", allowHTML = 'true', theme = "light", arrow = "true")
+
+tippy::tippy_this(elementId = "qset3", tooltip = 
+  "<b>Question Set 3:</b><br/>
+  For the most recent year in which data are available, how is each racial subgroup faring relative to the total population? Is any group disproportionately better off or worse off than the population as a whole?<br/>", allowHTML = 'true', theme = "light", arrow = "true")
+
+```
+
 ## Introduction
 
 The Stepping Stones Report, originally produced by the Charlottesville/Albemarle Commission on Children and Families in 2000, aims to provide insight into outcomes for youth in Charlottesville and Albemarle by sharing data on a variety of metrics related to health and well-being. In June 2023, the University of Virginia’s Equity Center and Batten School of Leadership and Public Policy in partnership with the Charlottesville Department of Human Services, released a new version of the [Stepping Stones Report](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/) that provides updated data and context for each metric. _This supplemental report showcases racially disaggregated data for a subset of the original metrics._ 
@@ -105,7 +131,7 @@ We adopt a set of strategies to make the racially disaggregated data useful whil
 
 Each included measure has three visuals to represent the data. The first visual is a gap chart highlighting the size of the gaps between racial subgroups who are most and least impacted by each outcome. The second is a line chart showing how the outcome has changed over time for each subgroup. The third is a bar chart showing how the outcome for each racial group compares to the total population in the most recent year the data is available. With these three visualizations, we hope to probe the following questions:
 
-### Question Set 1
+### Question Set 1:
 
 __How large is the gap between the racial groups experiencing the best and worst outcomes in Charlottesville, Albemarle, and Virginia? Is the size of the gap changing over time? Are the same groups consistently benefited or harmed?__
 
@@ -206,13 +232,13 @@ knitr::include_graphics("gapchart1-example.png")
 
 ```
 
-### Question Set 2
+### Question Set 2:
 
 __How is the outcome changing over time for each racial group? What groups are experiencing the best/worst outcomes? And how do these results compare across localities?__
 
 These questions are best answered by the second graph for each outcome. The percent or rate of people impacted for each racial group is shown over time. So, for each individual racial group, you can see if the rate is increasing or decreasing, and how this trend compares across racial groups and across localities. 
 
-### Question Set 3
+### Question Set 3:
 
 __For the most recent year in which data are available, how is each racial subgroup faring relative to the total population? Is any group disproportionately better off or worse off than the population as a whole?__
 
@@ -432,17 +458,13 @@ ggplot(aes(x = youthperc, y = locality, group = locality, fill = ethnicity, labe
 
 These figures present the percentage of families with incomes below the yearly poverty level out of all families. In 2022, the federal poverty level for a family of four was $27,750; falling below the poverty threshold indicates severe economic insecurity. 
 
-#### Notable Trends
-
--  In the first graph, we see that the gap in Albemarle is similar to the racial gap in the state overall and the gap in Charlottesville is consistently the largest. 
-- The second figure provides the overtime trend for the percent in poverty by racial subgroup: While the percent of children in poverty has been relatively steady in Albemarle across all subgroups, the poverty rate for Black children in Charlottesville has been steadily increasing. Black children are notably more likely to be living in poverty than any other racial group in both localities. 
-- The third figure makes the current disparity clear: Black children in each locality experience poverty at a higher rate than the overall population, and this trend is especially true in Charlottesville. In Charlottesville, but not in Albemarle or the Commonwealth, Multiracial children also live in poverty at a higher rate than children overall.
-
 __Data Source:__ U.S. Census Bureau, [Small Area Income and Poverty Estimates](https://www.census.gov/programs-surveys/saipe/data/datasets.html). "SAIPE State and County Estimates for 2021." 
 
-#### Gap Chart of the Percent of Children living below the Poverty Threshold by Race for Albemarle, Charlottesville and Virginia, 2011-2021 
+#### How large is the gap? <span id="qset1">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-```{r fig.height=9, fig.width=10, fig.cap="Chart showing outcome gaps for Asian, Black, Multiracial, White, and Total (Percent for all youth) in Albemarle, Charlottesville, and Virginia, for every other year from 2011 to 2021."}
+##### Percent of Children living below the Poverty Threshold by Race for Albemarle, Charlottesville and Virginia, 2011-2021 
+
+```{r fig.height=9, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Multiracial, White, and Total (Percent for all youth) in Albemarle, Charlottesville, and Virginia, for every other year from 2011 to 2021."}
 # Children Living Below Poverty Threshold
 # reading in data
 povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
@@ -530,10 +552,13 @@ grid.draw(g)
 
 ```
 
+__Notable Trends:__ The gap in Albemarle is similar to the racial gap in the state overall and the gap in Charlottesville is consistently the largest.
 
-#### Percent of Children living below the Poverty Threshold by Race for Albemarle and Charlottesville, 2011-2021 
+#### How have the outcomes changed over time? <span id="qset2">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-```{r fig.height=8, fig.width=10, fig.cap="Line charts for Albemarle and Charlottesville, each showing outcomes for Asian, Black, Multiracial, White, and Total (Percent for all youth) from 2011 to 2021."}
+##### Percent of Children living below the Poverty Threshold by Race for Albemarle and Charlottesville, 2011-2021 
+
+```{r fig.height=8, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville, each showing outcomes for Asian, Black, Multiracial, White, and Total (Percent for all youth) from 2011 to 2021."}
 # Creating data viz for stepping stones supplemental report by race 
 # removing NHPI and AIAN for all plots because they represent such a small portion of the population 
 # Contributor: Lee LeBoeuf
@@ -597,9 +622,13 @@ ggplot() +
 
 ```
 
-#### Percent of Children living below the Poverty Threshold by Race in 2021 for Albemarle, Charlottesville, and Virginia
+__Notable Trends:__ While the percent of children in poverty has been relatively steady in Albemarle across all subgroups, the poverty rate for Black children in Charlottesville has been steadily increasing. Black children are notably more likely to be living in poverty than any other racial group in both localities.
 
-```{r fig.height = 9, fig.width=10, fig.cap="Bar charts for Asian, Black, Multiracial, and White, showing the gap in outcomes between the subgroup and the whole youth population for Albemarle, Charlottesville, and Virginia in 2021."}
+#### What are the current outcomes? <span id="qset3">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Children living below the Poverty Threshold by Race in 2021 for Albemarle, Charlottesville, and Virginia
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Multiracial, and White, showing the gap in outcomes between the subgroup and the whole youth population for Albemarle, Charlottesville, and Virginia in 2021."}
 
 # Contributor: Lee LeBoeuf
 # 
@@ -681,23 +710,21 @@ ggplot() +
   labs(fill = "")
 ```
 
+__Notable Trends:__ The current disparity clear: Black children in each locality experience poverty at a higher rate than the overall population, and this trend is especially true in Charlottesville. In Charlottesville, but not in Albemarle or the Commonwealth, Multiracial children also live in poverty at a higher rate than children overall.
+
 ### Students Identified as Economically Disadvantaged
 
 [Students in economically disadvantaged households](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#students-identified-as-economically-disadvantaged) face additional barriers to learning, from the impact of inadequate nutrition and health care on concentration to the effect on development from growing up with long-term exposure to stress. Like poverty, the experience of economic disadvantage among students is shaped by race, with the same [policies](https://www.americanprogress.org/article/systematic-inequality-economic-opportunity/) and [structures](https://www.sciencedirect.com/science/article/pii/S1876285921002783) that generate racially disparate rates of poverty producing disparate rates of economic disadvantage. The challenges to education faced by students in economically disadvantaged contexts is one of the ways racial advantage and disadvantage is [reproduced through generations](https://www.opportunityatlas.org/).
 
-Students are identified as economically disadvantaged if they meet one or more of the following conditions: eligible for free or reduced meals (family income is within 130% or 185% of federal poverty threshold), are eligible for TANF, Medicaid and/or Head Start, or identified as from a migrant family, experiencing homelessness, or in foster care. The measure below is the percent of all students who meet any of the above conditions. 
-
-#### Notable Trends
-
-- The first graph highlights the racial gaps among economically disadvantaged students. The gaps for both Charlottesville and Albemarle are larger than those for the state as a whole. The racial gap in Albemarle is approximately the same throughout this period; the racial gap in Charlottesville narrows for a brief time, in the 2019 to 2021 period, before increasing again.
-- The second figure presents the percent of economically disadvantaged students by race and ethnicity over time. For both Charlottesville and Albemarle, we see a drop in the percent of students classified as economically disadvantaged in the year in which each system applied for the USDA’s Community Eligibility Program (CEP). Schools in which 40 percent or more of the students are eligible for free meals can apply for “community eligibility” so that all students in the school may participate in the meal program. CEP eligibility has [raised some challenges to measuring](https://www.usnews.com/news/education-news/articles/2019-01-07/why-its-getting-harder-to-count-poor-children-in-the-nations-schools) the number of economically disadvantaged students as it changes the process and incentives for acquiring household income information previously used to qualify for reduced meals. Consequently, the declines in the economically disadvantaged rate visible at the onset of CEP may reflect less accurate data collection rather than a reduction in need. 
-- The third figure shows the percent of economic need by race and ethnicity relative to the overall percent of economically disadvantaged students in a school division for the 2022-2023 school year. Black students in each jurisdiction have a higher rate of economic disadvantage relative to the overall rate. In Charlottesville, both students of Asian descent and Multiracial students experience higher rates of economic disadvantage, while in Albemarle students of Hispanic descent experience a higher rate of economic need compared to students overall.
+Students are identified as economically disadvantaged if they meet one or more of the following conditions: eligible for free or reduced meals (family income is within 130% or 185% of federal poverty threshold), are eligible for TANF, Medicaid and/or Head Start, or identified as from a migrant family, experiencing homelessness, or in foster care. The measure below is the percent of all students who meet any of the above conditions.
 
 __Data Source:__ Virginia Department of Education, “[Fall Membership Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/fallmembership).” 2004-2023.
 
-#### Gap Chart of the Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2011-2023
+#### How large is the gap? <span id="qset1">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-```{r fig.height=9.5, fig.width=10, fig.cap="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for every other year from 2011 to 2023."}
+##### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2011-2023
+
+```{r fig.height=9.5, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for every other year from 2011 to 2023."}
 # Students Identified as Economically Disadvantaged
 # reading in data
 econbyrace <- read.csv("../data/econ_disad_students_Race.csv") %>%
@@ -785,10 +812,13 @@ grid.draw(g)
 
 ```
 
+__Notable Trends:__ The gaps for both Charlottesville and Albemarle are larger than those for the state as a whole. The racial gap in Albemarle is approximately the same throughout this period; the racial gap in Charlottesville narrows for a brief time, in the 2019 to 2021 period, before increasing again.
 
-#### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity for Albemarle County Public Schools and Charlottesville City Schools, 2011-2023 
+#### How have the outcomes changed over time? <span id="qset2">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-```{r fig.height=8, fig.width=10, fig.cap="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for school years 2010-11 to 2022-23."}
+##### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity for Albemarle County Public Schools and Charlottesville City Schools, 2011-2023 
+
+```{r fig.height=8, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for school years 2010-11 to 2022-23."}
 # reading in data
 econbyrace <- read.csv("../data/econ_disad_students_Race.csv") %>%
   filter(race != "American Indian or Alaska Native" & 
@@ -862,9 +892,13 @@ ggplot() +
 
 ```
 
-#### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity in the 2022-23 School Year for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+__Notable Trends:__ For both Charlottesville and Albemarle, we see a drop in the percent of students classified as economically disadvantaged in the year in which each system applied for the USDA’s Community Eligibility Program (CEP). Schools in which 40 percent or more of the students are eligible for free meals can apply for “community eligibility” so that all students in the school may participate in the meal program. CEP eligibility has [raised some challenges to measuring](https://www.usnews.com/news/education-news/articles/2019-01-07/why-its-getting-harder-to-count-poor-children-in-the-nations-schools) the number of economically disadvantaged students as it changes the process and incentives for acquiring household income information previously used to qualify for reduced meals. Consequently, the declines in the economically disadvantaged rate visible at the onset of CEP may reflect less accurate data collection rather than a reduction in need.
 
-```{r fig.height = 9, fig.width=10, fig.cap="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts for the 2022-23 school year."}
+#### What are the current outcomes? <span id="qset3">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity in the 2022-23 School Year for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts for the 2022-23 school year."}
 # reading in data
 econbyrace <- read.csv("../data/econ_disad_students_Race.csv") %>%
   filter(race != "American Indian or Alaska Native" & 
@@ -929,23 +963,21 @@ ggplot() +
   labs(fill = "")
 ```
 
+__Notable Trends:__ For the 2022-2023 school year, black students in each jurisdiction have a higher rate of economic disadvantage relative to the overall rate. In Charlottesville, both students of Asian descent and Multiracial students experience higher rates of economic disadvantage, while in Albemarle students of Hispanic descent experience a higher rate of economic need compared to students overall.
+
 ### People Experiencing Homelessness
 
 [Homelessness](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#people-experiencing-homelessness) is a public health crisis. Individuals without housing are at a higher risk of [illness, violence, and mortality](https://www.cdc.gov/phlp/publications/topic/resources/resources-homelessness.html). Across the country, Black and Indigenous people experience much [higher rates of homelessness](https://link.springer.com/article/10.1007/s40615-023-01521-9), and these [longstanding disparities](https://endhomelessness.org/homelessness-in-america/what-causes-homelessness/inequality/) are shaped by histories of segregation and housing discrimination as well as ongoing structural disparities in economic opportunity and incarceration.   
 
-The figures below present the Point-in-Time (PIT) count as conducted each year in January to document the scale and nature of homelessness in our area. The Blue Ridge Area Coalition for the Homelessness serves as the coordinator of the Continuum of Care for our community, including City of Charlottesville and counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson. The figure below represents the number of unhoused persons identifying with a racial or ethnic subgroup over the number of residents in the overall region identifying with the same racial or ethnic subgroup. 
-
-#### Notable Trends
-
-- In the first figure, the racial gap in homelessness grew smaller in the period from 2019 to 2021 relative to prior years and saw an increase in 2022. Reflecting outcomes nationally, Black individuals are consistently and significantly overrepresented among people experiencing homelessness. 
-- From the second figure, which shows trends over time within racial and ethnic subgroups, we see that the size of the racial gap is largely a function of the changing rate of homelessness among Black residents; the rate among Black residents has both dropped and increased notably across this period. 
-- The final figure makes clear the disproportionality in the rate of homelessness among Black residents relative to all other racial and ethnic subgroups.
+The figures below present the Point-in-Time (PIT) count as conducted each year in January to document the scale and nature of homelessness in our area. The [Blue Ridge Area Coalition for the Homeless](https://blueridgehomeless.org/) serves as the coordinator of the Continuum of Care for our community, including City of Charlottesville and counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson. The figure below represents the number of unhoused persons identifying with a racial or ethnic subgroup over the number of residents in the overall region identifying with the same racial or ethnic subgroup.
 
 __Data Source:__ Blue Ridge Area Coalition for the Homeless, “Point-in-Time Count”, 2014-2022.
 
-#### Gap Chart of the Rate of People Experiencing Homelessness by Race and Ethnicity in the Charlottesville Region, 2014-2022
+#### How large is the gap? <span id="qset1">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-```{r fig.height=8, fig.width=10, fig.cap="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and the Rate for the Total Population in the Charlottesville Region (City of Charlottesville and Counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson), for the years 2014 to 2022."}
+##### Rate of People Experiencing Homelessness by Race and Ethnicity in the Charlottesville Region, 2014-2022
+
+```{r fig.height=8, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and the Rate for the Total Population in the Charlottesville Region, for the years 2014 to 2022.", fig.cap="The Charlottesville Region for this dataset includes the City of Charlottesville and Counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson."}
 # reading in data
 homelesssbyrace <- read.csv("../data/pit_homelessness_race.csv") %>%
   filter(group != "aian" & group != "nhpi" & group !="nonhispanic") %>% 
@@ -1005,9 +1037,13 @@ grid.draw(g)
 
 ```
 
-#### Rate of People Experiencing Homelessness in the Charlottesville Region by Race and Ethnicity, 2014-2022 
+__Notable Trends:__ The racial gap in homelessness grew smaller in the period from 2019 to 2021 relative to prior years and saw an increase in 2022. Reflecting outcomes nationally, Black individuals are consistently and significantly overrepresented among people experiencing homelessness.
 
-```{r fig.height=7, fig.width=10, fig.cap="Line chart for the Charlottesville Region (City of Charlottesville and Counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson), showing outcomes for Asian, Black, Hispanic, Multiracial, White, and the Rate for the Total Population from 2014 to 2022."}
+#### How have the outcomes changed over time? <span id="qset2">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Rate of People Experiencing Homelessness in the Charlottesville Region by Race and Ethnicity, 2014-2022 
+
+```{r fig.height=7, fig.width=10, fig.alt="Line chart for the Charlottesville Region, showing outcomes for Asian, Black, Hispanic, Multiracial, White, and the Rate for the Total Population from 2014 to 2022.", fig.cap="The Charlottesville Region for this dataset includes the City of Charlottesville and Counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson."}
 
 homelesssbyrace <- read.csv("../data/pit_homelessness_race.csv") %>%
   filter(group != "aian" & group != "nhpi" & group != "nonhispanic") %>% 
@@ -1057,9 +1093,13 @@ ggplot() +
 
 ```
 
-#### Rate of People Experiencing Homelessness by Race and Ethnicity in the Charlottesville Region in 2022
+__Notable Trends:__ From this figure we can see that the size of the racial gap is largely a function of the changing rate of homelessness among Black residents; the rate among Black residents has both dropped and increased notably across this period.
 
-```{r fig.height = 6, fig.width=10, fig.cap="Bar chart for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between each subgroup and rate for the total population for the Charlottesville Region (City of Charlottesville and Counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson) in 2022."}
+#### What are the current outcomes? <span id="qset3">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Rate of People Experiencing Homelessness by Race and Ethnicity in the Charlottesville Region in 2022
+
+```{r fig.height = 6, fig.width=10, fig.alt="Bar chart for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between each subgroup and rate for the total population for the Charlottesville Region in 2022.", fig.cap="The Charlottesville Region for this dataset includes the City of Charlottesville and Counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson."}
 # reading in data
 hombyrace <- read.csv("../data/pit_homelessness_race.csv")  %>%
   filter(year == 2022) %>%
@@ -1113,24 +1153,21 @@ ggplot() +
   labs(fill = "")
 ```
 
+__Notable Trends:__ This figure makes clear the disproportionality in the rate of homelessness among Black residents relative to all other racial and ethnic subgroups.
 
 ### Low Birth-Weight Infants
 
 [Low birth-weight infants](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#low-birth-weight-infants), defined as those born weighing less than 2,500 grams (about 5.5 lbs), are indicative of maternal health and infant health. Due to inequitable access to maternal care and education, low birth-weight infants are more likely among families of color relative to White families. More specifically, [recent research](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6596993/) found that low birth-weight infants are more common in non-Hispanic Black families, non-Hispanic Asian families, and foreign-born Hispanic families. The racial inequities in this outcome are associated with cascading health inequalities, as being a low birth-weight infant predicts many other poor health outcomes. 
 
-Here, we show data from the Virginia Department of Health’s (VDH) Vital Events Statistics program, which records the percentage of low birth-weight babies out of all babies born in the state. VDH only reports data for White families, Black families, and all other families. 
-
-#### Notable Trends
-
-- As can be seen in the first graph, the gap between the percentage of low birth-weight babies born to White families and those born to Black families was consistently larger in Charlottesville relative to Albemarle except for the 2003-05 period. In all three localities, low birth-weight babies are more common among Black families than White families. 
-- The second graph similarly shows that the percentage of Black infants born with low birth-weights is consistently higher than the percentage of White infants born with low birth-weight in both Albemarle and Charlottesville. 
-- Finally, the last graph underscores this by showing that the percent of infant low birth-weight babies among Black infants was around 14-16% in all three localities for the 2018-2020 period, whereas the rate among White infants was only 5-7%. 
+Here, we show data from the Virginia Department of Health’s (VDH) Vital Events Statistics program, which records the percentage of low birth-weight babies out of all babies born in the state. VDH only reports data for White families, Black families, and all other families.
 
 __Data Source:__ [Virginia Department of Health, Division of Health Statistics](https://apps.vdh.virginia.gov/HealthStats/stats.htm), “Resident Low Weight Live Births and Very Low Weight Births.” 2000-2022.
 
-#### Gap Chart of the Percent of Low Birth-Weight Infants by Race for Albemarle, Charlottesville and Virginia, 2000-2020 
+#### How large is the gap? <span id="qset1">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-``` {r fig.height=9, fig.width=10, fig.cap="Chart showing outcome gaps for Black, White, and Total (Percent for All Infants) in Charlottesville, Albemarle and Virginia, for three-year periods from 2000 to 2020."}
+##### Percent of Low Birth-Weight Infants by Race for Albemarle, Charlottesville and Virginia, 2000-2020 
+
+``` {r fig.height=9, fig.width=10, fig.alt="Chart showing outcome gaps for Black, White, and Total (Percent for All Infants) in Charlottesville, Albemarle and Virginia, for three-year periods from 2000 to 2020."}
 lbw_race <- read.csv("../data/low_birth_weight_race.csv")
 lbw_race <- lbw_race %>% filter(group != "other") # can't define, catagory contains unknown/inconsistent variables 
 
@@ -1202,9 +1239,13 @@ grid.draw(g)
 
 ```
 
-#### Percent of Low Birth-Weight Infants by Race, 2000-2020 
+__Notable Trends:__ The gap between the percentage of low birth-weight babies born to White families and those born to Black families was consistently larger in Charlottesville relative to Albemarle except for the 2003-05 period. In all three localities, low birth-weight babies are more common among Black families than White families. 
 
-```{r fig.height=7, fig.width=10, fig.cap="Line charts for Albemarle and Charlottesville, each showing outcomes for Black, White, and Total (Percent for All Infants) for three-year periods from 2000 to 2020."}
+#### How have the outcomes changed over time? <span id="qset2">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Low Birth-Weight Infants by Race, 2000-2020 
+
+```{r fig.height=7, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville, each showing outcomes for Black, White, and Total (Percent for All Infants) for three-year periods from 2000 to 2020."}
 # reading in data
 lbw_race <- read.csv("../data/low_birth_weight_race.csv")
 lbw_race <- lbw_race %>% 
@@ -1262,9 +1303,13 @@ ggplot() +
 
 ```
 
-#### Percent of Low Birth-Weight Infants by Race for 2018-2020 for Albemarle, Charlottesville, and Virginia
+__Notable Trends:__ This figure shows that the percentage of Black infants born with low birth-weights is consistently higher than the percentage of White infants born with low birth-weight in both Albemarle and Charlottesville.
 
-```{r fig.height = 5, fig.width=10, fig.cap="Bar charts for Black and White racial subgroups, showing the gap in outcomes between the subgroup and the all infants for Albemarle, Charlottesville, and Virginia for the three-year period 2018-2020."}
+#### What are the current outcomes? <span id="qset3">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Low Birth-Weight Infants by Race for 2018-2020 for Albemarle, Charlottesville, and Virginia
+
+```{r fig.height = 5, fig.width=10, fig.alt="Bar charts for Black and White racial subgroups, showing the gap in outcomes between the subgroup and the all infants for Albemarle, Charlottesville, and Virginia for the three-year period 2018-2020."}
 # reading in data 
 lbw_race <- read.csv("../data/low_birth_weight_race.csv") %>%
   filter(year == 2019) %>%
@@ -1328,23 +1373,21 @@ ggplot() +
   labs(fill = "")
 ```
 
+__Notable Trends:__ This graph underscores the existing gap, showing that the percent of Black infants born with low birth-weights was around 14-16% in all three localities for the 2018-2020 period, whereas the rate among White infants was only 5-7%.
+
 ### Infant Deaths
 
 Much like low birth-weight infants, [infant mortality](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#infant-deaths) is an indicator of infant health and familial access to health care. Infant mortality refers to the rate of babies who die before their first birthday per 1,000 live births, and it is a tragedy that [disproportionately impacts Black families](https://minorityhealth.hhs.gov/omh/browse.aspx?lvl=4&lvlid=23) in large part because these families are less likely to receive prenatal and postnatal care. The most common causes of infant mortality include birth defects, preterm births and low birth-weight, maternal complications during pregnancy, Sudden Infant Death Syndrome, and injuries. 
 
 The data presented here come from health registration data from the Virginia Department of Health’s Vital Events Statistics program. These data are like census data in that they aim to accurately reflect the population and represent an authoritative list of births in the state. There may be some amount of error if some births are not accurately recorded. 
 
-#### Notable trends
-
-- The first figure shows that the racial gaps between White and Black rates of infant deaths seem to be smaller in 2000-02 relative to 2018-20. 
-- As with low birth-weight infants shown above, the second figure shows that this outcome is much more common among Black families than it is White families in all three localities. Though the rates of infant deaths decreased for both White and Black babies between 2006-08 and 2015-17 in Albemarle and 2009-11 and 2012-14 in Charlottesville, both localities saw an uptick in 2015-17. 
-- The final figure shows that the rate for Black infant deaths is higher in Albemarles than it is in Charlottesville or the rest of the state, but rates are consistently higher Black families relative to the whole population across all three localities. 
-
 __Data Source:__ [Virginia Department of Health, Division of Health Statistics](https://apps.vdh.virginia.gov/HealthStats/stats.htm), “Total Infant Deaths by Place of Occurrence and Place of Residence.” 2000-2022.
 
-#### Gap Chart of the Percent of Infant Deaths by Race for Albemarle, Charlottesville and Virginia, 2000-2020 
+#### How large is the gap? <span id="qset1">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-``` {r fig.height=9, fig.width=10, fig.cap="Chart showing outcome gaps for Black, White, and Total (Percent for All Infants) in Charlottesville, Albemarle and Virginia, for three-year periods from 2000 to 2020."}
+##### Percent of Infant Deaths by Race for Albemarle, Charlottesville and Virginia, 2000-2020 
+
+``` {r fig.height=9, fig.width=10, fig.alt="Chart showing outcome gaps for Black, White, and Total (Percent for All Infants) in Charlottesville, Albemarle and Virginia, for three-year periods from 2000 to 2020."}
 infant_mortality_race <- read.csv("../data/infant_mortality_race.csv")
 infant_mortality_race <- infant_mortality_race %>% filter(group != "other") # can't define, catagory contains unknown/inconsistent variables 
 
@@ -1415,9 +1458,13 @@ grid.draw(g)
 
 ```
 
-#### Percent of Infant Deaths by Race, 2000-2020 
+__Notable Trends:__ The gap between White and Black rates of infant deaths seems to have decreased since 2000-02. This is especially true for Charlottesville, where there was as large as a 16% gap between rates for White and Black infants in 2000-02, to the most recent period of 2018-20, where the gap decreased to nearly 2%.
 
-```{r fig.height=7, fig.width=10, fig.cap="Line charts for Albemarle and Charlottesville, each showing outcomes for Black, White, and Total (Percent for All Infants) for three-year periods from 2000 to 2020."}
+#### How have the outcomes changed over time? <span id="qset2">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Infant Deaths by Race, 2000-2020 
+
+```{r fig.height=7, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville, each showing outcomes for Black, White, and Total (Percent for All Infants) for three-year periods from 2000 to 2020."}
 # reading in data
 infant_mortality_race <- read.csv("../data/infant_mortality_race.csv")
 infant_mortality_race <- infant_mortality_race %>% 
@@ -1475,9 +1522,13 @@ ggplot() +
 
 ```
 
-#### Percent of Infant Deaths by Race for 2018-2020 for Albemarle, Charlottesville, and Virginia
+__Notable Trends:__ This figure shows that this outcome is more common among Black families than it is White families in all three localities. Though the rates of infant deaths decreased for both White and Black babies between 2006-08 and 2015-17 in Albemarle and 2009-11 and 2012-14 in Charlottesville, both localities saw an uptick in 2015-17.
 
-```{r fig.height = 5, fig.width=10, fig.cap="Bar charts for Black and White racial subgroups, showing the gap in outcomes between the subgroup and the all infants for Albemarle, Charlottesville, and Virginia for the three-year period 2018-2020."}
+#### What are the current outcomes? <span id="qset3">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Infant Deaths by Race for 2018-2020 for Albemarle, Charlottesville, and Virginia
+
+```{r fig.height = 5, fig.width=10, fig.alt="Bar charts for Black and White racial subgroups, showing the gap in outcomes between the subgroup and the all infants for Albemarle, Charlottesville, and Virginia for the three-year period 2018-2020."}
 # reading in data 
 id <- read.csv("../data/infant_mortality_race.csv")%>%
   filter(year == 2019) %>%
@@ -1540,23 +1591,21 @@ ggplot() +
 
 ```
 
+__Notable Trends:__ For the 2018-2020 period, the rate for Black infant deaths is higher in Albemarle than it is in Charlottesville or the rest of the state, but rates are consistently higher for Black families relative to the whole population across all three localities.
+
 ### Students Eligible for Special Education Services
 
 [Special education services](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#students-eligible-for-special-education-services) are intended to ensure students with disabilities (hearing impairment, including deafness; speech or language impairment; visual impairment, including blindness; orthopedic impairment; autism; traumatic brain injury; developmental delay; other health impairment; intellectual disability; specific learning disability; serious emotional disturbance; or multiple disabilities) have access to a meaningful public education. Nationally, Black and Native American students are more likely to be referred for special education services than are White and Asian students (e.g., [Why are So Many Students of Color in Special Education?](https://eric.ed.gov/?id=ED622195)), while rates for Hispanic students tend to be comparable to those in the overall population. 
 
 These differences were formerly thought to be explained by differences in the expectations educators have for students of color as a result of racial bias. However, more [recent research](https://www.brookings.edu/articles/race-poverty-and-interpreting-overrepresentation-in-special-education/) has demonstrated that the differences observed between racial groups tend to disappear once other important student characteristics are taken into account, like socioeconomic status. Therefore, the fact that more Black and Native American students are referred to special education services has much more to do with the close tie between historical and current economic inequality and race than it does race alone. However, examining the percent of students in each racial group who receive special education services can still help guide decisions about allocating educational resources. Especially because the inequitable referral rates can serve to segregate children, affording fewer opportunities to children of color.
 
-#### Notable Trends
-
-- The first graph makes it clear that the gaps between the percent of students eligible for special education services across racial groups is large–often between 10 and 15%–but has narrowed in the 2021-2022 school year relative to prior years. 
-- The second graph highlights the similarities between Albemarle and Charlottesville and many other localities around the country: Black students receive special education services at the highest rate and Asian students at the lowest (among the racial groups shown here). 
-- The final graph shows that the rate for Black students eligible for special education services was notably higher than the overall rate for the 2021-22 school year, while all other racial groups have rates near the overall rates for the school division.  
-
 __Data Source:__ Virginia Department of Education, “[December 1 Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/dec1).” 2011-2022.
 
-#### Gap Chart of the Percent of Students Eligible for Special Education Services by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2014-2022
+#### How large is the gap? <span id="qset1">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-```{r fig.height=8.5, fig.width=10, fig.cap="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for school years 2013-14 to 2021-22."}
+##### Percent of Students Eligible for Special Education Services by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2014-2022
+
+```{r fig.height=8.5, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for school years 2013-14 to 2021-22."}
 #for all sped visualizations
 sped_race_dat <- read.csv("../data/sped_services_by_race.csv") %>%
   mutate(total_sped = as.numeric(sub(",", "", total_sped, fixed = TRUE)),
@@ -1643,9 +1692,13 @@ grid.draw(g)
 
 ```
 
-#### Percent of Students Eligible for Special Education Services by Race and Ethnicity, 2014-2022 
+__Notable Trends:__ This figure makes it clear that the gaps between the percent of students eligible for special education services across racial groups is large–often between 10 and 15%–but has narrowed in the 2021-2022 school year relative to prior years.
 
-```{r fig.height=8, fig.width=10, fig.cap="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for school years 2013-14 to 2021-22."}
+#### How have the outcomes changed over time? <span id="qset2">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Students Eligible for Special Education Services by Race and Ethnicity, 2014-2022 
+
+```{r fig.height=8, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for school years 2013-14 to 2021-22."}
 # reading in data
 sped_services_race <- sped_race_dat %>%
   filter(race != "American Indian or Alaska Native" & 
@@ -1708,9 +1761,13 @@ ggplot() +
 
 ```
 
-#### Percent of Students Eligible for Special Education Services by Race and Ethnicity for the 2021-2022 School Year for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+__Notable Trends:__ This figure highlights the similarities between Albemarle and Charlottesville and many other localities around the country: Black students receive special education services at the highest rate and Asian students at the lowest (among the racial groups shown here).
 
-```{r fig.height = 9, fig.width=10, fig.cap="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts for the 2022-23 school year."}
+#### What are the current outcomes? <span id="qset3">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Students Eligible for Special Education Services by Race and Ethnicity for the 2021-2022 School Year for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts for the 2022-23 school year."}
 # reading in data
 sped_services_race <- sped_race_dat %>%
   filter(race != "American Indian or Alaska Native" & 
@@ -1774,23 +1831,21 @@ ggplot() +
   labs(fill = "")
 ```
 
+__Notable Trends:__ This figure shows that the rate for Black students eligible for special education services was notably higher than the overall rate for the 2021-22 school year, while all other racial groups have rates near the overall rates for the school division.
+
 ### Out-of-School Suspensions
 
 [School suspensions](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#out-of-school-suspensions) are an exclusionary disciplinary tool that temporarily removes students from their schools for a violation of school policies or rules. Being suspended from school is associated with several negative outcomes for students, and the likelihood of being suspended is [closely tied to a student’s racial identity](https://learningpolicyinstitute.org/sites/default/files/2022-09/CRDC_School_Suspension_REPORT.pdf). Importantly, previous research has not found evidence that these disparities are caused by differences in behavior by different racial groups, rather they are thought to be [caused by racial bias](https://www.apa.org/news/press/releases/2021/10/black-students-harsh-discipline) influencing the ways in which educators interpret and respond to student behavior. 
 
-The report data for the following figures come from the Civil Rights Data Collection (CRDC), which surveys all public schools in the country about their use of different disciplinary practices. The survey is administered by the Office for Civil Rights, and completion for all public schools and districts is required under [section 203(c)(1) of the Department of Education Organization Act](https://www.gpo.gov/fdsys/granule/STATUTE-93/STATUTE-93-Pg668/content-detail.html). The CRDC tabulates the number of students who have received an out-of-school suspension (OSS) by race, gender, and disability status. Here, we present the average percentage of students who have received one or more OSS disaggregated by race. 
-
-#### Notable Trends
-
-- The first figure shows the overall racial gap in the use of OSS. Disparities between racial groups are consistently higher across the commonwealth as a whole than in the Albemarle County Public Schools (ACPS) and Charlottesville City Schools (CCS). The racial gaps in CCS appears to be shrinking over time. 
-- In the second figure, we see that the rate of OSS among Black students is consistently the highest in ACPS. In CCS either Black or Multiracial students experience the highest rate of OSS, but the rate trends downward for all racial groups.  
-- The final figure shows that although there are large racial disparities in suspension rates, it is overall a relatively low-probability event, with the largest rates being 13% for Black children in Virginia and 10% in Albemarle. 
+The report data for the following figures come from the Civil Rights Data Collection (CRDC), which surveys all public schools in the country about their use of different disciplinary practices. The survey is administered by the Office for Civil Rights, and completion for all public schools and districts is required under [section 203(c)(1) of the Department of Education Organization Act](https://www.gpo.gov/fdsys/granule/STATUTE-93/STATUTE-93-Pg668/content-detail.html). The CRDC tabulates the number of students who have received an out-of-school suspension (OSS) by race, gender, and disability status. Here, we present the average percentage of students who have received one or more OSS disaggregated by race.
 
 __Data Source:__ U.S. Department of Education, Civil Rights Data Collection, 2011-12, 2013-14, 2015-16, 2017-18: [https://ocrdata.ed.gov/resources/downloaddatafile](https://ocrdata.ed.gov/resources/downloaddatafile).
 
-#### Gap Chart of the Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2012-2018
+#### How large is the gap? <span id="qset1">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-```{r fig.height=7.4, fig.width=10, fig.cap="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for school years 2011-12 to 2017-18."}
+##### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2012-2018
+
+```{r fig.height=7.4, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for school years 2011-12 to 2017-18."}
 
 library(stats)
 library(ggpubr)
@@ -1940,9 +1995,13 @@ grid.draw(g)
 
 ```
 
-#### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity, 2011-2018 
+__Notable Trends:__ Disparities between racial groups are consistently higher across the commonwealth as a whole than in the Albemarle County Public Schools (ACPS) and Charlottesville City Schools (CCS). The racial gaps in CCS appears to be shrinking over time.
 
-```{r fig.height=7, fig.width=10, fig.cap="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for school years 2011-12 to 2017-18."}
+#### How have the outcomes changed over time? <span id="qset2">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity, 2011-2018 
+
+```{r fig.height=7, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for school years 2011-12 to 2017-18."}
 # reading in data from previous plot
 oss_by_race <- dat %>%
   filter(Locality != "Virginia") %>%
@@ -1998,9 +2057,13 @@ ggplot() +
 
 ```
 
-#### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity for the 2017-2018 School Year for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+__Notable Trends:__ The rate of Out-of-School Suspensions among Black students is consistently the highest in ACPS. In CCS either Black or Multiracial students experience the highest rate of OSS, but the rate trends downward for all racial groups.
 
-```{r fig.height = 9, fig.width=10, fig.cap="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts for the 2017-18 school year."}
+#### What are the current outcomes? <span id="qset3">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity for the 2017-2018 School Year for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts for the 2017-18 school year."}
 # reading in data
 nonprekVAall <- read.csv("../data/school_suspension_CRDCnonprek.csv")
 
@@ -2096,23 +2159,21 @@ ggplot() +
   labs(fill = "")
 ```
 
+__Notable Trends:__ Although there are large racial disparities in suspension rates, it is overall a relatively low-probability event, with the largest rates being 13% for Black children in Virginia and 10% in Albemarle.
+
 ### Post-Secondary Enrollment
 
 [Post-secondary enrollment]() captures the percent of graduating high school seniors who enroll in an institute of higher education within 16 months of graduating. College graduates enjoy more job security, higher wage, and better health, among other positive outcomes. But rates of college going (and degree attainment) [vary substantially by race and ethnicity](https://www.urban.org/research/publication/racial-and-ethnic-representation-postsecondary-education). While college enrollment has been [declining in the U.S. since 2010](https://nces.ed.gov/programs/coe/indicator/cpb/college-enrollment-rate), nationally the [rates for Black and Hispanic students](https://www.usatoday.com/story/news/education/2023/05/15/college-student-gap-between-black-white-americans-worse/70195689007/) has fallen faster than the rate for White students. These racial disparities in post-secondary enrollment serve to perpetuate racial disparities in income and wealth. 
 
 The graphs below present the racial gap in enrollment in a 2-year or 4-year college or university in the United States within 16 months of high school graduation. 
 
-#### Notable Trends
-
-- The first figure shows that the post-secondary enrollment gap has grown over time in Charlottesville, Albemarle, and Virginia as a whole. The gap is especially wide in Albemarle County Public Schools among students graduating in 2020. 
-- The second figure shows the trends over time by racial group. In Albemarle, Black and Hispanic graduates are consistently the least likely to enroll in a postsecondary institution, and these rates have generally fallen over time. Students of Asian descent are the most likely to enroll in higher education, and the rate has risen over time. 
-- The final figure compares the rate of post-secondary enrollment for each racial subgroup to the overall rate of college-going among 2020 graduates. In Albemarle, students of Asian descent enroll in institutions of higher education at a rate that exceeds the overall enrollment rate, while Black and Hispanic students enroll at rates below the overall enrollment rate. In Charlottesville, Black graduating students enroll at rates below those for students as a whole.^[The number of Asian students graduating was below the threshold the state uses to avoid potentially identifiable data, so counts are not provided for this group in 2020]
-
 __Data Source:__ Virginia Department of Education, State Fiscal Stabilization Fund Indicator (C)(11), “Postsecondary Enrollment Reports.” 2008-2020.
 
-#### Gap Chart of the Percent of Students Enrolled in Any Post-Secondary Institution by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2008-2020
+#### How large is the gap? <span id="qset1">`r shiny::icon("circle-question", "fa-xs")`</span>
 
-```{r fig.height=9, fig.width=10, fig.cap="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for every other graduation year from 2008 to 2020. Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008 and 2020, for Hispanic students 2008-12 and 2014, and for Multiracial students 2008-14 and 2018."}
+##### Percent of Students Enrolled in Any Post-Secondary Institution by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2008-2020
+
+```{r fig.height=9, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for every other graduation year from 2008 to 2020.", fig.cap="Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008 and 2020, for Hispanic students 2008-12 and 2014, and for Multiracial students 2008-14 and 2018."}
 
 dat <- read.csv("../data/postsecondary_education_race.csv")
 
@@ -2150,7 +2211,7 @@ plotdat$year <- ifelse(plotdat$locality == "Virginia", plotdat$year - 0.5,
 # ..................................................
 # Creating plots
 
-#### Any enrollment
+##### Any enrollment
 
 # Filtering for racial groups whose group is large enough that we would expect at least one 
 # student to enroll in 4-year college if total rate were equal across racial groups 
@@ -2223,9 +2284,13 @@ g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
 grid.draw(g)
 ```
 
-#### Percent of Students Enrolled in Any Post-Secondary Institution by Race and Ethnicity, 2008-2020 
+__Notable Trends:__ The post-secondary enrollment gap has grown over time in Charlottesville, Albemarle, and Virginia as a whole. The gap is especially wide in Albemarle County Public Schools among students graduating in 2020.
 
-```{r fig.height=8, fig.width=10, fig.cap="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for graduation years 2008 to 2020. Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008, 2015 and 2020, for Hispanic students 2008-12 and 2014, and for Multiracial students 2008-15 and 2018."}
+#### How have the outcomes changed over time? <span id="qset2">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Students Enrolled in Any Post-Secondary Institution by Race and Ethnicity, 2008-2020 
+
+```{r fig.height=8, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for graduation years 2008 to 2020.", fig.cap="Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008, 2015 and 2020, for Hispanic students 2008-12 and 2014, and for Multiracial students 2008-15 and 2018."}
 # reading in data 
 psenroll <- read.csv("../data/postsecondary_education_race.csv") %>%
   filter(group != "American Indian" & group != "Native Hawaiian" & group != "Race Unknown") %>%
@@ -2282,9 +2347,13 @@ ggplot() +
 
 ```
 
-#### Percent of Students Enrolled in Any Post-Secondary Institution by Race and Ethnicity in 2020 for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+__Notable Trends:__ In Albemarle, Black and Hispanic graduates are consistently the least likely to enroll in a post-secondary institution, and these rates have generally fallen over time. Students of Asian descent are the most likely to enroll in higher education, and the rate has risen over time.
 
-```{r fig.height = 9, fig.width=10, fig.cap="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts graduating in 2020. Note: The counts for Asian students in Charlottesville is not provided because the number of Asian students graduating in 2020 was below the threshold the state uses to avoid potentially identifiable data."}
+#### What are the current outcomes? <span id="qset3">`r shiny::icon("circle-question", "fa-xs")`</span>
+
+##### Percent of Students Enrolled in Any Post-Secondary Institution by Race and Ethnicity in 2020 for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts graduating in 2020.", fig.cap="Note: The counts for Asian students in Charlottesville is not provided because the number of Asian students graduating in 2020 was below the threshold the state uses to avoid potentially identifiable data."}
 # reading in data 
 psenroll <- read.csv("../data/postsecondary_education_race.csv") %>%
   filter(group != "American Indian" & group != "Native Hawaiian") %>%
@@ -2339,6 +2408,8 @@ ggplot() +
         legend.position = "top") +
   labs(fill = "")
 ```
+
+__Notable Trends:__ In Albemarle, students of Asian descent enroll in institutions of higher education at a rate that exceeds the overall enrollment rate, while Black and Hispanic students enroll at rates below the overall enrollment rate. In Charlottesville, Black graduating students enroll at rates below those for students as a whole.
 
 ## Contributions and Future Development
 
