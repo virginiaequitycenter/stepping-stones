@@ -1,0 +1,94 @@
+---
+title: "Comparing Physical Violence Measures"
+date: "2023-02-22"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+The VDOE's [Discipline, Crime, and Violence reports](https://www.doe.virginia.gov/data-policy-funding/data-reports/data-collection/special-education) change substantially over time
+
+* From 2006-2007 through 2012-2013 the number of offenses are provided by relatively narrowly defined offense categories (59 separate categories, except for 2006-2007 which has 58); these reports are provided as PDFs.
+* From 2013-2014 through 2016-2017 the number of offenses in each category are not provided by school division (only region).
+* From 2017-2018 through 2020-2021 the offense categories are reduced to 29 separate offense types; these reports are provided as excel files.
+
+The report itself note: "Limitations of data presented in this report arise from three primary sources: (1) changes in reporting requirements across time; (2) variations in local methods of collecting and managing
+data; and (3) variations in local student conduct policies and programming across school
+divisions."
+
+Given the changes in reporting categories, it may not be possible or advisable to report the full series of data we can retrieve as if it represents a consistent set of events. 
+
+## Retrieving the data
+To build the data set, we 
+
+1. Read in the Region V tables from the 2006-2007 through 2012-2013 reports and did extensive cleaning of the resulting data to verify Albemarle and Charlottesville values were accurately captured.[^1] There are several inconsistencies for this period between the data we capture and that provided in the city spreadsheet; in all instances of discrepancies, the numbers we capture here match the values provided in the DCV reports; 
+2. Selected the relevant categories of offenses to reflect those outlined in the city spreadsheet;
+3. Read in the excel files from 2017-2018 through 2020-2021;
+4. Selected the categories of offenses that appear to capture the more detailed categories in prior reports;
+5. Collapsed the categories in the prior report to match those in the newer reporting; and
+6. Combined the data sets from the two periods into one.
+
+We use that combined data set for the comparisons that follow.
+
+## Visual Comparison
+Below we show the frequency of offenses by the updated offense categories in Charlottesville, Albemarle, and Virginia as a whole.
+```{r}
+library(tidyverse)
+
+df <- read_csv("../data/school_violence_byoffense_dcv.csv")
+```
+
+### Assault/Battery
+To match the assault/battery category in the new reports, we combined the previous categories of "battery against staff", "battery against students", "malicious wounding" and "homicide" from the earlier reports (the latter two were uniformly zero in the division level data).
+```{r}
+ggplot(df, aes(x = year, y = assault_battery, color = division, group = source)) + 
+  geom_point() + geom_line() + 
+  scale_x_continuous(breaks = c(2007:2013, 2018:2021)) +
+  facet_wrap(~division, scales = "free_y", ncol = 1) +
+  theme_bw()
+```
+
+### Fighting/Conflict
+To match the fighting/conflict category in the new reports, we used the single category of "fighting without injury" from the earlier report. Earlier categories that were not included in the Stepping Stones report, but that **might** have been combined into the fighting/conflict category under the new offense categories include "altercations"; that is, it's reasonable to assume the new fighting/conflict category represents offenses beyond those previously captured as "fighting without injury".
+```{r}
+ggplot(df, aes(x = year, y = fighting_conflict, color = division, group = source)) + 
+  geom_point() + geom_line() + 
+  scale_x_continuous(breaks = c(2007:2013, 2018:2021)) +
+  facet_wrap(~division, scales = "free_y", ncol = 1) +
+  theme_bw()
+```
+
+### Sexual Offenses
+To match the sexual offenses category in the new reports, we combined "sexual assault", "sexual battery", and "sexual offense" from the earlier report. Earlier categories that were not included in the Stepping Stones report, but that **might** have been combined into the sexual offenses category under the new offense categories include "sexual harassment".
+```{r}
+ggplot(df, aes(x = year, y = sexual_offenses, color = division, group = source)) + 
+  geom_point() + geom_line() + 
+  scale_x_continuous(breaks = c(2007:2013, 2018:2021)) +
+  facet_wrap(~division, scales = "free_y", ncol = 1) +
+  theme_bw()
+```
+
+### Threats
+To match the Threats/Verbal/Physical category in the new reports, we used the single category of "threats" from the earlier report. Again, it is possible that the updated category contains offense types beyond those previously categorized as "threats".
+```{r}
+ggplot(df, aes(x = year, y = threats, color = division, group = source)) + 
+  geom_point() + geom_line() + scale_x_continuous(breaks = c(2007:2013, 2018:2021)) +
+  facet_wrap(~division, scales = "free_y", ncol = 1) +
+  theme_bw()
+```
+
+## Tentative Recommendation
+Given the notable difference between the two periods in fighting/conflict and in sexual offenses, we are not confident the new reporting categories are capturing the same combination of offenses as those pulled from earlier reports. The consistency of the categories for assault/battery and threats are less clear. 
+
+We could
+
+1. Begin the series anew beginning with the 2017-2018 reports, or
+2. Try to capture a more exhaustive set of offense categories from prior reports to generate more apparent consistency with the data as prevented in new reports.
+
+As the Discipline, Crime, and Violence collection was retired after 2020-2021 and replaced with the [Student Behavior and Administrative Response (SBAR) data collection](https://www.doe.virginia.gov/data-policy-funding/data-reports/data-collection/student-behavior-and-administrative-response-collection) which captures 84 distinct behavior codes, we believe time will be better spent aligning new SBAR codes with the most recent DCV reports and continuing a new series from 2017.
+
+[^1]: While guns and weapons were included under physical violence in the prior stepping stones data collection, we have exluded them here as these offenses are already captured in another measure. In addition, robbery and kidnapping were part of the prior data collection, and we continue to include them here, but as they are uniformly zero in Charlottesville and Albemarel school divisions across all years, they are not shown in the comparisons below.

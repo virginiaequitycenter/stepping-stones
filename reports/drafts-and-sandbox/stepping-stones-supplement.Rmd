@@ -1,0 +1,2432 @@
+---
+title: "Stepping Stones Supplemental Report"
+subtitle: "Disaggregated Measures of Well-Being of Children and Families in the Charlottesville/Albemarle Area"
+date: "July 2023"
+toc-title: Contents
+output:
+  # pdf_document:
+  html_document:
+    # self_contained: false
+    template: atlas-rmd-template-toc-test.html
+    # theme:
+    #   version: 5
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+```{css, echo=FALSE}
+.main-container div.section.level2 h2 {
+  /*font-size: 2.35rem;*/
+  padding: 4px 22px;
+/*margin: 0 0 22px;*/
+margin: 22px 0;
+border-left: 6px solid #3991d1;
+}
+
+h4, h5 {
+  font-family: "Poppins",Arial,sans-serif;
+  /*font-size: 1.25rem;*/
+}
+div.small-h3 h3 {
+font-size: 1.5rem;
+}
+
+div.figure p.caption {
+  font-size: smaller;
+  font-style: oblique; 
+  text-align: right;
+  margin-left: 8%;
+}
+
+#qset1 svg,
+#qset2 svg,
+#qset3 svg{
+vertical-align: super;
+color: #0370b7;
+cursor: pointer;
+}
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(scales)
+library(janitor)
+library(ggthemes)
+library(ggrepel)
+library(bslib)
+library(stringr)
+library(grid)
+library(ggnewscale)
+library(stats)
+library(plotrix)
+library(shiny)
+library(fontawesome)
+library(tippy)
+
+str_sort_last <- function(object){
+  last <- str_sort(object)
+  last <- tail(last, 1)
+  last
+}
+
+# web colors
+three_category_palette <- c("#E48073", "#2F7E9F", "#83DBD7")
+two_category_palette <- c("#782C6A", "#83DBD7")
+one_category_palette <- c("#782C6A")
+
+seven_colors_race <- c(
+"#0cc0aa",
+"#58a2ee",
+"#a942be",
+"#E0004E",
+"#ffa600",
+"#2d5192",
+# "#9112B8",
+"#b69cfd"
+)
+
+two_colors_ethn <- c(
+  # "#cf80dd",
+  "#D3D3D3", 
+  "#860967")
+
+
+```
+
+```{r, echo=FALSE}
+tippy::tippy_this(elementId = "qset1", tooltip = 
+  "<b>Question Set 1:</b><br/>
+  How large is the gap between the racial groups experiencing the best and worst outcomes in Charlottesville, Albemarle, and Virginia?<br/>Is the size of the gap changing over time?<br/>Are the same groups consistently benefited or harmed?<br/>", allowHTML = 'true', theme = "light", arrow = "true")
+
+tippy::tippy_this(elementId = "qset2", tooltip = 
+  "<b>Question Set 2:</b><br/>
+  How is the outcome changing over time for each racial group? What groups are experiencing the best/worst outcomes? And how do these results compare across localities?<br/>", allowHTML = 'true', theme = "light", arrow = "true")
+
+tippy::tippy_this(elementId = "qset3", tooltip = 
+  "<b>Question Set 3:</b><br/>
+  For the most recent year in which data are available, how is each racial subgroup faring relative to the total population? Is any group disproportionately better off or worse off than the population as a whole?<br/>", allowHTML = 'true', theme = "light", arrow = "true")
+
+```
+
+## Introduction
+
+The Stepping Stones Report, originally produced by the Charlottesville/Albemarle Commission on Children and Families in 2000, aims to provide insight into outcomes for youth and the larger community in Charlottesville and Albemarle by sharing data on a variety of metrics related to health and well-being. In June 2023, the University of Virginia’s Equity Center, in partnership with the Charlottesville Department of Human Services and Batten School of Leadership and Public Policy, released a new version of the [Stepping Stones Report](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/) that provides updated data and context for each metric. _The current report is a supplement to the Stepping Stones Report to present racially disaggregated data for a subset of the original metrics._ 
+
+Disaggregated data is data that is broken down and analyzed by race, ethnicity, or other defined subgroups. Interest in racially and other disaggregated data has grown in recent years as evidenced in the establishment of the federal government’s [Equitable Data Working Group](https://www.whitehouse.gov/wp-content/uploads/2022/04/eo13985-vision-for-equitable-data.pdf), an interagency effort to increase access to disaggregated federal data to promote equity assessments and equitable policy making. Equity assessments provide understanding on whether current policies and institutions are impacting or serving subgroups differently; Equitable policy making ensures that new policies will equally help different populations.
+
+The racially disaggregated data in this report is intended to center equity. Aggregated data – summary statistics for the population as a whole – can mask vastly different experiences and outcomes among subgroups. As shown below, many of the measures of youth and community wellbeing vary by race or ethnicity. Some racial subgroups are disproportionately harmed or benefited. Working towards health and well-being for the youth in our region must mean _all_ youth, regardless of their racial or ethnic identity. 
+
+## Approach
+
+Our approach to this supplemental report follows the principles from the primary report: we seek to make the work open, reproducible, and contextualized. We primarily use publicly available data, our work is documented so that it can be reproduced by others, and we provide context alongside the data, including an overview of how the measure impacts youth and others and known limitations of the data and its source.
+
+Understanding the full context of these data is especially important when considering racial disparities. Youth of color are disproportionately impacted by many of the included outcomes relative to White youth due to the long history of racial inequality in policy and opportunities. We hope that highlighting the disparate outcomes of youth in our region raises questions about what leaders, educators, and stakeholders can do to ensure all youth, regardless of their racial or ethnic identity, have equal opportunity to thrive in our community. 
+
+There are additional challenges that arise in racially disaggregated data. First, different data sources use different racial categories and language to describe them. The federal government currently mandates five categories for race and two for ethnicity: American Indian or Alaskan Native, Asian, Black, Native Hawaiian or Other Pacific Islander, and White for race, and Hispanic or Latino and not Hispanic or Latino for ethnicity.^[Race and ethnicity categories were first provided in the [OMB Directive 15](https://spd15revision.gov/content/spd15revision/en/history.html) issued in 1977 and updated in 1997. The OMB is currently working with the [Federal Interagency Technical Working Group on Race and Ethnicity Standards](https://spd15revision.gov/content/spd15revision/en.html) to revise these categories.] None of the data sources for the included measures in this report go beyond these categories, and some include only a portion of them. Additionally, some agencies that collect this data make a distinction between race and ethnicity, while others do not. Thus, a person who is Black and Hispanic might be recorded as belonging to the Black racial category and the Hispanic ethnic group in one dataset, while another dataset will only record them as Hispanic. Finally, it is not always clear who assigned an individual to a racial category (e.g., do individuals self identify, are they identified by their parents, or are they identified by agents within the relevant institution?). In this report, our goal is to be transparent about each data source and their choices around racial and ethnic categories.
+
+Multiple concerns have been raised with respect to the use of racially disaggregated data, primarily around privacy or surveillance and around the potential for misinterpretation. Breaking down data by race and ethnicity within local jurisdictions, and especially for small populations, may unintentionally reveal individuals. Marginalized populations who have been historically surveilled by governments may feel especially distrustful of racially disaggregated data and vulnerable to identification. In addition, research shows there is a tendency to interpret disparities as the fault of individual and group traits in ways that reinforce stereotypes^[For example, Hetey, R. C., & Eberhardt, J. L. (2018). The Numbers Don’t Speak for Themselves: Racial Disparities and the Persistence of Inequality in the Criminal Justice System. Current Directions in Psychological Science, 27(3), 183–187. [https://doi.org/10.1177/0963721418763931](https://doi.org/10.1177/0963721418763931) and Skinner-Dorkenoo, A.L., Sarmal, A., Rogbeer, K.G., André, C.J., Patel, B., Cha, L., (2022). Highlighting COVID-19 racial disparities can reduce support for safety precautions among White U.S. residents. Social Science & Medicine 301. [https://doi.org/10.1016/j.socscimed.2022.114951](https://doi.org/10.1016/j.socscimed.2022.114951).], rather than recognizing how disparities are products of structural inequities. While racial categories are socially constructed – that is, they reflect a social definition of race as recognized in the United States and not a biological or anthropological definition – showing differences by race can contribute to the stigmatization of groups who have been subject to historical and ongoing structural oppression.
+
+We adopt a set of strategies to make the racially disaggregated data useful while minimizing these potential harms. First, we show disaggregated measures only for racial and ethnic subgroups that make up at least five percent of our youth population to minimize the chance that individuals could be identified within small communities. Because of the composition of Charlottesville and Albemarle, this means we only show measures for White, Black, Asian, and Multiracial subgroups. Second, we seek to provide some brief context for each measure. Finally, we visualize the metrics in several ways, intended to emphasize the multiple perspectives from which to read the data.
+
+Each included measure has three visuals to represent the data. The first visual is a gap chart highlighting the size of the gaps between racial subgroups who are most and least impacted by each outcome. The second is a line chart showing how the outcome has changed over time for each subgroup. The third is a bar chart showing how the outcome for each racial group compares to the total population in the most recent year for which the data is available. With these three visualizations, we hope to probe the following questions:
+
+### Question Set 1
+
+__How large is the gap between the racial groups experiencing the best and worst outcomes in Charlottesville, Albemarle, and Virginia? Is the size of the gap changing over time? Are the same groups consistently benefited or harmed?__
+
+These questions are primarily answered in the first graph for each outcome – the length of each line emphasizes the difference between how well institutions are serving distinct populations. We show these gaps over multiple years to give a sense of whether the gaps are shrinking or increasing overtime. And we array the rates of each racial subgroup and the rate for the combined population along the same line to avoid making one population, like White residents, the default category against which each other group is compared. 
+
+__Reading the Gap Charts__
+
+Each gap chart shows disaggregated racial data for Albemarle County, the City of Charlottesville, and Virginia–the color of the line corresponds to the locality. Each racial subgroup is drawn as a circle on the line, identified by the first letter of the group name. As seen in the example below, the gap chart allows you to identify the gap in outcomes between different racial groups, as well as between a racial group and the total population. The chart also allows for comparisons to be made between different localities to identify how a group’s outcome differs depending on where they live.
+
+```{r, fig.cap = "Example gap chart with annotations identifying gaps in outcomes between subgroups on the same locality line and between localities."}
+knitr::include_graphics("gapchart1-example.png")
+```
+
+```{r fig.height=3.5, fig.width=10}
+# # used to produce the above images, annotated in Illustrator
+# # reading in data
+# povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
+#   rename(locality = NAME) %>%
+#   filter(race != "aian" & race != "nhpi" & race != "hispanic" & race != "other") %>% # all NA's for hispanic
+#   clean_names() %>%
+#   mutate(locality = factor(locality, levels = c("Albemarle County, Virginia", "Charlottesville city, Virginia", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia"))) %>% 
+#   select(c(year, locality, race, pov_count, pov_percent))
+# 
+# # getting totals 
+# povtot <- read.csv("../data/child_pov.csv") %>%
+#   filter(year >= 2010) %>%  # only have data by race for 2010 and later 
+#   clean_names() %>% 
+#   mutate(locality = ifelse(county_fips == 3, "Albemarle",
+#                           ifelse(county_fips == 540, "Charlottesville", "Virginia")),
+#          race = "Total",
+#          pov_count = num_child_pov, 
+#          pov_percent = pct_child_pov) %>% 
+#   select(c(year, locality, race, pov_count, pov_percent))
+# 
+# plot_child_pov <- rbind(povbyrace, povtot)
+# 
+# plot_child_pov <- plot_child_pov %>% 
+#   mutate(race = factor(race, 
+#                        levels = c("asian", "black", "multi", "white", "Total"),
+#                        labels = c("Asian", "Black", "Multiracial", "White", "Total (Percent for All Youth)")),
+#          year_space = ifelse(locality == "Virginia", year - 0.6, 
+#                        ifelse(locality == "Albemarle", year + 0.6, 
+#                               year)))
+# 
+# 
+# plot_child_pov <- plot_child_pov %>% 
+#   mutate(pt_label = substr(race, 1,1)) %>% 
+#   filter(year ==2021) # one year for example purposes
+# 
+# plot_poverty_gaps <- ggplot() + 
+#   #   geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020, ymax = 2022), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+#   # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+#   # geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+#   geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
+#   scale_color_manual(values=rep("#5C6068", 6)) +
+#   new_scale_color() +
+#   geom_line(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), linewidth = 0.8) +
+#   geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), position = 'identity', size = 7) +
+#   scale_color_manual(values = three_category_palette) +
+#   scale_x_continuous(limits = c(0, 65),
+#                      expand = expansion(mult = c(.075, .02)),
+#                      breaks = seq(0, 65, by = 10),
+#                      labels = label_percent(scale = 1),
+#                      name = "Percent of Youth",
+#                      sec.axis = dup_axis()) +
+#   scale_y_continuous(
+#     expand = expansion(mult = c(.2, .2)),
+#                      breaks = 2021,
+#                      name = "Year") + 
+#   theme_minimal() +
+#   new_scale_color() +
+#   geom_text(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
+#   scale_color_manual(values=rep("white",6)) +
+#   theme(panel.grid.minor.y = element_blank(),
+#         panel.grid.major.y = element_blank(),
+#         text = element_text(size = 14),
+#         axis.text = element_text(size = 13),
+#         axis.text.y = element_text(margin = margin(r=-38)),
+#         axis.title = element_text(size = 14),
+#         axis.title.y = element_text(margin = margin(r=10)),
+#         axis.title.x = element_text(margin = margin(t=12)),
+#         # axis.title.x.bottom = element_blank(),
+#         axis.title.x.top = element_text(margin = margin(b=12)),
+#         plot.caption = element_text(hjust=0, margin = margin(t=12)),
+#         legend.title=element_blank(),
+#         legend.box="vertical", legend.margin=margin(),
+#         legend.position = "top"
+#         )
+# 
+# g <- ggplotGrob(plot_poverty_gaps)
+# lbls <- c("A", "B", "M", "W", "T")
+# idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
+#   "label" %in% names(i)}))
+# for(i in 1:length(idx)){
+# g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
+# }
+# grid.draw(g)
+
+```
+
+### Question Set 2
+
+__How is the outcome changing over time for each racial group? What groups are experiencing the best/worst outcomes? And how do these results compare across localities?__
+
+These questions are best answered by the second graph for each outcome. The percent or rate of people impacted for each racial group is shown over time. So, for each individual racial group, you can see if the rate is increasing or decreasing, and how this trend compares across racial groups and across localities. 
+
+### Question Set 3
+
+__For the most recent year in which data are available, how is each racial subgroup faring relative to the total population? Is any group disproportionately better off or worse off than the population as a whole?__
+
+The final graph for each outcome answers these questions. The bars show the rate for a given racial group in a given locality and the dots show the rate for overall population in that same locality. This graph makes it clear how each individual group compares to the population: if a bar is below the dot, the group is experiencing less of that outcome than the overall population; if a bar is above the dot, the group is experiencing more of that outcome. 
+
+```{r, fig.cap = "Example bar chart with annotations identifying gaps in outcomes between a subgroup and that of a locality's whole population."}
+knitr::include_graphics("gapchart2-example.png")
+```
+
+```{r fig.height = 4, fig.width=10}
+# # used to produce the above images, annotated in Illustrator
+
+# # reading in data
+# povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
+#   rename(Race = race,
+#          Locality = NAME) %>%
+#   filter(Race == "black" | Race == "white") %>% # all NA's for hispanic
+#   filter(year == 2021)
+# 
+# povbyrace$Race <- recode(povbyrace$Race, 
+#                    "black" = "Black", "white" = "White")
+# 
+# povbyrace$Locality <- recode(povbyrace$Locality, 
+#                          "Albemarle County, Virginia" = "Albemarle",
+#                          "Charlottesville city, Virginia" = "Charlottesville")
+# povbyrace <- povbyrace %>% 
+#   mutate(label = ifelse(year %in% str_sort_last(year),
+#                          paste0(as.character(round(pov_percent, digits = 0)), "%"), NA))
+# 
+# # getting totals 
+# povtot <- read.csv("../data/child_pov.csv") %>%
+#   filter(year == 2021)
+# povtot$Locality <- ifelse(povtot$county_fips == 0, "Virginia", 
+#                           ifelse(povtot$county_fips == 3, "Albemarle",
+#                                  ifelse(povtot$county_fips == 540, "Charlottesville", povtot$county_fips)))
+# 
+# 
+# # Plot 
+# ggplot() + 
+#   geom_col(data = povbyrace, aes(y = pov_percent, x = Locality, fill = Locality)) + 
+#   geom_text(data = povbyrace, aes(y = pov_percent, x = Locality, color = Locality, label = label), 
+#                   size = 4, 
+#                   vjust = -0.5,
+#                   hjust = -0.85,
+#                   fontface = "bold",
+#             show.legend = FALSE) +
+#   scale_color_manual(values = three_category_palette) +
+#   scale_fill_manual(values = three_category_palette) +
+#   new_scale_color() +
+#   geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "Percent for All Youth"), size = 4) + 
+#   scale_color_manual("",
+#                      breaks = c("Percent for All Youth"),
+#                      values = c("#2F3136")) +
+#   scale_y_continuous(limits = c(0, 100),
+#                      labels = label_percent(scale = 1), 
+#                      name = "Percent of Youth") + 
+#   scale_x_discrete(name = "") + 
+#   facet_wrap(~ Race, ncol = 2, scales='free_x') +
+#   theme_minimal() +
+#   theme(panel.grid.minor.x = element_blank(),
+#         # panel.grid.major.x = element_blank(),
+#         # text = element_text(size = 14),
+#         strip.text.x = element_text(size = 16),
+#         # strip.background = element_rect(fill = "grey90", linewidth = 0),
+#         panel.spacing = unit(1, "lines"),
+#         axis.text = element_text(size = 12),
+#         # axis.text.y = element_text(margin = margin(r=-10)),
+#         # axis.text.x = element_text(size = 13),
+#         axis.title = element_text(size = 13),
+#         axis.title.y = element_text(margin = margin(r=8)),
+#         axis.title.x = element_text(margin = margin(t=12)),
+#         # axis.title.x.bottom = element_blank(),
+#         # axis.title.y.right = element_text(margin = margin(l=12)),
+#         plot.caption = element_text(hjust=0, margin = margin(t=12)),
+#         # plot.title = element_text(size = 16),
+#         legend.title=element_blank(),
+#         legend.text = element_text(size = 12),
+#         legend.position = "top") +
+#   labs(fill = "")
+
+```
+
+## Race and Ethnicity in Charlottesville and Albemarle
+
+Before showing the disaggregated data on outcomes, we provide the racial composition of Charlottesville and Albemarle youth (residents under 18 years old) as important context for the data that follows. If 40% of youth in a certain racial group experience a particular outcome, knowing whether that racial group constitutes 2% or 80% of the overall population matters for understanding the number of actual youth impacted. The following graphs show, first, the percentage of the youth population that fall into each racial group and, second, the percentage of the youth population that is or is not Hispanic. These data come from the American Community Survey (ACS), which asks about race and ethnicity separately. 
+
+Based on the 2017-2021 ACS, there are an estimated 22,417 residents under 18 yrs. in Albemarle and 7,314 residents under 18 yrs. in Charlottesville. Nearly three-quarters (73%) of youth in Albemarle and nearly two-thirds (65%) of youth in Charlottesville are White, compared to 60% in the state overall. Black youth make up 18% of the Charlottesville youth population, close to that of the state overall, but only 10% of the Albemarle youth population. Multiracial children, those identifying with two or more available racial groups, make up 8% of Albemarle’s youth and 5% of Charlottesville’s youth, slightly less than the proportion in Virginia as a whole. Asian children make up 7% of Albemarle youth and 11% of Charlottesville youth, slightly more than the proportion in Virginia as a whole. Other racial identities – a catchall category that has been growing nationally^[Because the category is generally used by individuals who don’t identify with the other options provided (American Indian or Alaskan Native, Asian, Black, Native Hawaiian or Pacific Islander, White), it can reflect different types of people in different locations. Research suggests it is often used by people with Hispanic, Latino, or Spanish roots or those with Middle Eastern or North African origins.] – compose 2% of Albemarle and 1% of Charlottesville youth, and American Indian youth compose less than 1% of either locality.
+
+Because the percentages of youth identifying as American Indian/Alaskan Native or with some other non-provided classification are small – so small that you can hardly see them in the graphs – we do not show the racially disaggregated data for these categories. In addition to raising concerns about identifiability, the estimated percent experiencing an outcome can change dramatically even if only one or a few more individuals are impacted within a small population. This choice is not meant to dismiss or make invisible individual identity or community diversity, but to ensure both accuracy and privacy in the presented data.
+
+### Youth Population by Race in Albemarle County, City of Charlottesville and Virginia in 2021 {.small-h3}
+
+```{r fig.height=6.5, fig.width=9, fig.cap="Youth population in Albemarle / Charlottesville / VA, disaggregated by racial subgroups: White (73% / 65% / 60%), Black (10% / 18% / 20%), Multiracial(8% / 5% / 9%), Asian (7% / 11% / 6%), Other Racial Identities (2% / 1% / 4%), American Indian or Alaskan Native (0.5% / 0.1% / 0.3%), and Native Hawaiian or Other Pacific Islander (0% / 0% / 0.1%)."}
+# Showing the youth population racial and enthic demographics for the stepping stone supplemental report
+# Contributor: Lee LeBoeuf
+
+# reading in data
+popdat <- read.csv("../data/pop_race_ethn.csv") %>%
+  rename(race = variable) %>%
+  filter(year == 2021) %>% 
+  clean_names() %>% 
+  mutate(locality = factor(name, levels = c("Virginia", "Charlottesville city, Virginia", "Albemarle County, Virginia"), labels = c("Virginia", "Charlottesville", "Albemarle")))
+
+# dataframe for race
+popdatrace <- popdat %>%
+  filter(raceethn == 'race') %>%
+  group_by(locality) %>%
+  mutate(totalyouthpop = sum(youthpop_count)) %>%
+  ungroup()
+
+popdatrace$youthperc <- round(popdatrace$youthpop_count / popdatrace$totalyouthpop * 100, 2)
+popdatrace$allperc <- round(popdatrace$pop_count / popdatrace$totalpop * 100, 2)
+
+# dataframe for ethnicity 
+popdatethn <- popdat %>%
+  group_by(locality) %>%
+  mutate(totalyouthpop = sum(youthpop_count)) %>%
+  ungroup()
+
+popdatethn <- popdatethn %>%
+  group_by(raceethn, locality) %>%
+  mutate(groupcount = sum(youthpop_count)) %>%
+  select(locality, groupcount, totalyouthpop) %>%
+  distinct()
+
+popdatethn$ethnicity <- ifelse(popdatethn$raceethn == "ethnicity", "Hispanic", "Non-Hispanic")
+
+popdatethn$youthperc <- round(popdatethn$groupcount / popdatethn$totalyouthpop * 100, 2)
+
+
+# youth plot 
+popdatrace %>% 
+  mutate(race = factor(race, 
+                       levels = c("white", "black", "multi", "asian", "other", "aian", "nhpi", "hispanic"), 
+                       labels = c("White", "Black", "Multiracial", "Asian", "Other Racial Identities", "American Indian/Alaskan Native", "Native Hawaiian/Pacific Islander", "Hispanic")),
+         label = ifelse(youthperc >= 1, paste0(as.character(round(youthperc, digits = 0)), "%"), paste0(as.character(round(youthperc, digits = 1)), "%"))) %>% 
+  arrange(race) %>% 
+  ggplot(aes(x = youthperc, y = locality, group = locality, fill = race)) +
+  geom_bar(stat = "identity") +
+  geom_label_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", show.legend = FALSE,
+                  min.segment.length = Inf,
+                  position = position_stack(vjust = 0.45), 
+                  box.padding = 0.1,
+                  force_pull = 100,
+                  # direction = "x",
+                  color = "white") +
+  scale_x_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Population",
+                     sec.axis = dup_axis()) + 
+  scale_y_discrete(name = "") +
+  scale_fill_manual(values = c(seven_colors_race)) +
+  theme_minimal() +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-10)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(fill = "")
+
+```
+
+### Youth Population by Ethnicity in Albemarle County, City of Charlottesville and Virginia in 2021 {.small-h3}
+
+```{r fig.cap="Youth population in Albemarle / Charlottesville / VA, disaggregated by ethnitcity: Non-Hispanic (92% / 93% / 88%) and Hispanic (8% / 7% / 12%)."}
+# youth plot 
+popdatethn %>%
+  mutate(ethnicity = factor(ethnicity, levels = c("Non-Hispanic", "Hispanic"), labels = c("Non-Hispanic", "Hispanic")),
+         label = ifelse(youthperc >= 1, paste0(as.character(round(youthperc, digits = 0)), "%"), paste0(as.character(round(youthperc, digits = 1)), "%"))) %>% 
+  arrange(ethnicity) %>% 
+ggplot(aes(x = youthperc, y = locality, group = locality, fill = ethnicity, label = label)) +
+  geom_bar(stat = "identity") +
+  geom_label_repel(aes(label = label),
+                  size = 3.5, fontface = "bold", show.legend = FALSE,
+                  # min.segment.length = Inf,
+                  position = position_stack(vjust = 0.5), 
+                  box.padding = 0.05,
+                  force_pull = 100,
+                  direction = "x",
+                  color = "white") +
+  scale_x_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Population",
+                     sec.axis = dup_axis()) + 
+  scale_y_discrete(name = "") +
+  scale_fill_manual(values = two_colors_ethn) +
+  theme_minimal() +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-10)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(fill = "")
+
+```
+
+## Measures
+
+### Children Living below the Poverty Threshold
+
+[Childhood poverty](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#children-living-below-poverty-threshold) is tied to a cascade of negative outcomes, from inadequate nutrition and limited access to health care services, to unstable housing and greater exposure to environmental toxins. [Racial disparities in poverty and child poverty](https://npc.umich.edu/publications/policy_briefs/brief16/PolicyBrief16.pdf) are long standing in the US, with Black, Native, and Latinx populations among the groups most impacted by poverty, and research has shown how the disparity is [created and reinforced](https://www.sciencedirect.com/science/article/pii/S1876285921002783) through [state and federal policies](https://www.americanprogress.org/article/systematic-inequality-economic-opportunity/).
+
+These figures present the percentage of families with incomes below the yearly poverty level out of all families. In 2022, the federal poverty level for a family of four was $27,750; falling below the poverty threshold indicates severe economic insecurity. 
+
+__Data Source:__ U.S. Census Bureau, [Small Area Income and Poverty Estimates](https://www.census.gov/programs-surveys/saipe/data/datasets.html). "SAIPE State and County Estimates for 2021." 
+
+#### How large is the gap? <span id="qset1">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Children living below the Poverty Threshold by Race for Albemarle, Charlottesville and Virginia, 2011-2021 
+
+```{r fig.height=9, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Multiracial, White, and Total (Percent for all youth) in Albemarle, Charlottesville, and Virginia, for every other year from 2011 to 2021."}
+# Children Living Below Poverty Threshold
+# reading in data
+povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
+  rename(locality = NAME) %>%
+  filter(race != "aian" & race != "nhpi" & race != "hispanic" & race != "other") %>% # all NA's for hispanic
+  clean_names() %>%
+  mutate(locality = factor(locality, levels = c("Albemarle County, Virginia", "Charlottesville city, Virginia", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia"))) %>% 
+  select(c(year, locality, race, pov_count, pov_percent))
+
+# getting totals 
+povtot <- read.csv("../data/child_pov.csv") %>%
+  filter(year >= 2010) %>%  # only have data by race for 2010 and later 
+  clean_names() %>% 
+  mutate(locality = ifelse(county_fips == 3, "Albemarle",
+                          ifelse(county_fips == 540, "Charlottesville", "Virginia")),
+         race = "Total",
+         pov_count = num_child_pov, 
+         pov_percent = pct_child_pov) %>% 
+  select(c(year, locality, race, pov_count, pov_percent))
+
+plot_child_pov <- rbind(povbyrace, povtot)
+
+plot_child_pov <- plot_child_pov %>% 
+  mutate(race = factor(race, 
+                       levels = c("asian", "black", "multi", "white", "Total"),
+                       labels = c("Asian", "Black", "Multiracial", "White", "Total (Percent for All Youth)")),
+         year_space = ifelse(locality == "Virginia", year - 0.6, 
+                       ifelse(locality == "Albemarle", year + 0.6, 
+                              year)))
+
+
+plot_child_pov <- plot_child_pov %>% 
+  mutate(pt_label = substr(race, 1,1)) %>% 
+  filter(year %in% c(2011,2013,2015,2017,2019,2021)) # reduce to odd years only
+
+plot_poverty_gaps <- ggplot() + 
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020, ymax = 2022), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 6)) +
+  new_scale_color() +
+  geom_line(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), linewidth = 0.8) +
+  geom_point(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, color = locality), position = 'identity', size = 7) +
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(limits = c(0, 65),
+                     expand = expansion(mult = c(.075, .02)),
+                     breaks = seq(0, 65, by = 10),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Youth",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(expand = expansion(mult = c(.03, .02)),
+                     breaks = seq(2011, 2021, by = 2),
+                     name = "Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(data = plot_child_pov, aes(x = pov_percent, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
+  scale_color_manual(values=rep("white",6)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-38)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.box="vertical", legend.margin=margin(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_poverty_gaps)
+lbls <- c("A", "B", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+# g$grobs[[grep("guide", g$layout$name)]]
+
+```
+
+__Notable Trends:__ The gap in Albemarle is similar to the racial gap in the state overall and the gap in Charlottesville is consistently the largest.
+
+#### How have the outcomes changed over time? <span id="qset2">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Children living below the Poverty Threshold by Race for Albemarle and Charlottesville, 2011-2021 
+
+```{r fig.height=8, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville, each showing outcomes for Asian, Black, Multiracial, White, and Total (Percent for all youth) from 2011 to 2021."}
+# Creating data viz for stepping stones supplemental report by race 
+# removing NHPI and AIAN for all plots because they represent such a small portion of the population 
+# Contributor: Lee LeBoeuf
+
+# reading in data
+povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
+  rename(locality = NAME) %>%
+  filter(race != "aian" & race != "nhpi" & race != "hispanic" & race != "other" ) %>% # all NA's for hispanic
+  filter(GEOID != 51) %>%  # filtering out VA 
+  clean_names() %>%
+  mutate(locality = factor(locality, levels = c("Virginia", "Charlottesville city, Virginia", "Albemarle County, Virginia"), labels = c("Virginia", "Charlottesville", "Albemarle")),
+         race = factor(race, 
+                       levels = c("asian", "black", "multi", "white"), 
+                       labels = c("Asian", "Black", "Multiracial", "White")),
+         label = ifelse((!locality %in% "Virginia") & (year %in% str_sort_last(year)),
+                         paste0(as.character(round(pov_percent, digits = 0)), "%"), NA)) %>% 
+  filter(year >= 2011) # start at 2011 to reflect years in gap chart
+
+# getting totals 
+povtot <- read.csv("../data/child_pov.csv") %>%
+  filter(county_fips != 0) %>% # filtering out VA
+  filter(year >= 2011) %>%  # only have data by race for 2010 and later // start at 2011
+  clean_names() %>% 
+  mutate(locality = ifelse(county_fips == 3, "Albemarle",
+                          ifelse(county_fips == 540, "Charlottesville", county_fips)),
+         race = "Percent for All Youth")
+
+# Plot 
+ggplot() + 
+  geom_line(data = povbyrace, aes(x = year, y = pov_percent, color = race), linewidth = 0.8) +
+  geom_point(data = povbyrace, aes(x = year, y = pov_percent, color = race)) +
+  geom_text_repel(data = povbyrace, aes(x = year, y = pov_percent, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee", "#a942be", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = povtot, aes(year, pct_child_pov, color = race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 80),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Youth") + 
+  scale_x_continuous(breaks = seq(from = 2011, to = 2021, by = 1),
+                     name = "Year") +
+  theme_minimal() + 
+  facet_wrap(~ locality, ncol = 2, scales='free_y') +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+
+```
+
+__Notable Trends:__ While the percent of children in poverty has been relatively steady in Albemarle across all subgroups, the poverty rate for Black children in Charlottesville has been steadily increasing. Black children are notably more likely to be living in poverty than any other racial group in both localities.
+
+#### What are the current disparities? <span id="qset3">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Children living below the Poverty Threshold by Race in 2021 for Albemarle, Charlottesville, and Virginia
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Multiracial, and White, showing the gap in outcomes between the subgroup and the whole youth population for Albemarle, Charlottesville, and Virginia in 2021."}
+
+# Contributor: Lee LeBoeuf
+# 
+# library(tidyverse)
+# library(stats)
+# library(plotrix)
+
+# reading in data
+povbyrace <- read.csv("../data/child_pov_byRace.csv") %>%
+  rename(Race = race,
+         Locality = NAME) %>%
+  filter(Race != "aian" & Race != "nhpi" & Race != "hispanic" & Race != "other" ) %>% # all NA's for hispanic
+  filter(year == 2021)
+
+povbyrace$Race <- recode(povbyrace$Race, 
+                   "asian" = "Asian",
+                   "black" = "Black",
+                   "multi" = "Multiracial",
+                   # "other" = "Other Racial Identities",
+                   "white" = "White", 
+                   "hispanic" = "Hispanic")
+
+povbyrace$Locality <- recode(povbyrace$Locality, 
+                         "Albemarle County, Virginia" = "Albemarle",
+                         "Charlottesville city, Virginia" = "Charlottesville")
+povbyrace <- povbyrace %>% 
+  mutate(label = ifelse(year %in% str_sort_last(year),
+                         paste0(as.character(round(pov_percent, digits = 0)), "%"), NA))
+
+# getting totals 
+povtot <- read.csv("../data/child_pov.csv") %>%
+  filter(year == 2021)
+povtot$Locality <- ifelse(povtot$county_fips == 0, "Virginia", 
+                          ifelse(povtot$county_fips == 3, "Albemarle",
+                                 ifelse(povtot$county_fips == 540, "Charlottesville", povtot$county_fips)))
+
+
+# Plot 
+ggplot() + 
+  geom_col(data = povbyrace, aes(y = pov_percent, x = Locality, fill = Locality)) + 
+  geom_text(data = povbyrace, aes(y = pov_percent, x = Locality, color = Locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = povtot, aes(y = pct_child_pov, x = Locality, color = "Percent for All Youth"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Youth"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Youth") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        # panel.grid.major.x = element_blank(),
+        # text = element_text(size = 14),
+        strip.text.x = element_text(size = 16),
+        # strip.background = element_rect(fill = "grey90", linewidth = 0),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        # axis.text.y = element_text(margin = margin(r=-10)),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        # axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        # plot.title = element_text(size = 16),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
+
+__Notable Trends:__ The current disparity clear: Black children in each locality experience poverty at a higher rate than the overall population, and this trend is especially true in Charlottesville. In Charlottesville, but not in Albemarle or the Commonwealth, Multiracial children also live in poverty at a higher rate than children overall.
+
+### Students Identified as Economically Disadvantaged
+
+[Students in economically disadvantaged households](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#students-identified-as-economically-disadvantaged) face additional barriers to learning, from the impact of inadequate nutrition and health care on concentration to the effect on development from growing up with long-term exposure to stress. Like poverty, the experience of economic disadvantage among students is shaped by race, with the same [policies](https://www.americanprogress.org/article/systematic-inequality-economic-opportunity/) and [structures](https://www.sciencedirect.com/science/article/pii/S1876285921002783) that generate racially disparate rates of poverty producing disparate rates of economic disadvantage. The challenges to education faced by students in economically disadvantaged contexts is one of the ways racial advantage and disadvantage is [reproduced through generations](https://www.opportunityatlas.org/).
+
+Students are identified as economically disadvantaged if they meet one or more of the following conditions: eligible for free or reduced meals (family income is within 130% or 185% of federal poverty threshold), are eligible for TANF, Medicaid and/or Head Start, or identified as from a migrant family, experiencing homelessness, or in foster care. The measure below is the percent of all students who meet any of the above conditions.
+
+__Data Source:__ Virginia Department of Education, “[Fall Membership Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/fallmembership).” 2004-2023.
+
+#### How large is the gap? <span id="qset1">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2011-2023
+
+```{r fig.height=9.5, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for every other year from 2011 to 2023."}
+# Students Identified as Economically Disadvantaged
+# reading in data
+econbyrace <- read.csv("../data/econ_disad_students_Race.csv") %>%
+  filter(race != "American Indian or Alaska Native" & 
+           race != "Unknown - Race/Ethnicity not provided" &
+           race != "Native Hawaiian  or Pacific Islander") %>%
+  # filter(division_name != "Virginia") %>%
+  filter(school_year != "2003-2004") %>%  # The total data doesn't include this year
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia")),
+         plot_year = as.numeric(substr(school_year, 6, 9))) %>% 
+  select(c(school_year, division_name, race, econdis_students, percent, plot_year))
+
+# getting totals 
+econtot <- read.csv("../data/economically_disadvantaged_students.csv") %>% 
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia")),
+         race = "Total",
+         econdis_students = economically_disadvantaged_students,
+         plot_year = as.numeric(substr(school_year, 6, 9))) %>% 
+  select(c(school_year, division_name, race, econdis_students, percent, plot_year))
+
+plot_econ_disadvan <- rbind(econbyrace, econtot)
+
+plot_econ_disadvan <- plot_econ_disadvan %>% 
+  mutate(race = factor(race, 
+                       levels = c("Asian", "Black, not of Hispanic origin", "Hispanic", "Non-Hispanic, two or more races", "White, not of Hispanic origin", "Total"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (Percent for All Students)")),
+         year_space = ifelse(division_name == "Virginia", plot_year - 0.5, 
+                       ifelse(division_name == "Albemarle", plot_year + 0.5, 
+                              plot_year)))
+
+
+plot_econ_disadvan <- plot_econ_disadvan %>% 
+  mutate(pt_label = substr(race, 1,1)) %>%
+  filter(plot_year %in% c(2011,2013,2015,2017,2019,2021,2023)) # reduce to odd years only, starting with 2011 (first year Multiracial category included)
+
+plot_econ_gaps <- ggplot() + 
+    geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020, ymax = 2022), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_point(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 6), guide = guide_legend(nrow = 1)) +
+  new_scale_color() +
+  geom_line(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, color = division_name), linewidth = 0.8) +
+  geom_point(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, color = division_name), position = 'identity', size = 7) +
+  scale_color_manual(values = three_category_palette, guide = guide_legend(nrow = 1)) +
+  scale_x_continuous(limits = c(0, 100),
+                     expand = expansion(mult = c(.09, .03)),
+                     breaks = seq(0, 100, by = 10),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Students",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(expand = expansion(mult = c(.03, .02)),
+                     breaks = seq(2011, 2023, by = 2),
+                     labels = c("2010-11", "2012-13", "2014-15", "2016-17", "2018-19", "2020-21", "2022-23"),
+                     name = "School Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(data = plot_econ_disadvan, aes(x = percent, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
+  scale_color_manual(values=rep("white",6), guide = guide_legend(nrow = 1)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-52)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.box="vertical", legend.direction="horizontal", legend.margin=margin(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_econ_gaps)
+lbls <- c("A", "B", "H", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+# g$grobs[[grep("guide", g$layout$name)]]
+
+```
+
+__Notable Trends:__ The gaps for both Charlottesville and Albemarle are larger than those for the state as a whole. The racial gap in Albemarle is approximately the same throughout this period; the racial gap in Charlottesville narrows for a brief time, in the 2019 to 2021 period, before increasing again.
+
+#### How have the outcomes changed over time? <span id="qset2">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity for Albemarle County Public Schools and Charlottesville City Schools, 2011-2023 
+
+```{r fig.height=8, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for school years 2010-11 to 2022-23."}
+# reading in data
+econbyrace <- read.csv("../data/econ_disad_students_Race.csv") %>%
+  filter(race != "American Indian or Alaska Native" & 
+           race != "Unknown - Race/Ethnicity not provided" &
+           race != "Native Hawaiian  or Pacific Islander") %>%
+  filter(division_name != "Virginia") %>%
+  filter(school_year != "2003-2004") %>%  # The total data doesn't include this year
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City"), labels = c("Albemarle", "Charlottesville")),
+         race = factor(race, 
+                       levels = c("Asian", "Black, not of Hispanic origin", "Hispanic", "Non-Hispanic, two or more races", "White, not of Hispanic origin"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White")),
+         plot_year = as.numeric(substr(school_year, 6, 9)),
+         label = ifelse((!division_name %in% "Virginia") & (plot_year %in% str_sort_last(plot_year)),
+                         paste0(as.character(round(percent, digits = 0)), "%"), NA)) %>% 
+  filter(plot_year >= 2011)
+
+# getting totals 
+econtot <- read.csv("../data/economically_disadvantaged_students.csv") %>%
+  filter(division_name != "Virginia") %>% 
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City"), labels = c("Albemarle", "Charlottesville")),
+         race = "Percent for All Students",
+         plot_year = as.numeric(substr(school_year, 6, 9)))%>% 
+  filter(plot_year >= 2011)
+
+# facet annotations
+fannotate <- data.frame(division_name = c("Albemarle", "Charlottesville"), x = c(2018.7, 2019.3), y = c(90, 93), label = c("ACPS begin 
+participating 
+in USDA CEP", "CCS begin 
+participating 
+in USDA CEP"))
+
+# facet annotation vline
+fline <- data.frame(division_name = c("Albemarle", "Charlottesville"), x = c(2022, 2019))
+
+# Plot 
+ggplot() + 
+  geom_text(data = fannotate, aes(x = x, y=y, label = label), hjust = 0, color = "#333333") +
+  geom_vline(data = fline, aes(xintercept = x), linetype = 2, color = "#333333") +
+  geom_line(data = econbyrace, aes(x = plot_year, y = percent, color = race), linewidth = 0.8) +
+  geom_point(data = econbyrace, aes(x = plot_year, y = percent, color = race)) +
+  geom_text_repel(data = econbyrace, aes(x = plot_year, y = percent, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = econtot, aes(plot_year, percent, color = race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 100),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") +
+  scale_x_continuous(breaks = seq(from = 2011, to = 2023, by = 1),
+                     labels = c("2010-11", "2011-12", "2012-13", "2013-14", "2014-15", "2015-16", 
+                                "2016-17", "2017-18", "2018-19", "2019-20", "2020-21", "2021-22", "2022-23"),
+                     name = "School Year") +
+  theme_minimal() +  
+  facet_wrap(~ division_name, ncol = 2, scales='free_y') +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+__Notable Trends:__ For both Charlottesville and Albemarle, we see a drop in the percent of students classified as economically disadvantaged in the year in which each system applied for the USDA’s Community Eligibility Program (CEP). Schools in which 40 percent or more of the students are eligible for free meals can apply for “community eligibility” so that all students in the school may participate in the meal program. CEP eligibility has [raised some challenges to measuring](https://www.usnews.com/news/education-news/articles/2019-01-07/why-its-getting-harder-to-count-poor-children-in-the-nations-schools) the number of economically disadvantaged students as it changes the process and incentives for acquiring household income information previously used to qualify for reduced meals. Consequently, the declines in the economically disadvantaged rate visible at the onset of CEP may reflect less accurate data collection rather than a reduction in need.
+
+#### What are the current disparities? <span id="qset3">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Identified as Economically Disadvantaged by Race and Ethnicity in the 2022-23 School Year for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts for the 2022-23 school year."}
+# reading in data
+econbyrace <- read.csv("../data/econ_disad_students_Race.csv") %>%
+  filter(race != "American Indian or Alaska Native" & 
+           race != "Unknown - Race/Ethnicity not provided" &
+           race != "Native Hawaiian  or Pacific Islander") %>% 
+  rename(Race = race) %>%
+  filter(school_year == '2022-2023')
+
+econbyrace$Race <- recode(econbyrace$Race, 
+                         "Black, not of Hispanic origin" = "Black",
+                         "Non-Hispanic, two or more races" = "Multiracial",
+                         "White, not of Hispanic origin" = "White")
+
+econbyrace$division_name <- recode(econbyrace$division_name, 
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville")
+
+econbyrace <- econbyrace %>% 
+  mutate(label = paste0(as.character(round(percent, digits = 0)), "%"))
+
+# getting totals 
+econtot <- read.csv("../data/economically_disadvantaged_students.csv") %>%
+  filter(school_year == '2022-2023') 
+
+econtot$division_name <- recode(econtot$division_name, 
+                                   "Albemarle County" = "Albemarle",
+                                   "Charlottesville City" = "Charlottesville")
+
+# Plot 
+ggplot() + 
+  geom_col(data = econbyrace, aes(y = percent, x = division_name, fill = division_name)) + 
+  geom_text(data = econbyrace, aes(y = percent, x = division_name, color = division_name, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = econtot, aes(y = percent, x = division_name, color = "Percent for All Students"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Students"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
+
+__Notable Trends:__ For the 2022-2023 school year, black students in each jurisdiction have a higher rate of economic disadvantage relative to the overall rate. In Charlottesville, both students of Asian descent and Multiracial students experience higher rates of economic disadvantage, while in Albemarle students of Hispanic descent experience a higher rate of economic need compared to students overall.
+
+### People Experiencing Homelessness
+
+[Homelessness](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#people-experiencing-homelessness) is a public health crisis. Individuals without housing are at a higher risk of [illness, violence, and mortality](https://www.cdc.gov/phlp/publications/topic/resources/resources-homelessness.html). Across the country, Black and Indigenous people experience much [higher rates of homelessness](https://link.springer.com/article/10.1007/s40615-023-01521-9), and these [longstanding disparities](https://endhomelessness.org/homelessness-in-america/what-causes-homelessness/inequality/) are shaped by histories of segregation and housing discrimination as well as ongoing structural disparities in economic opportunity and incarceration.   
+
+The figures below present the Point-in-Time (PIT) count as conducted each year in January to document the scale and nature of homelessness in our area. The [Blue Ridge Area Coalition for the Homeless](https://blueridgehomeless.org/) serves as the coordinator of the Continuum of Care for our community, including City of Charlottesville and counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson. The figure below represents the number of unhoused persons identifying with a racial or ethnic subgroup over the number of residents in the overall region identifying with the same racial or ethnic subgroup.
+
+__Data Source:__ Blue Ridge Area Coalition for the Homeless, “Point-in-Time Count”, 2014-2022.
+
+#### How large is the gap? <span id="qset1">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Rate of People Experiencing Homelessness by Race and Ethnicity in the Charlottesville Region, 2014-2022
+
+```{r fig.height=8, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and the Rate for the Total Population in the Charlottesville Region, for the years 2014 to 2022.", fig.cap="The Charlottesville Region for this dataset includes the City of Charlottesville and Counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson."}
+# reading in data
+homelesssbyrace <- read.csv("../data/pit_homelessness_race.csv") %>%
+  filter(group != "aian" & group != "nhpi" & group !="nonhispanic") %>% 
+  mutate(race = factor(group, 
+                       levels = c("asian", "black", "hispanic", "multi", "white", "total"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (Rate for Whole Population")),
+         locality = "Charlottesville Region",
+         pt_label = toupper(substr(group, 1,1)))
+
+
+plot_homeless_gaps <- ggplot() + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2020.5, ymax = 2021.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2018.5, ymax = 2019.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016.5, ymax = 2017.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2014.5, ymax = 2015.5), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_point(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col = race), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 7), guide = guide_legend(nrow = 1)) +
+  new_scale_color() +
+  geom_line(data = homelesssbyrace, aes(x = rate_region, y = year, group = year), linewidth = 0.8, color="#2F7E9F") +
+  geom_point(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col=race), position = 'identity', size = 7) +
+  scale_color_manual(values = c("#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F","#2F7E9F"), guide = guide_legend(nrow = 1)) +
+  scale_x_continuous(limits = c(0, 5),
+                     expand = expansion(mult = c(.075, .02)),
+                     breaks = seq(0, 5, by = 1),
+                     name = "Rate per 1000 People",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(breaks = seq(2014, 2022, by = 1),
+                     # expand = expansion(mult = c(.03, .02)),
+                     name = "Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(data = homelesssbyrace, aes(x = rate_region, y = year, group = year, col = race, label = pt_label), size = 4) +
+  scale_color_manual(values=rep("white",7), guide = guide_legend(nrow = 1)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-38)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.box="vertical", legend.direction="horizontal", legend.margin=margin(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_homeless_gaps)
+lbls <- c("A", "B", "H", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+```
+
+__Notable Trends:__ The racial gap in homelessness grew smaller in the period from 2019 to 2021 relative to prior years and saw an increase in 2022. Reflecting outcomes nationally, Black individuals are consistently and significantly overrepresented among people experiencing homelessness.
+
+#### How have the outcomes changed over time? <span id="qset2">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Rate of People Experiencing Homelessness in the Charlottesville Region by Race and Ethnicity, 2014-2022 
+
+```{r fig.height=7, fig.width=10, fig.alt="Line chart for the Charlottesville Region, showing outcomes for Asian, Black, Hispanic, Multiracial, White, and the Rate for the Total Population from 2014 to 2022.", fig.cap="The Charlottesville Region for this dataset includes the City of Charlottesville and Counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson."}
+
+homelesssbyrace <- read.csv("../data/pit_homelessness_race.csv") %>%
+  filter(group != "aian" & group != "nhpi" & group != "nonhispanic") %>% 
+  mutate(race = factor(group, 
+                       levels = c("asian", "black", "hispanic", "multi", "white", "total"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Rate for Total Population")))
+
+homelesssbyrace_only <- homelesssbyrace %>% 
+  filter(group != "total") %>% 
+  mutate(label = ifelse(year %in% str_sort_last(year),
+                         as.character(round(rate_region, digits = 1)), NA))
+
+homelesssbyrace_total <- homelesssbyrace %>% 
+  filter(group == "total")
+
+# Plot 
+ggplot() + 
+  geom_line(data = homelesssbyrace_only, aes(x = year, y = rate_region, color = race), linewidth = 0.8) +
+  geom_point(data = homelesssbyrace_only, aes(x = year, y = rate_region, color = race)) +
+  geom_text_repel(data = homelesssbyrace_only, aes(x = year, y = rate_region, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = homelesssbyrace_total, aes(x = year, y = rate_region, color = race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 5),
+                     breaks = seq(0, 5, by = 1),
+                     name = "Rate per 1000 People",
+                     expand = expansion(mult = c(.03, .02))) +
+  scale_x_continuous(breaks = seq(from = 2014, to = 2022, by = 1),
+                     name = "Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+__Notable Trends:__ From this figure we can see that the size of the racial gap is largely a function of the changing rate of homelessness among Black residents; the rate among Black residents has both dropped and increased notably across this period.
+
+#### What are the current disparities? <span id="qset3">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Rate of People Experiencing Homelessness by Race and Ethnicity in the Charlottesville Region in 2022
+
+```{r fig.height = 6, fig.width=10, fig.alt="Bar chart for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between each subgroup and rate for the total population for the Charlottesville Region in 2022.", fig.cap="The Charlottesville Region for this dataset includes the City of Charlottesville and Counties of Albemarle, Fluvanna, Greene, Louisa, and Nelson."}
+# reading in data
+hombyrace <- read.csv("../data/pit_homelessness_race.csv")  %>%
+  filter(year == 2022) %>%
+  filter(group != "aian" & group != "nhpi" & group != "nonhispanic") %>% 
+  mutate(race = factor(group, 
+                       levels = c("asian", "black", "hispanic", "multi", "white", "total"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Rate for Total Population")),
+         label = ifelse(year %in% str_sort_last(year),
+                         as.character(round(rate_region, digits = 1)), NA))
+
+# total
+homtotal <- hombyrace %>%
+  filter(group == "total")
+
+# by race
+hombyrace <- hombyrace %>%
+  filter(group != "total")
+
+# Plot 
+ggplot() + 
+  geom_col(data = hombyrace, aes(y = rate_region, x = race, fill = race)) + 
+  geom_text(data = hombyrace, aes(y = rate_region, x = race, color = race, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) +
+  scale_fill_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) +
+  new_scale_color() +
+  geom_segment(data = homtotal, aes(y = rate_region, yend = rate_region, x = -Inf, xend = Inf, color = "Rate for Total Population"), linewidth = 0.8, linetype = "dashed") + 
+  scale_color_manual(values = c("#2F3136")) +
+  # scale_color_manual("",
+  #                    breaks = c("Rate for Total Population"),
+  #                    values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 5),
+                     breaks = seq(0, 5, by = 1),
+                     name = "Rate per 1000 People") + 
+  scale_x_discrete(name = "") +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
+
+__Notable Trends:__ This figure makes clear the disproportionality in the rate of homelessness among Black residents relative to all other racial and ethnic subgroups.
+
+### Low Birth-Weight Infants
+
+[Low birth-weight infants](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#low-birth-weight-infants), defined as those born weighing less than 2,500 grams (about 5.5 lbs), are indicative of maternal health and infant health. Due to inequitable access to maternal care and education, low birth-weight infants are more likely among families of color relative to White families. More specifically, [recent research](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6596993/) found that low birth-weight infants are more common in non-Hispanic Black families, non-Hispanic Asian families, and foreign-born Hispanic families. The racial inequities in this outcome are associated with cascading health inequalities, as being a low birth-weight infant predicts many other poor health outcomes. 
+
+Here, we show data from the Virginia Department of Health’s (VDH) Vital Events Statistics program, which records the percentage of low birth-weight babies out of all babies born in the state. VDH only reports data for White families, Black families, and all other families.
+
+__Data Source:__ [Virginia Department of Health, Division of Health Statistics](https://apps.vdh.virginia.gov/HealthStats/stats.htm), “Resident Low Weight Live Births and Very Low Weight Births.” 2000-2022.
+
+#### How large is the gap? <span id="qset1">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Low Birth-Weight Infants by Race for Albemarle, Charlottesville and Virginia, 2000-2020 
+
+``` {r fig.height=9, fig.width=10, fig.alt="Chart showing outcome gaps for Black, White, and Total (Percent for All Infants) in Charlottesville, Albemarle and Virginia, for three-year periods from 2000 to 2020."}
+lbw_race <- read.csv("../data/low_birth_weight_race.csv")
+lbw_race <- lbw_race %>% filter(group != "other") # can't define, catagory contains unknown/inconsistent variables 
+
+lbw_race <- lbw_race %>% 
+  mutate(group = factor(group, levels = c("black", "white", "all"), labels = c("Black", "White", "All")),
+         locality = recode(locality, "Albemarle County" = "Albemarle",
+                           "Charlottesville City" = "Charlottesville",
+                           "Commonwealth Of Virginia" = "Virginia"),
+         year_space = ifelse(locality == "Virginia", year - 0.7, 
+                       ifelse(locality == "Albemarle", year + 0.7, 
+                              year)),
+         group = recode(group, "All" = "Total (Percent for All Infants)")
+         ) %>% 
+  filter(year %in% c(2001,2004,2007,2010,2013,2016,2019) ) 
+
+lbw_race <- lbw_race %>% 
+  mutate(pt_label = substr(group, 1,1))
+
+plot_LBW <- ggplot(lbw_race, aes(x = percent_3yr, y = year_space, group = year_space)) + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2014.5, ymax = 2017.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2008.5, ymax = 2011.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2002.5, ymax = 2005.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_point(aes(col = group), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 3)) +
+  new_scale_color() +
+  geom_line(aes(color = locality), size = 0.8) +
+  geom_point(aes(color = locality), position = 'identity', size = 7) +
+  # geom_label(aes(label = pt_label), fill = NA, color = "white", fontface = "bold") +
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(limits = c(0, 20),
+                     expand = expansion(mult = c(.09, .03)),
+                     breaks = seq(0, 20, by = 5),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Infants",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(expand = expansion(mult = c(.03, .03)),
+                     breaks = seq(2001, 2019, by = 3),
+                     labels = c("2000-02", "2003-05", "2006-08", "2009-11", "2012-14", "2015-17", "2018-20"),
+                     name = "Three-Year Period") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(aes(label = pt_label, col = group), size = 4) +
+  scale_color_manual(values=rep("white",3)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-52)),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.box="vertical", legend.margin=margin(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_LBW)
+lbls <- c("B", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+```
+
+__Notable Trends:__ The gap between the percentage of low birth-weight babies born to White families and those born to Black families was consistently larger in Charlottesville relative to Albemarle except for the 2003-05 period. In all three localities, low birth-weight babies are more common among Black families than White families. 
+
+#### How have the outcomes changed over time? <span id="qset2">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Low Birth-Weight Infants by Race, 2000-2020 
+
+```{r fig.height=7, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville, each showing outcomes for Black, White, and Total (Percent for All Infants) for three-year periods from 2000 to 2020."}
+# reading in data
+lbw_race <- read.csv("../data/low_birth_weight_race.csv")
+lbw_race <- lbw_race %>% 
+  filter(group != "other") %>%  # can't define, catagory contains unknown/inconsistent variables 
+  filter(locality != "Commonwealth Of Virginia")
+
+lbw_race <- lbw_race %>% 
+  mutate(race = factor(group, levels = c("black", "white", "all"), labels = c("Black", "White", "All")),
+         locality = recode(locality, "Albemarle County" = "Albemarle",
+                           "Charlottesville City" = "Charlottesville"),
+         race = recode(race, "All" = "Percent for All Infants")) %>% 
+  filter(year %in% c(2001,2004,2007,2010,2013,2016,2019) )
+
+lbw_race_only <- lbw_race %>% 
+  filter(group != "all") %>% 
+  mutate(label = ifelse(year %in% str_sort_last(year),
+                         paste0(as.character(round(percent_3yr, digits = 0)), "%"), NA))
+
+lbw_race_total <- lbw_race %>% 
+  filter(group == "all")
+
+# Plot 
+ggplot() + 
+  geom_line(data = lbw_race_only, aes(x = year, y = percent_3yr, color = race), linewidth = 0.8) +
+  geom_point(data = lbw_race_only, aes(x = year, y = percent_3yr, color = race)) +
+  geom_text_repel(data = lbw_race_only, aes(x = year, y = percent_3yr, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#58a2ee", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = lbw_race_total, aes(year, percent_3yr, color = race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 30),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Infants") +
+  scale_x_continuous(breaks = seq(2001, 2019, by = 3),
+                     labels = c("2000-02", "2003-05", "2006-08", "2009-11", "2012-14", "2015-17", "2018-20"),
+                     name = "Three-Year Period") +
+  theme_minimal() +  
+  facet_wrap(~ locality, ncol = 2, scales='free_y') +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+__Notable Trends:__ This figure shows that the percentage of Black infants born with low birth-weights is consistently higher than the percentage of White infants born with low birth-weight in both Albemarle and Charlottesville.
+
+#### What are the current disparities? <span id="qset3">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Low Birth-Weight Infants by Race for 2018-2020 for Albemarle, Charlottesville, and Virginia
+
+```{r fig.height = 5, fig.width=10, fig.alt="Bar charts for Black and White racial subgroups, showing the gap in outcomes between the subgroup and the all infants for Albemarle, Charlottesville, and Virginia for the three-year period 2018-2020."}
+# reading in data 
+lbw_race <- read.csv("../data/low_birth_weight_race.csv") %>%
+  filter(year == 2019) %>%
+  filter(group != "other") %>%
+  rename(Race = group)
+
+lbw_race$Race <- recode(lbw_race$Race,
+                  "black" = "Black",
+                  "white" = "White")
+                  
+lbw_race$locality <- recode(lbw_race$locality, 
+                      "Albemarle County" = "Albemarle",
+                      "Charlottesville City" = "Charlottesville",
+                      "Commonwealth Of Virginia" = "Virginia")
+
+# by race
+lbw_race_only <- lbw_race %>%
+  filter(Race != "all")
+
+lbw_race_only <- lbw_race_only %>% 
+  mutate(label = paste0(as.character(round(percent_3yr, digits = 0)), "%"))
+                      
+# totals 
+lbw_race_total <- lbw_race %>%
+  filter(Race == "all") %>%
+  select(-Race)
+
+# Plot 
+ggplot() + 
+  geom_col(data = lbw_race_only, aes(y = percent_3yr, x = locality, fill = locality)) + 
+  geom_text(data = lbw_race_only, aes(y = percent_3yr, x = locality, color = locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = lbw_race_total, aes(y = percent_3yr, x = locality, color = "Percent for All Infants"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Infants"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 30),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Infants") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
+
+__Notable Trends:__ This graph underscores the existing gap, showing that the percent of Black infants born with low birth-weights was around 14-16% in all three localities for the 2018-2020 period, whereas the rate among White infants was only 5-7%.
+
+### Infant Deaths
+
+Much like low birth-weight infants, [infant mortality](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#infant-deaths) is an indicator of infant health and familial access to health care. Infant mortality refers to the rate of babies who die before their first birthday per 1,000 live births, and it is a tragedy that [disproportionately impacts Black families](https://minorityhealth.hhs.gov/omh/browse.aspx?lvl=4&lvlid=23) in large part because these families are less likely to receive prenatal and postnatal care. The most common causes of infant mortality include birth defects, preterm births and low birth-weight, maternal complications during pregnancy, Sudden Infant Death Syndrome, and injuries. 
+
+The data presented here come from health registration data from the Virginia Department of Health’s Vital Events Statistics program. These data are like census data in that they aim to accurately reflect the population and represent an authoritative list of births in the state. There may be some amount of error if some births are not accurately recorded. 
+
+__Data Source:__ [Virginia Department of Health, Division of Health Statistics](https://apps.vdh.virginia.gov/HealthStats/stats.htm), “Total Infant Deaths by Place of Occurrence and Place of Residence.” 2000-2022.
+
+#### How large is the gap? <span id="qset1">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Infant Deaths by Race for Albemarle, Charlottesville and Virginia, 2000-2020 
+
+``` {r fig.height=9, fig.width=10, fig.alt="Chart showing outcome gaps for Black, White, and Total (Percent for All Infants) in Charlottesville, Albemarle and Virginia, for three-year periods from 2000 to 2020."}
+infant_mortality_race <- read.csv("../data/infant_mortality_race.csv")
+infant_mortality_race <- infant_mortality_race %>% filter(group != "other") # can't define, catagory contains unknown/inconsistent variables 
+
+infant_mortality_race <- infant_mortality_race %>% 
+  mutate(group = factor(group, levels = c("black", "white", "all"), labels = c("Black", "White", "All")),
+         locality = recode(locality, "Albemarle County" = "Albemarle",
+                           "Charlottesville City" = "Charlottesville",
+                           "Commonwealth Of Virginia" = "Virginia"),
+         year_space = ifelse(locality == "Virginia", year - 0.7, 
+                       ifelse(locality == "Albemarle", year + 0.7, 
+                              year)),
+         group = recode(group, "All" = "Total (Percent for All Infants)")
+         ) %>% 
+  filter(year %in% c(2001,2004,2007,2010,2013,2016,2019)) 
+
+infant_mortality_race <- infant_mortality_race %>% 
+  mutate(pt_label = substr(group, 1,1))
+
+plot_IM <- ggplot(infant_mortality_race, aes(x = rate_3yr, y = year_space, group = year_space)) + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2014.5, ymax = 2017.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2008.5, ymax = 2011.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2002.5, ymax = 2005.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_point(aes(col = group), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 3)) +
+  new_scale_color() +
+  geom_line(aes(color = locality), size = 0.8) +
+  geom_point(aes(color = locality), position = 'identity', size = 7) +
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(limits = c(0, 30),
+                     expand = expansion(mult = c(.09, .03)),
+                     breaks = seq(0, 30, by = 5),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Infants",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(expand = expansion(mult = c(.03, .03)),
+                     breaks = seq(2001, 2019, by = 3),
+                     labels = c("2000-02", "2003-05", "2006-08", "2009-11", "2012-14", "2015-17", "2018-20"),
+                     name = "Three-Year Period") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(aes(label = pt_label, col = group), size = 4) +
+  scale_color_manual(values=rep("white",3)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-52)),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.box="vertical", legend.margin=margin(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_IM)
+lbls <- c("B", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+```
+
+__Notable Trends:__ The gap between White and Black rates of infant deaths seems to have decreased since 2000-02. This is especially true for Charlottesville, where there was as large as a 16% gap between rates for White and Black infants in 2000-02, to the most recent period of 2018-20, where the gap decreased to nearly 2%.
+
+#### How have the outcomes changed over time? <span id="qset2">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Infant Deaths by Race, 2000-2020 
+
+```{r fig.height=7, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville, each showing outcomes for Black, White, and Total (Percent for All Infants) for three-year periods from 2000 to 2020."}
+# reading in data
+infant_mortality_race <- read.csv("../data/infant_mortality_race.csv")
+infant_mortality_race <- infant_mortality_race %>% 
+  filter(group != "other") %>%  # can't define, catagory contains unknown/inconsistent variables
+  filter(locality != "Commonwealth Of Virginia")
+
+infant_mortality_race <- infant_mortality_race %>% 
+  mutate(race = factor(group, levels = c("black", "white", "all"), labels = c("Black", "White", "All")),
+         locality = recode(locality, "Albemarle County" = "Albemarle",
+                           "Charlottesville City" = "Charlottesville"),
+         race = recode(race, "All" = "Percent for All Infants")) %>% 
+  filter(year %in% c(2001,2004,2007,2010,2013,2016,2019) )
+
+im_race_only <- infant_mortality_race %>% 
+  filter(group != "all") %>% 
+  mutate(label = ifelse(year %in% str_sort_last(year),
+                         paste0(as.character(round(rate_3yr, digits = 0)), "%"), NA))
+
+im_total <- infant_mortality_race %>% 
+  filter(group == "all")
+
+# Plot 
+ggplot() + 
+  geom_line(data = im_race_only, aes(x = year, y = rate_3yr, color = race), linewidth = 0.8) +
+  geom_point(data = im_race_only, aes(x = year, y = rate_3yr, color = race)) +
+  geom_text_repel(data = im_race_only, aes(x = year, y = rate_3yr, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#58a2ee", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = im_total, aes(year, rate_3yr, color = race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 30),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Infants") +
+  scale_x_continuous(breaks = seq(2001, 2019, by = 3),
+                     labels = c("2000-02", "2003-05", "2006-08", "2009-11", "2012-14", "2015-17", "2018-20"),
+                     name = "Three-Year Period") +
+  theme_minimal() +  
+  facet_wrap(~ locality, ncol = 2, scales='free_y') +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+__Notable Trends:__ This figure shows that this outcome is more common among Black families than it is White families in all three localities. Though the rates of infant deaths decreased for both White and Black babies between 2006-08 and 2015-17 in Albemarle and 2009-11 and 2012-14 in Charlottesville, both localities saw an uptick in 2015-17.
+
+#### What are the current disparities? <span id="qset3">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Infant Deaths by Race for 2018-2020 for Albemarle, Charlottesville, and Virginia
+
+```{r fig.height = 5, fig.width=10, fig.alt="Bar charts for Black and White racial subgroups, showing the gap in outcomes between the subgroup and the all infants for Albemarle, Charlottesville, and Virginia for the three-year period 2018-2020."}
+# reading in data 
+id <- read.csv("../data/infant_mortality_race.csv")%>%
+  filter(year == 2019) %>%
+  filter(group != "other") %>%
+  rename(Race = group)
+
+id$Race <- recode(id$Race,
+                  "black" = "Black",
+                  "white" = "White")
+                  
+id$locality <- recode(id$locality, 
+                      "Albemarle County" = "Albemarle",
+                      "Charlottesville City" = "Charlottesville",
+                      "Commonwealth Of Virginia" = "Virginia")
+
+# by race
+idrace <- id %>%
+  filter(Race != "all") %>% 
+  mutate(label = paste0(as.character(round(rate_3yr, digits = 0)), "%"))
+
+# totals 
+idtot <- id %>%
+  filter(Race == "all") %>%
+  select(-Race)
+
+# Plot 
+ggplot() + 
+  geom_col(data = idrace, aes(y = rate_3yr, x = locality, fill = locality)) + 
+  geom_text(data = idrace, aes(y = rate_3yr, x = locality, color = locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = idtot, aes(y = rate_3yr, x = locality, color = "Percent for All Infants"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Infants"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 30),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Infants") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+
+```
+
+__Notable Trends:__ For the 2018-2020 period, the rate for Black infant deaths is higher in Albemarle than it is in Charlottesville or the rest of the state, but rates are consistently higher for Black families relative to the whole population across all three localities.
+
+### Students Eligible for Special Education Services
+
+[Special education services](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#students-eligible-for-special-education-services) are intended to ensure students with disabilities (hearing impairment, including deafness; speech or language impairment; visual impairment, including blindness; orthopedic impairment; autism; traumatic brain injury; developmental delay; other health impairment; intellectual disability; specific learning disability; serious emotional disturbance; or multiple disabilities) have access to a meaningful public education. Nationally, Black and Native American students are more likely to be referred for special education services than are White and Asian students (e.g., [Why are So Many Students of Color in Special Education?](https://eric.ed.gov/?id=ED622195)), while rates for Hispanic students tend to be comparable to those in the overall population. 
+
+These differences were formerly thought to be explained by differences in the expectations educators have for students of color as a result of racial bias. However, more [recent research](https://www.brookings.edu/articles/race-poverty-and-interpreting-overrepresentation-in-special-education/) has demonstrated that the differences observed between racial groups tend to disappear once other important student characteristics are taken into account, like socioeconomic status. Therefore, the fact that more Black and Native American students are referred to special education services has much more to do with the close tie between historical and current economic inequality and race than it does race alone. However, examining the percent of students in each racial group who receive special education services can still help guide decisions about allocating educational resources. Especially because the inequitable referral rates can serve to segregate children, affording fewer opportunities to children of color.
+
+__Data Source:__ Virginia Department of Education, “[December 1 Build-A-Table](https://p1pe.doe.virginia.gov/buildatable/dec1).” 2011-2022.
+
+#### How large is the gap? <span id="qset1">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Eligible for Special Education Services by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2014-2022
+
+```{r fig.height=8.5, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for school years 2013-14 to 2021-22."}
+#for all sped visualizations
+sped_race_dat <- read.csv("../data/sped_services_by_race.csv") %>%
+  mutate(total_sped = as.numeric(sub(",", "", total_sped, fixed = TRUE)),
+         total_count = as.numeric(sub(",", "", total_count, fixed = TRUE)),
+         percent_sped = round(total_sped / total_count * 100, 2))
+
+# reading in data
+sped_services_race <- sped_race_dat %>%
+  filter(race != "American Indian or Alaska Native" & 
+           race != "Native Hawaiian  or Pacific Islander") %>%
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia")),
+         plot_year = as.numeric(substr(school_year, 6, 9))) %>% 
+  select(c(school_year, division_name, race, total_sped, percent_sped, plot_year))
+
+
+# getting totals 
+sped_services_tot <- read.csv("../data/sped_services.csv") %>% 
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City", "Virginia"), labels = c("Albemarle", "Charlottesville", "Virginia")),
+         race = "Total",
+         plot_year = as.numeric(substr(school_year, 6, 9))) %>% 
+  select(c(school_year, division_name, race, total_sped, percent_sped, plot_year))
+
+sped_services_alldat <- rbind(sped_services_race, sped_services_tot)
+
+sped_services_alldat <- sped_services_alldat %>% 
+  mutate(race = factor(race, 
+                       levels = c("Asian", "Black, not of Hispanic origin", "Hispanic", "Non-Hispanic, two or more races", "White, not of Hispanic origin", "Total"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (Percent for All Students)")),
+         year_space = ifelse(division_name == "Virginia", plot_year - 0.5, 
+                       ifelse(division_name == "Albemarle", plot_year + 0.5, 
+                              plot_year)))
+
+
+sped_services_alldat <- sped_services_alldat %>% 
+  mutate(pt_label = substr(race, 1,1)) %>%
+  filter(plot_year %in% c(2014,2016,2018,2020,2022)) # reduce to odd years only, starting with 2014; 2013 first year in data with both totals and all races
+
+plot_sped_gaps <- ggplot() + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2019, ymax = 2021), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2015, ymax = 2017), alpha = 0.35, color = NA, fill = "#D3D3D3") +
+  geom_point(data = sped_services_alldat, aes(x = percent_sped, y = year_space, group = year_space, col = race), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 6), guide = guide_legend(nrow = 1)) +
+  new_scale_color() +
+  geom_line(data = sped_services_alldat, aes(x = percent_sped, y = year_space, group = year_space, color = division_name), size = 0.8) +
+  geom_point(data = sped_services_alldat, aes(x = percent_sped, y = year_space, group = year_space, color = division_name), position = 'identity', size = 7) +
+  scale_color_manual(values = three_category_palette, guide = guide_legend(nrow = 1)) +
+  scale_x_continuous(limits = c(0, 30),
+                     expand = expansion(mult = c(.08, .02)),
+                     breaks = seq(0, 30, by = 5),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Students",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(expand = expansion(mult = c(.03, .02)),
+                     breaks = seq(2014, 2022, by = 2),
+                     labels = c("2013-14", "2015-16", "2017-18", "2019-20", "2021-22"),
+                     name = "School Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(data = sped_services_alldat, aes(x = percent_sped, y = year_space, group = year_space, label = pt_label, col = race), size = 4) +
+  scale_color_manual(values=rep("white",6), guide = guide_legend(nrow = 1)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-52)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.box="vertical", legend.direction="horizontal", legend.margin=margin(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_sped_gaps)
+lbls <- c("A", "B", "H", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+```
+
+__Notable Trends:__ This figure makes it clear that the gaps between the percent of students eligible for special education services across racial groups is large–often between 10 and 15%–but has narrowed in the 2021-2022 school year relative to prior years.
+
+#### How have the outcomes changed over time? <span id="qset2">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Eligible for Special Education Services by Race and Ethnicity, 2014-2022 
+
+```{r fig.height=8, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for school years 2013-14 to 2021-22."}
+# reading in data
+sped_services_race <- sped_race_dat %>%
+  filter(race != "American Indian or Alaska Native" & 
+           race != "Native Hawaiian  or Pacific Islander") %>%
+  filter(division_name != "Virginia") %>%
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City"), labels = c("Albemarle", "Charlottesville")),
+         race = factor(race, 
+                       levels = c("Asian", "Black, not of Hispanic origin", "Hispanic", "Non-Hispanic, two or more races", "White, not of Hispanic origin"),
+                       labels = c("Asian", "Black", "Hispanic", "Multiracial", "White")),
+         plot_year = as.numeric(substr(school_year, 6, 9)),
+         label = ifelse((plot_year %in% str_sort_last(plot_year)),
+                         paste0(as.character(round(percent_sped, digits = 0)), "%"), NA)) %>% 
+  filter(plot_year >= 2014)
+
+
+# getting totals 
+sped_services_tot <- read.csv("../data/sped_services.csv") %>% 
+  filter(division_name != "Virginia") %>%
+  mutate(division_name = factor(division_name, levels = c("Albemarle County", "Charlottesville City"), labels = c("Albemarle", "Charlottesville")),
+         race = "Percent for All Students",
+         plot_year = as.numeric(substr(school_year, 6, 9))) %>% 
+  filter(plot_year >= 2014)
+
+# Plot 
+
+ggplot() + 
+  geom_line(data = sped_services_race, aes(x = plot_year, y = percent_sped, color = race), linewidth = 0.8) +
+  geom_point(data = sped_services_race, aes(x = plot_year, y = percent_sped, color = race)) +
+  geom_text_repel(data = sped_services_race, aes(x = plot_year, y = percent_sped, color = race, label = label), size = 3.5, fontface = "bold", nudge_x = .8, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = sped_services_tot, aes(plot_year, percent_sped, color = race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 30),
+                     breaks = seq(0, 30, by = 5),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") +
+  scale_x_continuous(breaks = seq(from = 2014, to = 2022, by = 1),
+                     labels = c("2013-14", "2014-15", "2015-16", "2016-17", "2017-18", 
+                                "2018-19", "2019-20", "2020-21", "2021-22"),
+                     name = "School Year") +
+  theme_minimal() +  
+  facet_wrap(~ division_name, ncol = 2, scales='free_y') +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+__Notable Trends:__ This figure highlights the similarities between Albemarle and Charlottesville and many other localities around the country: Black students receive special education services at the highest rate and Asian students at the lowest (among the racial groups shown here).
+
+#### What are the current disparities? <span id="qset3">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Eligible for Special Education Services by Race and Ethnicity for the 2021-2022 School Year for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts for the 2022-23 school year."}
+# reading in data
+sped_services_race <- sped_race_dat %>%
+  filter(race != "American Indian or Alaska Native" & 
+           race != "Native Hawaiian  or Pacific Islander") %>% 
+  rename(Race = race) %>%
+  filter(school_year == '2021-2022')
+
+sped_services_race$Race <- recode(sped_services_race$Race, 
+                         "Black, not of Hispanic origin" = "Black",
+                         "Non-Hispanic, two or more races" = "Multiracial",
+                         "White, not of Hispanic origin" = "White")
+
+sped_services_race$division_name <- recode(sped_services_race$division_name, 
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville")
+
+sped_services_race <- sped_services_race %>% 
+  mutate(label = paste0(as.character(round(percent_sped, digits = 0)), "%"))
+
+# getting totals 
+sped_services_tot <- read.csv("../data/sped_services.csv") %>%
+  filter(school_year == '2021-2022') 
+
+sped_services_tot$division_name <- recode(sped_services_tot$division_name, 
+                                   "Albemarle County" = "Albemarle",
+                                   "Charlottesville City" = "Charlottesville")
+
+# Plot 
+ggplot() + 
+  geom_col(data = sped_services_race, aes(y = percent_sped, x = division_name, fill = division_name)) + 
+  geom_text(data = sped_services_race, aes(y = percent_sped, x = division_name, color = division_name, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = sped_services_tot, aes(y = percent_sped, x = division_name, color = "Percent for All Students"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Students"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 30),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
+
+__Notable Trends:__ This figure shows that the rate for Black students eligible for special education services was notably higher than the overall rate for the 2021-22 school year, while all other racial groups have rates near the overall rates for the school division.
+
+### Out-of-School Suspensions
+
+[School suspensions](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones/#out-of-school-suspensions) are an exclusionary disciplinary tool that temporarily removes students from their schools for a violation of school policies or rules. Being suspended from school is associated with several negative outcomes for students, and the likelihood of being suspended is [closely tied to a student’s racial identity](https://learningpolicyinstitute.org/sites/default/files/2022-09/CRDC_School_Suspension_REPORT.pdf). Importantly, previous research has not found evidence that these disparities are caused by differences in behavior by different racial groups, rather they are thought to be [caused by racial bias](https://www.apa.org/news/press/releases/2021/10/black-students-harsh-discipline) influencing the ways in which educators interpret and respond to student behavior. 
+
+The report data for the following figures come from the Civil Rights Data Collection (CRDC), which surveys all public schools in the country about their use of different disciplinary practices. The survey is administered by the Office for Civil Rights, and completion for all public schools and districts is required under [section 203(c)(1) of the Department of Education Organization Act](https://www.gpo.gov/fdsys/granule/STATUTE-93/STATUTE-93-Pg668/content-detail.html). The CRDC tabulates the number of students who have received an out-of-school suspension (OSS) by race, gender, and disability status. Here, we present the average percentage of students who have received one or more OSS disaggregated by race.
+
+__Data Source:__ U.S. Department of Education, Civil Rights Data Collection, 2011-12, 2013-14, 2015-16, 2017-18: [https://ocrdata.ed.gov/resources/downloaddatafile](https://ocrdata.ed.gov/resources/downloaddatafile).
+
+#### How large is the gap? <span id="qset1">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2012-2018
+
+```{r fig.height=7.4, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for school years 2011-12 to 2017-18."}
+
+library(stats)
+library(ggpubr)
+library(plotrix)
+
+# reading in data
+nonprekVAall <- read.csv("../data/school_suspension_CRDCnonprek.csv")
+nonprekVAall$OSS_Total <- rowSums(nonprekVAall[,c('OSS_Black','OSS_Hispanic','OSS_White','OSS_TwoOrMore', 'OSS_Asian')], na.rm = T)
+nonprekVAall$totalstudents <- nonprekVAall$num_Total
+nonprekVAall <- nonprekVAall %>%
+  filter(Year != 2009)
+
+## Re-shaping them to long format 
+k12long_count_oss <- pivot_longer(nonprekVAall, cols = c('num_Black', 'num_Hispanic', 'num_White',
+                                                         'num_TwoOrMore', 'num_Asian', 'num_Total',
+                                                         'OSS_Black', 'OSS_Hispanic', 'OSS_White',
+                                                         'OSS_TwoOrMore','OSS_Asian', 'OSS_Total'),
+                                  names_to = c('.value','Race'),
+                                  names_pattern = '(.+)_(Black|White|Hispanic|Asian|TwoOrMore|Total)')
+
+k12long_count_oss$Race <- ifelse(k12long_count_oss$Race == "TwoOrMore", "Multiracial", k12long_count_oss$Race)
+
+# Calculating the percent of students suspended in each racial group 
+k12long_count_oss$percsus <- round(k12long_count_oss$OSS / k12long_count_oss$num * 100, 2)
+# Calculating the percent of the students enrolled in each racial group 
+k12long_count_oss$percenroll <- round(k12long_count_oss$num / k12long_count_oss$totalstudents * 100, 2)
+# Calculating means by race and year for plotting 
+k12OSSmeans <- k12long_count_oss %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+
+# Filtering for racial groups whose enrollment is large enough that we would expect at least one 
+# suspension if rates were equitable across racial groups 
+totalsusovertime <- data.frame(Year = unique(k12OSSmeans$Year), totalsus = k12OSSmeans$meanpercsus[k12OSSmeans$Race == "Total"])
+k12OSSmeans <- merge(k12OSSmeans, totalsusovertime, by = 'Year')
+# k12OSSmeans$lessthan <- ifelse(k12OSSmeans$meanenroll < (100 / k12OSSmeans$totalsus), TRUE, FALSE)
+# k12OSSmeans <- k12OSSmeans %>%
+#   filter(lessthan == FALSE)
+k12OSSmeans$Locality <- "Virginia"
+
+# Charlottesville = CHARLOTTESVILLE CTY PBLC SCHS
+# Albemarle = ALBEMARLE CO PBLC SCHS
+albk12 <- k12long_count_oss %>%
+  filter(LEA == "ALBEMARLE CO PBLC SCHS")
+cvillek12 <- k12long_count_oss %>%
+  filter(LEA == "CHARLOTTESVILLE CTY PBLC SCHS")
+
+# Albemarle
+# Calculating means by race and year for plotting 
+albk12OSSmeans <- albk12 %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+# Filtering for racial groups whose enrollment is large enough that we would expect at least one 
+# suspension if rates were equitable across racial groups 
+totalsusovertime <- data.frame(Year = unique(albk12OSSmeans$Year), totalsus = albk12OSSmeans$meanpercsus[albk12OSSmeans$Race == "Total"])
+albk12OSSmeans <- merge(albk12OSSmeans, totalsusovertime, by = 'Year')
+# albk12OSSmeans$lessthan <- ifelse(albk12OSSmeans$meanenroll < (100 / albk12OSSmeans$totalsus), TRUE, FALSE)
+# albk12OSSmeans <- albk12OSSmeans %>%
+#   filter(lessthan == FALSE)
+albk12OSSmeans$Locality <- "Albemarle"
+
+# Cville
+cvillek12OSSmeans <- cvillek12 %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+# Filtering for racial groups whose enrollment is large enough that we would expect at least one 
+# suspension if rates were equitable across racial groups 
+totalsusovertime <- data.frame(Year = unique(cvillek12OSSmeans$Year), totalsus = cvillek12OSSmeans$meanpercsus[cvillek12OSSmeans$Race == "Total"])
+cvillek12OSSmeans <- merge(cvillek12OSSmeans, totalsusovertime, by = 'Year')
+# cvillek12OSSmeans$lessthan <- ifelse(cvillek12OSSmeans$meanenroll < (100 / cvillek12OSSmeans$totalsus), TRUE, FALSE)
+# cvillek12OSSmeans <- cvillek12OSSmeans %>%
+#   filter(lessthan == FALSE)
+cvillek12OSSmeans$Locality <- "Charlottesville"
+
+dat <- rbind(k12OSSmeans, albk12OSSmeans, cvillek12OSSmeans)
+
+dat_OSS <- dat
+dat_OSS$Year <- ifelse(dat_OSS$Locality == "Virginia", dat_OSS$Year - 0.5, 
+                       ifelse(dat_OSS$Locality == "Albemarle", dat_OSS$Year + 0.5, dat_OSS$Year))
+
+### Plots  adjust shape and color
+## years are fall year, create school year +1
+# all levels together 
+
+dat_OSS <- dat_OSS %>% 
+  mutate(Race = factor(Race, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (Percent for All Students)")),
+       pt_label = substr(Race, 1,1))
+
+plot_OSS <- ggplot(dat_OSS, aes(x = meanpercsus, y = Year, group = Year)) + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_point(aes(col = Race), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 6), guide = guide_legend(nrow = 1)) +
+  new_scale_color() +
+  geom_line(aes(color = Locality), size = 0.8) +
+  geom_point(aes(color = Locality), position = 'identity', size = 7) +
+  scale_color_manual(values = three_category_palette, guide = guide_legend(nrow = 1)) +
+  scale_x_continuous(limits = c(0, 20),
+                     expand = expansion(mult = c(.11, .03)),
+                     breaks = seq(0, 20, by = 5),
+                     labels = label_percent(scale = 1),
+                     name = "Average Percent of Students Receiving OSS",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(breaks = seq(2011, 2017, by = 2),
+                     expand = expansion(mult = c(.03, .03)),
+                     labels = c("2011-12", "2013-14", "2015-16", "2017-18"),
+                     name = "School Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(aes(label = pt_label, col = Race), size = 4) +
+  scale_color_manual(values=rep("white",6), guide = guide_legend(nrow = 1)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-54)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.box="vertical", legend.margin=margin(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_OSS)
+lbls <- c("A", "B", "H", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+# g$grobs[[grep("guide", g$layout$name)]]
+
+
+```
+
+__Notable Trends:__ Disparities between racial groups are consistently higher across the commonwealth as a whole than in the Albemarle County Public Schools (ACPS) and Charlottesville City Schools (CCS). The racial gaps in CCS appears to be shrinking over time.
+
+#### How have the outcomes changed over time? <span id="qset2">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity, 2011-2018 
+
+```{r fig.height=7, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for school years 2011-12 to 2017-18."}
+# reading in data from previous plot
+oss_by_race <- dat %>%
+  filter(Locality != "Virginia") %>%
+  mutate(
+    # Locality = factor(division_name, levels = c("Albemarle County", "Charlottesville City"), labels = c("Albemarle", "Charlottesville")),
+         Race = factor(Race, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total")),
+         label = ifelse((Year %in% str_sort_last(Year)),
+                         paste0(as.character(round(meanpercsus, digits = 0)), "%"), NA),
+         school_year = paste0(as.character(Year), "-", as.character(Year + 1)))
+
+# race only
+oss_race_only <- oss_by_race %>% 
+  filter(Race != "Total")
+# totals only 
+oss_tot <- oss_by_race %>% 
+  filter(Race == "Total") %>% 
+  mutate(Race = "Percent for All Students")
+
+# Plot 
+ggplot() + 
+  geom_line(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race), linewidth = 0.8) +
+  geom_point(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race)) +
+  geom_text_repel(data = oss_race_only, aes(x = Year, y = meanpercsus, color = Race, label = label), size = 3.5, fontface = "bold", nudge_x = .4, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = oss_tot, aes(Year, meanpercsus, color = Race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(0, 30),
+                     breaks = seq(0, 30, by = 5),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") +
+  scale_x_continuous(breaks = seq(from = 2011, to = 2017, by = 2),
+                     labels = c("2011-12", "2013-14", "2015-16", "2017-18"),
+                     name = "School Year") +
+  theme_minimal() +  
+  facet_wrap(~ Locality, ncol = 2, scales='free_y') +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        # axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+__Notable Trends:__ The rate of Out-of-School Suspensions among Black students is consistently the highest in ACPS. In CCS either Black or Multiracial students experience the highest rate of OSS, but the rate trends downward for all racial groups.
+
+#### What are the current disparities? <span id="qset3">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Recieving Out-of-School Suspensions by Race and Ethnicity for the 2017-2018 School Year for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts for the 2017-18 school year."}
+# reading in data
+nonprekVAall <- read.csv("../data/school_suspension_CRDCnonprek.csv")
+
+nonprekVAall$OSS_Total <- rowSums(nonprekVAall[,c('OSS_Black','OSS_Hispanic','OSS_White','OSS_TwoOrMore', 'OSS_Asian')], na.rm = T)
+
+nonprekVAall$totalstudents <- nonprekVAall$num_Total
+
+nonprekVAall <- nonprekVAall %>%
+  filter(Year != 2009)
+
+## Re-shaping them to long format 
+k12long_count_oss <- pivot_longer(nonprekVAall, cols = c('num_Black', 'num_Hispanic', 'num_White',
+                                                         'num_TwoOrMore', 'num_Asian', 'num_Total',
+                                                         'OSS_Black', 'OSS_Hispanic', 'OSS_White',
+                                                         'OSS_TwoOrMore','OSS_Asian', 'OSS_Total'),
+                                  names_to = c('.value','Race'),
+                                  names_pattern = '(.+)_(Black|White|Hispanic|Asian|TwoOrMore|Total)')
+
+k12long_count_oss$Race <- ifelse(k12long_count_oss$Race == "TwoOrMore", "Two or more", k12long_count_oss$Race)
+
+# Calculating the percent of students suspended in each racial group 
+k12long_count_oss$percsus <- round(k12long_count_oss$OSS / k12long_count_oss$num * 100, 2)
+# Calculating the percent of the students enrolled in each racial group 
+k12long_count_oss$percenroll <- round(k12long_count_oss$num / k12long_count_oss$totalstudents * 100, 2)
+
+allva <- k12long_count_oss %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+
+# Filtering to just Charlottesville and Albemarle 
+
+albcville <- k12long_count_oss %>%
+  filter(LEA == "ALBEMARLE CO PBLC SCHS" | LEA == "CHARLOTTESVILLE CTY PBLC SCHS")
+
+albcville$Locality <- ifelse(albcville$LEA == "ALBEMARLE CO PBLC SCHS", "Albemarle", "Charlottesville")
+
+albcville <- albcville %>%
+  group_by(Locality, Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+
+fulldat <- rbind(allva, albcville)
+fulldat$Locality <- ifelse(is.na(fulldat$Locality) == T, "Virginia", fulldat$Locality)
+
+mostrecentTot <- fulldat %>%
+  filter(Year == 2017) %>%
+  filter(Race == 'Total') %>%
+  rename(group = Race)
+
+mostrecent <- fulldat %>%
+  filter(Year == 2017) %>%
+  filter(Race != 'Total') %>% 
+  mutate(label = paste0(as.character(round(meanpercsus, digits = 0)), "%"))
+
+# Plot 
+ggplot() + 
+  geom_col(data = mostrecent, aes(y = meanpercsus, x = Locality, fill = Locality)) + 
+  geom_text(data = mostrecent, aes(y = meanpercsus, x = Locality, color = Locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = mostrecentTot, aes(y = meanpercsus, x = Locality, color = "Percent for All Students"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Students"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 30),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ Race, ncol = 2, scales='free_x') +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
+
+__Notable Trends:__ Although there are large racial disparities in suspension rates, it is overall a relatively low-probability event, with the largest rates being 13% for Black children in Virginia and 10% in Albemarle.
+
+### Post-Secondary Enrollment
+
+[Post-secondary enrollment]() captures the percent of graduating high school seniors who enroll in an institute of higher education within 16 months of graduating. College graduates enjoy more job security, higher wage, and better health, among other positive outcomes. But rates of college going (and degree attainment) [vary substantially by race and ethnicity](https://www.urban.org/research/publication/racial-and-ethnic-representation-postsecondary-education). While college enrollment has been [declining in the U.S. since 2010](https://nces.ed.gov/programs/coe/indicator/cpb/college-enrollment-rate), nationally the [rates for Black and Hispanic students](https://www.usatoday.com/story/news/education/2023/05/15/college-student-gap-between-black-white-americans-worse/70195689007/) has fallen faster than the rate for White students. These racial disparities in post-secondary enrollment serve to perpetuate racial disparities in income and wealth. 
+
+The graphs below present the racial gap in enrollment in a 2-year or 4-year college or university in the United States within 16 months of high school graduation. 
+
+__Data Source:__ Virginia Department of Education, State Fiscal Stabilization Fund Indicator (C)(11), “Postsecondary Enrollment Reports.” 2008-2020.
+
+#### How large is the gap? <span id="qset1">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Enrolled in Any Post-Secondary Institution by Race and Ethnicity for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools, 2008-2020
+
+```{r fig.height=9, fig.width=10, fig.alt="Chart showing outcome gaps for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) in Albemarle, Charlottesville, and Virginia school districts, for every other graduation year from 2008 to 2020.", fig.cap="Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008 and 2020, for Hispanic students 2008-12 and 2014, and for Multiracial students 2008-14 and 2018."}
+
+dat <- read.csv("../data/postsecondary_education_race.csv")
+
+# We have 9 racial categories
+# I'm filtering out a couple for now
+# NOTE - There are only values for "American Indian" for the state overall, not in the county or city
+# I'm adding it here for now
+dat <- dat %>%
+  filter(group != "Race Unknown") %>% # No values in Charlottesville or Albermarle
+  filter(group != "Native Hawaiian") %>% # No values in Charlottesville or Albemarle
+  filter(group != "American Indian") # No values in Charlottesville or Albemarle
+
+# ..................................................
+# Need to calculate the overall averages for each year to show in plot 
+# NOTE - What is the difference between these totals and "All Students", the values are not the same
+totals <- dat %>%
+  group_by(year, locality) %>%
+  summarise(cohortsize = sum(cohortsize, na.rm = T),
+            enrolledany = sum(enrolledany, na.rm = T),
+            enrolled4yr = sum(enrolled4yr, na.rm = T)) %>%
+  mutate(percent_any = round(enrolledany / cohortsize * 100, 2),
+         percent_4yr = round(enrolled4yr / cohortsize * 100, 2))
+
+totals$group <- "Total"
+
+plotdat <- rbind(dat, totals)
+plotdat <- plotdat %>% 
+  filter(year %in% c(2008,2010,2012,2014,2016,2018,2020)) # reduce to odd years only
+
+plotdat$group <- ifelse(plotdat$group == "2 or More", "Multiracial", plotdat$group)
+
+plotdat$year <- ifelse(plotdat$locality == "Virginia", plotdat$year - 0.5, 
+                       ifelse(plotdat$locality == "Albemarle", plotdat$year + 0.5, plotdat$year))
+
+# ..................................................
+# Creating plots
+
+##### Any enrollment
+
+# Filtering for racial groups whose group is large enough that we would expect at least one 
+# student to enroll in 4-year college if total rate were equal across racial groups 
+totalstimeAny <- data.frame(year = unique(plotdat$year), totalenrollperc = plotdat$percent_any[plotdat$group == "Total"])
+plotdatAny <- merge(plotdat, totalstimeAny, by = 'year')
+# plotdatAny$lessthan <- ifelse(plotdatAny$cohortsize < (100 / plotdatAny$enrolled4yr), TRUE, FALSE)
+# plotdatAny <- plotdatAny %>%
+#   filter(lessthan == FALSE)
+
+plotdatAny <- plotdatAny %>%
+  filter(group != "Total")
+
+# plotdatAny <- rbind(plotdatAny, blanks)
+
+# Rename "All Students" to "Total" but idk if this is accurate per above
+plotdatAny$group <- ifelse(plotdatAny$group == "All Students", "Total", plotdatAny$group)
+plotdatAny <- plotdatAny %>% 
+   mutate(group = factor(group, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total (Percent for All Students)")),
+       pt_label = substr(group, 1,1))
+
+plot_PSE <- ggplot(plotdatAny, aes(x = percent_any, y = year, group = year)) + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2017, ymax = 2019), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2013, ymax = 2015), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2009, ymax = 2011), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_point(aes(col = group), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("#5C6068", 6), guide = guide_legend(nrow = 1)) +
+  new_scale_color() +
+  geom_line(aes(color = locality), size = 0.8) +
+  geom_point(aes(color = locality), position = 'identity', size = 7) +
+  scale_color_manual(values = three_category_palette, guide = guide_legend(nrow = 1)) +
+  scale_x_continuous(limits = c(40,100),
+                     breaks = seq(40, 100, by = 10),
+                     expand = expansion(mult = c(.06, .02)),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Students",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(breaks = seq(2008, 2020, by = 2),
+                     expand = expansion(mult = c(.03, .03)),
+                     name = "Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(aes(label = pt_label, col = group), size = 4) +
+  scale_color_manual(values=rep("white",6), guide = guide_legend(nrow = 1)) +
+#   labs(caption = "Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid 
+# potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008 and 2020, for Hispanic 
+# students 2008-12 and 2014, and for Multiracial students 2008-14 and 2018.") +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-38)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.box="vertical", legend.margin=margin(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_PSE)
+lbls <- c("A", "B", "H", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[1]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[1]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+```
+
+__Notable Trends:__ The post-secondary enrollment gap has grown over time in Charlottesville, Albemarle, and Virginia as a whole. The gap is especially wide in Albemarle County Public Schools among students graduating in 2020.
+
+#### How have the outcomes changed over time? <span id="qset2">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Enrolled in Any Post-Secondary Institution by Race and Ethnicity, 2008-2020 
+
+```{r fig.height=8, fig.width=10, fig.alt="Line charts for Albemarle and Charlottesville school districts, each showing outcomes for Asian, Black, Hispanic, Multiracial, White, and Total (Percent for all students) for graduation years 2008 to 2020.", fig.cap="Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008, 2015 and 2020, for Hispanic students 2008-12 and 2014, and for Multiracial students 2008-15 and 2018."}
+# reading in data 
+psenroll <- read.csv("../data/postsecondary_education_race.csv") %>%
+  filter(group != "American Indian" & group != "Native Hawaiian" & group != "Race Unknown") %>%
+  rename(Race = group) %>%
+  filter(locality != "Virginia")
+
+psenrollrace <- psenroll %>%
+  filter(Race != "All Students") %>% 
+  mutate(Race = factor(Race, levels = c("Asian", "Black", "Hispanic", "2 or More", "White"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White")),
+         label = ifelse((year %in% str_sort_last(year)),
+                         paste0(as.character(round(percent_any, digits = 0)), "%"), NA))
+
+psenrolltot <- psenroll %>%
+  filter(Race == "All Students") %>% 
+  mutate(Race = "Percent for All Students")
+
+# Plot 
+ggplot() + 
+  geom_line(data = psenrollrace, aes(x = year, y = percent_any, color = Race), linewidth = 0.8) +
+  geom_point(data = psenrollrace, aes(x = year, y = percent_any, color = Race)) +
+  geom_text_repel(data = psenrollrace, aes(x = year, y = percent_any, color = Race, label = label), size = 3.5, fontface = "bold", nudge_x = .3, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = c("#E0004E", "#58a2ee","#860967", "#a942be", "#0cc0aa")) + 
+  new_scale_color() +
+  geom_line(data = psenrolltot, aes(year, percent_any, color = Race), linewidth = 0.8, linetype = "dashed") +
+  scale_color_manual(values = c("#5C6068")) +
+  scale_y_continuous(limits = c(30, 100),
+                     breaks = seq(30, 100, by = 10),
+                     expand = expansion(mult = c(.03, .02)),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") +
+  scale_x_continuous(breaks = seq(from = 2008, to = 2020, by = 1),
+                     # labels = c("2011-12", "2013-14", "2015-16", "2017-18"),
+                     name = "School Year") +
+  theme_minimal() +  
+  facet_wrap(~ locality, ncol = 2, scales='free_y') +
+#   labs(caption = "Note: For the following groups and years, the number of students graduating was below the threshold the state uses to avoid 
+# potentially identifiable data, so counts are not provided for Charlottesville for Asian students in 2008, 2015 and 2020, for 
+# Hispanic students 2008-12 and 2014, and for Multiracial students 2008-15 and 2018.") +
+  theme(text = element_text(size = 14),
+        panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.text.y = element_text(margin = margin(r=-8)),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        axis.title.y.right = element_text(margin = margin(l=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top") +
+  labs(color = "")
+
+```
+
+__Notable Trends:__ In Albemarle, Black and Hispanic graduates are consistently the least likely to enroll in a post-secondary institution, and these rates have generally fallen over time. Students of Asian descent are the most likely to enroll in higher education, and the rate has risen over time.
+
+#### What are the current disparities? <span id="qset3">`r fa("circle-question", fill="#0370b7")`</span>
+
+##### Percent of Students Enrolled in Any Post-Secondary Institution by Race and Ethnicity in 2020 for Albemarle County Public Schools, Charlottesville City Schools, and Virginia Public Schools
+
+```{r fig.height = 9, fig.width=10, fig.alt="Bar charts for Asian, Black, Hispanic, Multiracial, and White subgroups, showing the gap in outcomes between the subgroup and all students for Albemarle, Charlottesville, and Virginia school districts graduating in 2020.", fig.cap="Note: The counts for Asian students in Charlottesville is not provided because the number of Asian students graduating in 2020 was below the threshold the state uses to avoid potentially identifiable data."}
+# reading in data 
+psenroll <- read.csv("../data/postsecondary_education_race.csv") %>%
+  filter(group != "American Indian" & group != "Native Hawaiian") %>%
+  rename(race = group) %>% 
+  filter(year == 2020)
+
+psenroll$race <- ifelse(psenroll$race == "2 or More", "Multiracial", psenroll$race)
+
+psenrollrace <- psenroll %>%
+  filter(race != "All Students") %>% 
+  mutate(label = ifelse(!is.na(percent_any),
+                         paste0(as.character(round(percent_any, digits = 0)), "%"), NA))
+
+psenrolltot <- psenroll %>%
+  filter(race == "All Students") %>%
+  select(-race)
+
+# Plot 
+ggplot() + 
+  geom_col(data = psenrollrace, aes(y = percent_any, x = locality, fill = locality)) + 
+  geom_text(data = psenrollrace, aes(y = percent_any, x = locality, color = locality, label = label), 
+                  size = 4, 
+                  vjust = -0.5,
+                  hjust = -0.85,
+                  fontface = "bold",
+            show.legend = FALSE) +
+  scale_color_manual(values = three_category_palette) +
+  scale_fill_manual(values = three_category_palette) +
+  new_scale_color() +
+  geom_point(data = psenrolltot, aes(y = percent_any, x = locality, color = "Percent for All Students"), size = 4) + 
+  scale_color_manual("",
+                     breaks = c("Percent for All Students"),
+                     values = c("#2F3136")) +
+  scale_y_continuous(limits = c(0, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students") + 
+  scale_x_discrete(name = "") +
+  facet_wrap(~ race, ncol = 2, scales='free_x') +
+#   labs(caption = "Note: The counts for Asian students in Charlottesville is not provided because the number of Asian students 
+# graduating in 2020 was below the threshold the state uses to avoid potentially identifiable data.") +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(),
+        strip.text.x = element_text(size = 16),
+        panel.spacing = unit(1, "lines"),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 13),
+        axis.title.y = element_text(margin = margin(r=8)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.text = element_text(size = 12),
+        legend.position = "top") +
+  labs(fill = "")
+```
+
+__Notable Trends:__ In Albemarle, students of Asian descent enroll in institutions of higher education at a rate that exceeds the overall enrollment rate, while Black and Hispanic students enroll at rates below the overall enrollment rate. In Charlottesville, Black graduating students enroll at rates below those for students as a whole.
+
+## Contributions and Future Development
+
+This supplemental report builds on the 2023 Stepping Stones Report, which was produced through a collaboration between the City of Charlottesville’s Department of Human Services, the UVA Equity Center, and the Batten School of Leadership and Public Policy class, Public Interest Data: Ethics & Practice. 
+
+The supplemental report – data acquisition, processing, documentation, and visualization; background research, writing, and editing – was completed by the UVA Equity Center Democratization of Data team: Michele Claibourn (Director of Equitable Analysis), Lee LeBoeuf (Equity Data Fellow), and Beth Mitchell (Data Scientist for Equitable Analysis).
+
+Among the forty metrics in the Stepping Stones Report, racially disaggregated data is available for approximately 25 of the measures (or for similar measures). In this first supplemental report presenting racially disaggregated measures, we began with eight measures across the key themes (education and civic engagement, economic security and housing, health and family stability, school and community disciplinary actions) so that we could preserve sufficient time for thoughtful visualization and appropriate contextualization. In future years, additional measures could be added to this effort.
+
+### Project Repository {.small-h3}
+
+The work supporting this Stepping Stones Report, including our data collection documentation and the corresponding data, is publicly available in the [Virginia Equity Center GitHub Stepping Stones Repository](https://github.com/virginiaequitycenter/stepping-stones/).
+
+### Citation {.small-h3}
+
+Charlottesville Department of Human Services and the UVA Equity Center. _Steppings Stones Supplemental Report: Disaggregated Measures of Well-Being of Children and Families in the Charlottesville/Albemarle Area_. Published July 2023. [url].
+
+## Notes

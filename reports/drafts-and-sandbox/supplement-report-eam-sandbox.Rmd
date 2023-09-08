@@ -1,0 +1,585 @@
+---
+title: "Stepping Stones Supplement Sandbox"
+output:
+  # pdf_document:
+  html_document:
+    # template: school-composition-template.html
+    # theme:
+    #   version: 5
+    # css: styles.css
+    toc: true
+    toc_depth: 3
+    toc_float: true
+# toc-title: Contents
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(scales)
+library(janitor)
+library(ggthemes)
+library(ggrepel)
+library(bslib)
+library(stringr)
+library(grid)
+library(ggnewscale)
+
+str_sort_last <- function(object){
+  last <- str_sort(object)
+  last <- tail(last, 1)
+  last
+}
+
+# three_category_palette <- c("#E57873", "#146A94", "#58C9AB")
+# two_category_palette <- c("#782C6A", "#58C9AB")
+# one_category_palette <- c("#782C6A")
+
+# web colors
+three_category_palette <- c("#E48073", "#2F7E9F", "#83DBD7")
+two_category_palette <- c("#782C6A", "#83DBD7")
+one_category_palette <- c("#782C6A")
+
+# black/white/grayscale friendly
+# three_category_palette <- c("#E57873", "#0D6A82", "#ADE9ED")
+# two_category_palette <- c("#782C6A", "#ADE9ED")
+# one_category_palette <- c("#782C6A")
+
+# favs <- c("#E57873", "#2F7E9F", "#83DBD7")
+# muted_palette <- c("#96595A", "#DA897C", "#E4E4B2", "#B2E4CF", "#0D6A82")
+# 
+# test3 <- c("#003f5c", "#7a5195", "#ef5675", "#ffa600")
+# test2 <- c("#E57873", "#2F7E9F","#FFD05B", "#EA7000", "#AF0000", "#BDBF00", "#00878F", "#2bd7e3", "#82BAFF", "#ADE9ED")
+# 
+# test <- c("#EE1C25", "#DD4765", "#6D968A", "#58C9AB", "#D1C627")
+# old <- c("#B23B6B", "#5AB48A", "#E7A342")
+# two_old <- c("#146A94", "#E7A342")
+# one_old <- c("#146A94")
+
+
+```
+
+## Out--of-School Suspensions
+
+```{r fig.height=7.4, fig.width=10}
+
+library(stats)
+library(ggpubr)
+library(plotrix)
+
+# reading in data
+nonprekVAall <- read.csv("../data/school_suspension_CRDCnonprek.csv")
+nonprekVAall$OSS_Total <- rowSums(nonprekVAall[,c('OSS_Black','OSS_Hispanic','OSS_White','OSS_TwoOrMore', 'OSS_Asian')], na.rm = T)
+nonprekVAall$totalstudents <- nonprekVAall$num_Total
+nonprekVAall <- nonprekVAall %>%
+  filter(Year != 2009)
+
+## Re-shaping them to long format 
+k12long_count_oss <- pivot_longer(nonprekVAall, cols = c('num_Black', 'num_Hispanic', 'num_White',
+                                                         'num_TwoOrMore', 'num_Asian', 'num_Total',
+                                                         'OSS_Black', 'OSS_Hispanic', 'OSS_White',
+                                                         'OSS_TwoOrMore','OSS_Asian', 'OSS_Total'),
+                                  names_to = c('.value','Race'),
+                                  names_pattern = '(.+)_(Black|White|Hispanic|Asian|TwoOrMore|Total)')
+
+k12long_count_oss$Race <- ifelse(k12long_count_oss$Race == "TwoOrMore", "Multiracial", k12long_count_oss$Race)
+
+# Calculating the percent of students suspended in each racial group 
+k12long_count_oss$percsus <- round(k12long_count_oss$OSS / k12long_count_oss$num * 100, 2)
+# Calculating the percent of the students enrolled in each racial group 
+k12long_count_oss$percenroll <- round(k12long_count_oss$num / k12long_count_oss$totalstudents * 100, 2)
+# Calculating means by race and year for plotting 
+k12OSSmeans <- k12long_count_oss %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+
+# Filtering for racial groups whose enrollment is large enough that we would expect at least one 
+# suspension if rates were equitable across racial groups 
+totalsusovertime <- data.frame(Year = unique(k12OSSmeans$Year), totalsus = k12OSSmeans$meanpercsus[k12OSSmeans$Race == "Total"])
+k12OSSmeans <- merge(k12OSSmeans, totalsusovertime, by = 'Year')
+k12OSSmeans$lessthan <- ifelse(k12OSSmeans$meanenroll < (100 / k12OSSmeans$totalsus), TRUE, FALSE)
+k12OSSmeans <- k12OSSmeans %>%
+  filter(lessthan == FALSE)
+k12OSSmeans$Locality <- "Virginia"
+
+# Charlottesville = CHARLOTTESVILLE CTY PBLC SCHS
+# Albemarle = ALBEMARLE CO PBLC SCHS
+albk12 <- k12long_count_oss %>%
+  filter(LEA == "ALBEMARLE CO PBLC SCHS")
+cvillek12 <- k12long_count_oss %>%
+  filter(LEA == "CHARLOTTESVILLE CTY PBLC SCHS")
+
+# Albemarle
+# Calculating means by race and year for plotting 
+albk12OSSmeans <- albk12 %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+# Filtering for racial groups whose enrollment is large enough that we would expect at least one 
+# suspension if rates were equitable across racial groups 
+totalsusovertime <- data.frame(Year = unique(albk12OSSmeans$Year), totalsus = albk12OSSmeans$meanpercsus[albk12OSSmeans$Race == "Total"])
+albk12OSSmeans <- merge(albk12OSSmeans, totalsusovertime, by = 'Year')
+albk12OSSmeans$lessthan <- ifelse(albk12OSSmeans$meanenroll < (100 / albk12OSSmeans$totalsus), TRUE, FALSE)
+albk12OSSmeans <- albk12OSSmeans %>%
+  filter(lessthan == FALSE)
+albk12OSSmeans$Locality <- "Albemarle"
+
+# Cville
+cvillek12OSSmeans <- cvillek12 %>%
+  group_by(Year, Race) %>%
+  summarise(meanpercsus = round(weighted.mean(percsus, num, na.rm = T), 2),
+            se = std.error(percsus, na.rm = T),
+            meanperenroll = round(mean(percenroll, na.rm = T), 2),
+            meanenroll = mean(num))
+# Filtering for racial groups whose enrollment is large enough that we would expect at least one 
+# suspension if rates were equitable across racial groups 
+totalsusovertime <- data.frame(Year = unique(cvillek12OSSmeans$Year), totalsus = cvillek12OSSmeans$meanpercsus[cvillek12OSSmeans$Race == "Total"])
+cvillek12OSSmeans <- merge(cvillek12OSSmeans, totalsusovertime, by = 'Year')
+cvillek12OSSmeans$lessthan <- ifelse(cvillek12OSSmeans$meanenroll < (100 / cvillek12OSSmeans$totalsus), TRUE, FALSE)
+cvillek12OSSmeans <- cvillek12OSSmeans %>%
+  filter(lessthan == FALSE)
+cvillek12OSSmeans$Locality <- "Charlottesville"
+
+dat <- rbind(k12OSSmeans, albk12OSSmeans, cvillek12OSSmeans)
+
+dat_OSS <- dat
+dat_OSS$Year <- ifelse(dat_OSS$Locality == "Virginia", dat_OSS$Year - 0.5, 
+                       ifelse(dat_OSS$Locality == "Albemarle", dat_OSS$Year + 0.5, dat_OSS$Year))
+
+### Plots  adjust shape and color
+## years are fall year, create school year +1
+# all levels together 
+
+dat_OSS <- dat_OSS %>% 
+  mutate(Race = factor(Race, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total")),
+       pt_label = substr(Race, 1,1))
+
+plot_OSS <- ggplot(dat_OSS, aes(x = meanpercsus, y = Year, group = Year)) + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016, ymax = 2018), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012, ymax = 2014), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_point(aes(col = Race), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("grey", 6)) +
+  new_scale_color() +
+  geom_line(aes(color = Locality), size = 0.8) +
+  geom_point(aes(color = Locality), position = 'identity', size = 7) +
+  # geom_label(aes(label = pt_label), fill = NA, color = "white", fontface = "bold") +
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(limits = c(0, 15),
+                     expand = expansion(mult = c(.09, .03)),
+                     breaks = seq(0, 15, by = 5),
+                     labels = label_percent(scale = 1),
+                     name = "Average Percent of Students Receiving OSS",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(breaks = seq(2011, 2017, by = 2),
+                     expand = expansion(mult = c(.03, .03)),
+                     labels = c("2011-12", "2013-14", "2015-16", "2017-18"),
+                     name = "School Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(aes(label = pt_label, col = Race), size = 4) +
+  scale_color_manual(values=rep("white",6)) +
+  labs(caption = "Note: Racial groups were only included for a given year and locality when the average number of students enrolled was high enough
+such that you would expect to see at least one suspension if the average overall rate were true for each racial group") +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-52)),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        # legend.box = 'horizontal',
+        # legend.position = c(0.01, 0.2)
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_OSS)
+lbls <- c("A", "B", "H", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+# g$grobs[[grep("guide", g$layout$name)]]
+
+
+```
+
+## Post-Secondary Education
+
+### Enrollment in Any Post-Secondary Education
+```{r fig.height=14, fig.width=10}
+
+dat <- read.csv("../data/postsecondary_education_race.csv")
+
+# We have 9 racial categories
+# I'm filtering out a couple for now
+# NOTE - There are only values for "American Indian" for the state overall, not in the county or city
+# I'm adding it here for mow
+dat <- dat %>%
+  filter(group != "Race Unknown") %>% # No values in Charlottesville or Albermarle
+  filter(group != "Native Hawaiian") %>% # No values in Charlottesville or Albemarle
+  filter(group != "American Indian") # No values in Charlottesville or Albemarle
+
+# ..................................................
+# Need to calculate the overall averages for each year to show in plot 
+# NOTE - What is the difference between these totals and "All Students", the values are not the same
+totals <- dat %>%
+  group_by(year, locality) %>%
+  summarise(cohortsize = sum(cohortsize, na.rm = T),
+            enrolledany = sum(enrolledany, na.rm = T),
+            enrolled4yr = sum(enrolled4yr, na.rm = T)) %>%
+  mutate(percent_any = round(enrolledany / cohortsize * 100, 2),
+         percent_4yr = round(enrolled4yr / cohortsize * 100, 2)) 
+
+totals$group <- "Total"
+
+plotdat <- rbind(dat, totals)
+
+plotdat$group <- ifelse(plotdat$group == "2 or More", "Multiracial", plotdat$group)
+# plotdat$group <- ifelse(plotdat$group == "American Indian", "Indigenous/American Indian", plotdat$group)
+
+
+# Making NA rows for breaking up lines in ggplot 
+# with the new way I code years later, 2010, 2012, 2014, and 2016 should all be NA years
+# yrs <- rep(c(2016.1, 2017.1, 2018.1, 2019.1, 2020.1, 2008.1, 2009.1, 2010.1, 2011.1, 2012.1, 2013.1, 2014.1, 2015.1), 3)
+# locality <- rep(c("Albemarle", "Charlottesville", "Virginia"), 13)
+# blanks <- data.frame(n = 1:39)
+# cols <- c("group", "cohortsize", "enrolledany", "enrolled4yr", "percent_any", "percent_4yr", "totalenrollperc", "lessthan")
+# blanks[cols] <- NA
+# blanks$year <- yrs
+# blanks$locality <- locality
+# blanks <- blanks %>%
+#   select(-n)
+
+# Have to re-code years for the different localities separately and then re-bind the data frames together
+
+plotdat$year <- ifelse(plotdat$locality == "Virginia", plotdat$year - 0.3, 
+                       ifelse(plotdat$locality == "Albemarle", plotdat$year + 0.3, plotdat$year))
+# ..................................................
+# Creating plots
+
+#### 4-year enrollment
+
+# Filtering for racial groups whose group is large enough that we would expect at least one 
+# student to enroll in 4-year college if total rate were equal across racial groups 
+# totalstime4yr <- data.frame(year = unique(plotdat$year), totalenrollperc = plotdat$percent_4yr[plotdat$group == "Total"])
+# plotdat4yr <- merge(plotdat, totalstime4yr, by = 'year')
+# plotdat4yr$lessthan <- ifelse(plotdat4yr$cohortsize < (100 / plotdat4yr$enrolled4yr), TRUE, FALSE)
+# plotdat4yr <- plotdat4yr %>%
+#   filter(lessthan == FALSE)
+# 
+# plotdat4yr <- plotdat4yr %>%
+#   filter(group != "Total")
+
+# plotdat4yr <- rbind(plotdat4yr, blanks)
+
+# ggplot() + geom_point(data = plotdat4yr, aes(year, percent_4yr, shape = group, color = locality),
+#                       position = 'identity', size = 3.5) + 
+#   geom_line(data = plotdat4yr,aes(x = year, y = percent_4yr, group = locality),
+#             color = 'gray') +
+#   xlab("Year") + ylab("Pecent of students")  + 
+#   ggtitle("") + scale_x_continuous(breaks = seq(2008, 2020, by = 1)) + 
+#   theme_bw()+ 
+#   scale_shape_discrete(na.translate = F) +
+#   labs(caption = "Note: Racial groups were only included for a given year and locality when the number of students enrolled 
+#   was high enough such that you would expect to see at least one student enrolled in a 4-year institution if the 
+#   overall rate were true for each racial group")+
+#   theme(plot.caption = element_text(hjust=0))
+
+
+#### Any enrollment
+
+# Filtering for racial groups whose group is large enough that we would expect at least one 
+# student to enroll in 4-year college if total rate were equal across racial groups 
+totalstimeAny <- data.frame(year = unique(plotdat$year), totalenrollperc = plotdat$percent_any[plotdat$group == "Total"])
+plotdatAny <- merge(plotdat, totalstimeAny, by = 'year')
+plotdatAny$lessthan <- ifelse(plotdatAny$cohortsize < (100 / plotdatAny$enrolled4yr), TRUE, FALSE)
+plotdatAny <- plotdatAny %>%
+  filter(lessthan == FALSE)
+
+plotdatAny <- plotdatAny %>%
+  filter(group != "Total")
+
+# plotdatAny <- rbind(plotdatAny, blanks)
+
+# Rename "All Students" to "Total" but idk if this is accurate per above
+plotdatAny$group <- ifelse(plotdatAny$group == "All Students", "Total", plotdatAny$group)
+plotdatAny <- plotdatAny %>% 
+   mutate(group = factor(group, levels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total"), labels = c("Asian", "Black", "Hispanic", "Multiracial", "White", "Total")),
+       pt_label = substr(group, 1,1))
+
+# plotdatAny %>% 
+# ggplot(aes(x = year, y = percent_any, group = locality, shape = group, color = locality)) + 
+#   geom_line(size = 0.4) +
+#   geom_point(position = 'identity', size = 3.5) + 
+#   scale_color_manual(values = three_category_palette) +
+#   scale_x_continuous(breaks = seq(2008, 2020, by = 1)) +
+#   scale_y_continuous(limits = c(40,100),
+#                      breaks = seq(40, 100, by = 10),
+#                      labels = label_percent(scale = 1)) +
+#   xlab("Year") + ylab("Percent of Students")  + 
+#   ggtitle("") +  
+#   theme_minimal() +
+#   scale_shape_manual(values = c(23,15,16,17,7,18),
+#                      na.translate = FALSE) +
+#   labs(color = "", shape = "", caption = "Note: Racial groups were only included for a given year and locality when the number of students enrolled was high 
+#   enough such that you would expect to see at least one student enrolled in a 4-year institution if the overall rate
+#   were true for each racial group")+
+#   theme(text = element_text(size = 16), 
+#         axis.title.x = element_text(margin = margin(t=12)),
+#         plot.caption = element_text(hjust=0, margin = margin(t=12)))
+
+plot_PSE <- ggplot(plotdatAny, aes(x = percent_any, y = year, group = year)) + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2018.5, ymax = 2019.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2016.5, ymax = 2017.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2014.5, ymax = 2015.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2012.5, ymax = 2013.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2010.5, ymax = 2011.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2008.5, ymax = 2009.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_point(aes(col = group), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("grey", 6)) +
+  new_scale_color() +
+  geom_line(aes(color = locality), size = 0.8) +
+  geom_point(aes(color = locality), position = 'identity', size = 7) +
+  # geom_label(aes(label = pt_label), fill = NA, color = "white", fontface = "bold") +
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(limits = c(40,100),
+                     breaks = seq(40, 100, by = 10),
+                     expand = expansion(mult = c(.06, .02)),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Students",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(breaks = seq(2008, 2020, by = 1),
+                     expand = expansion(mult = c(.03, .03)),
+                     # labels = c("2011-12", "2013-14", "2015-16", "2017-18"),
+                     name = "Year") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(aes(label = pt_label, col = group), size = 4) +
+  scale_color_manual(values=rep("white",6)) +
+  labs(caption = "Note: Racial groups were only included for a given year and locality when the number of students enrolled was high enough such 
+that you would expect to see at least one student enrolled in a 4-year institution if the overall rate were true for each racial group") +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-38)),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_PSE)
+lbls <- c("A", "B", "H", "M", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+# g$grobs[[grep("guide", g$layout$name)]]
+```
+
+## Low Birth-Weight Infants
+
+``` {r fig.height=9, fig.width=10}
+lbw_race <- read.csv("../data/low_birth_weight_race.csv")
+lbw_race <- lbw_race %>% filter(group != "other") # can't define, catagory contains unknown/inconsistent variables 
+
+# spaceframe <- data.frame(locality = c("Albemarle","Albemarle","Albemarle","Albemarle","Albemarle","Albemarle",                            "Charlottesville","Charlottesville","Charlottesville","Charlottesville","Charlottesville","Charlottesville",
+# "Virginia","Virginia","Virginia","Virginia","Virginia","Virginia"),
+#                        year_space = c(2002,2005,2008,2011,2014,2017,
+#                                 2002,2005,2008,2011,2014,2017,
+#                                 2002,2005,2008,2011,2014,2017))
+
+lbw_race <- lbw_race %>% 
+  mutate(group = factor(group, levels = c("black", "white", "all"), labels = c("Black", "White", "All")),
+         locality = recode(locality, "Albemarle County" = "Albemarle",
+                           "Charlottesville City" = "Charlottesville",
+                           "Commonwealth Of Virginia" = "Virginia"),
+         year_space = ifelse(locality == "Virginia", year - 0.7, 
+                       ifelse(locality == "Albemarle", year + 0.7, 
+                              year)),
+         group = recode(group, "All" = "Total (All Groups)")
+         ) %>% 
+  filter(year %in% c(2001,2004,2007,2010,2013,2016,2019) ) 
+
+lbw_race <- lbw_race %>% 
+  mutate(pt_label = substr(group, 1,1))
+
+plot_LBW <- ggplot(lbw_race, aes(x = percent_3yr, y = year_space, group = year_space)) + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2014.5, ymax = 2017.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2008.5, ymax = 2011.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2002.5, ymax = 2005.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_point(aes(col = group), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("grey", 3)) +
+  new_scale_color() +
+  geom_line(aes(color = locality), size = 0.8) +
+  geom_point(aes(color = locality), position = 'identity', size = 7) +
+  # geom_label(aes(label = pt_label), fill = NA, color = "white", fontface = "bold") +
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(limits = c(0, 20),
+                     expand = expansion(mult = c(.09, .03)),
+                     breaks = seq(0, 20, by = 5),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Infants",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(expand = expansion(mult = c(.03, .03)),
+                     breaks = seq(2001, 2019, by = 3),
+                     labels = c("2000-02", "2003-05", "2006-08", "2009-11", "2012-14", "2015-17", "2018-20"),
+                     name = "Three-Year Period") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(aes(label = pt_label, col = group), size = 4) +
+  scale_color_manual(values=rep("white",3)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-52)),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        # legend.box = 'horizontal',
+        # legend.position = c(0.01, 0.2)
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_LBW)
+lbls <- c("B", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+# g$grobs[[grep("guide", g$layout$name)]]
+
+# lbw_race %>% 
+#   bind_rows(spaceframe) %>% 
+# ggplot(aes(x = year_space, y = percent_3yr, group = locality, shape = group, color = locality)) + 
+#   geom_line(size = 0.4) +
+#   geom_point(position = 'identity', 
+#              size = 3.5) + 
+#   scale_color_manual(values = three_category_palette) +
+#   scale_x_continuous(breaks = seq(2001, 2019, by = 3),
+#                      labels = c("2000-2002", "2003-2005", "2006-2008", "2009-2011", "2012-2014", "2015-2017", "2018-2020"),
+#                      name = "Three-Year Period") +
+#   # scale_x_discrete(name = "Three-Year Period") +
+#   scale_y_continuous(limits = c(0,17),
+#                      # breaks = seq(0, 100, by = 10),
+#                      labels = label_percent(scale = 1)) +
+#   xlab("Year") + ylab("Percent of Infants")  + 
+#   ggtitle("") +  
+#   theme_minimal() +
+#   scale_shape_manual(values = c(16,18,5,8),
+#                      na.translate = FALSE) +
+#   labs(color = "", shape = "")+
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+#         axis.title.x = element_text(margin = margin(t=12)),
+#         text = element_text(size = 16), 
+#         plot.caption = element_text(hjust=0))
+```
+
+## Infant Deaths
+
+``` {r fig.height=9, fig.width=10}
+infant_mortality_race <- read.csv("../data/infant_mortality_race.csv")
+infant_mortality_race <- infant_mortality_race %>% filter(group != "other") # can't define, catagory contains unknown/inconsistent variables 
+
+infant_mortality_race <- infant_mortality_race %>% 
+  mutate(group = factor(group, levels = c("black", "white", "all"), labels = c("Black", "White", "All")),
+         locality = recode(locality, "Albemarle County" = "Albemarle",
+                           "Charlottesville City" = "Charlottesville",
+                           "Commonwealth Of Virginia" = "Virginia"),
+         year_space = ifelse(locality == "Virginia", year - 0.7, 
+                       ifelse(locality == "Albemarle", year + 0.7, 
+                              year)),
+         group = recode(group, "All" = "Total (All Groups)")
+         ) %>% 
+  filter(year %in% c(2001,2004,2007,2010,2013,2016,2019)) 
+
+
+infant_mortality_race <- infant_mortality_race %>% 
+  mutate(pt_label = substr(group, 1,1))
+
+plot_IM <- ggplot(infant_mortality_race, aes(x = rate_3yr, y = year_space, group = year_space)) + 
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2014.5, ymax = 2017.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2008.5, ymax = 2011.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = 2002.5, ymax = 2005.5), alpha = .05, color = NA, fill = "#f5f5f5") +
+  geom_point(aes(col = group), position = 'identity', size = 7) +
+  scale_color_manual(values=rep("grey", 3)) +
+  new_scale_color() +
+  geom_line(aes(color = locality), size = 0.8) +
+  geom_point(aes(color = locality), position = 'identity', size = 7) +
+  # geom_label(aes(label = pt_label), fill = NA, color = "white", fontface = "bold") +
+  scale_color_manual(values = three_category_palette) +
+  scale_x_continuous(limits = c(0, 25),
+                     expand = expansion(mult = c(.09, .03)),
+                     breaks = seq(0, 25, by = 5),
+                     labels = label_percent(scale = 1),
+                     name = "Percent of Infants",
+                     sec.axis = dup_axis()) +
+  scale_y_continuous(expand = expansion(mult = c(.03, .03)),
+                     breaks = seq(2001, 2019, by = 3),
+                     labels = c("2000-02", "2003-05", "2006-08", "2009-11", "2012-14", "2015-17", "2018-20"),
+                     name = "Three-Year Period") + 
+  theme_minimal() +
+  new_scale_color() +
+  geom_text(aes(label = pt_label, col = group), size = 4) +
+  scale_color_manual(values=rep("white",3)) +
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size = 14),
+        axis.text = element_text(size = 13),
+        axis.text.y = element_text(margin = margin(r=-52)),
+        # axis.text.x = element_text(size = 13),
+        axis.title = element_text(size = 14),
+        axis.title.y = element_text(margin = margin(r=10)),
+        axis.title.x = element_text(margin = margin(t=12)),
+        # axis.title.x.bottom = element_blank(),
+        axis.title.x.top = element_text(margin = margin(b=12)),
+        plot.caption = element_text(hjust=0, margin = margin(t=12)),
+        legend.title=element_blank(),
+        # legend.box = 'horizontal',
+        # legend.position = c(0.01, 0.2)
+        legend.position = "top"
+        )
+
+g <- ggplotGrob(plot_IM)
+lbls <- c("B", "W", "T")
+idx <- which(sapply(g$grobs[[15]][[1]][[2]]$grobs,function(i){
+  "label" %in% names(i)}))
+for(i in 1:length(idx)){
+g$grobs[[15]][[1]][[2]]$grobs[[idx[i]]]$label <- lbls[i]
+}
+grid.draw(g)
+
+# g$grobs[[grep("guide", g$layout$name)]]
+
+```

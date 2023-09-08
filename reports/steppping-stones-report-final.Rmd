@@ -7,7 +7,7 @@ toc-title: Contents
 output:
   html_document:
     # self_contained: false
-    template: atlas-rmd-template-toc-test.html
+    template: atlas-rmd-template.html
     toc: true
     toc_depth: 3
     toc_float: true
@@ -118,7 +118,7 @@ __Reproducible:__ These updates include building processes that are repeatable f
 
 __Contextualized:__ The report is divided into sections based on the nature of the measures and their source. For each metric, we provide an overview of how the measure impacts youth and community well-being, present visualizations and highlight key trends, and note the sources and limitations of the data. 
 
-An important piece of context missing from this report is representation of racial disparities in the outcomes shown here. Many of the metrics we highlight in this report disproportionately impact youth of color due to long-standing systemic racial inequality in our region and the country. Although we only display data for the populations as a whole in this report, understanding how these metrics differentially impact youth depending on their racial identity is critical to promoting racial equity in the region. More information about racial disparities in youth well-being can be found in our forthcoming supplemental report. 
+An important piece of context missing from this report is representation of racial disparities in the outcomes shown here. Many of the metrics we highlight in this report disproportionately impact youth of color due to long-standing systemic racial inequality in our region and the country. Although we only display data for the populations as a whole in this report, understanding how these metrics differentially impact youth depending on their racial identity is critical to promoting racial equity in the region. More information about racial disparities in youth well-being can be found in our [supplemental report](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones-supplement/). 
 
 ### Our Youth {.small-h3}
 
@@ -1921,7 +1921,7 @@ The work supporting this Stepping Stones Report, including our data collection d
 
 ### Citation {.small-h3}
 
-Charlottesville Department of Human Services and the UVA Equity Center. _Steppings Stones: A Report on Community Well-Being of Children and Families in the Charlottesville/Albemarle Area_. Published June 2023. [https://equityatlas.virginiaequitycenter.org/reports/stepping-stones](https://equityatlas.virginiaequitycenter.org/reports/stepping-stones).
+Charlottesville Department of Human Services and the UVA Equity Center. _Stepping Stones: A Report on Community Well-Being of Children and Families in the Charlottesville/Albemarle Area_. Published June 2023. [https://equityatlas.virginiaequitycenter.org/reports/stepping-stones](https://equityatlas.virginiaequitycenter.org/reports/stepping-stones).
 
 This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
