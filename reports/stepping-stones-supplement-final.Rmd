@@ -2454,7 +2454,7 @@ The work supporting this Stepping Stones Report, including our data collection d
 
 ### Citation {.small-h3}
 
-Charlottesville Department of Human Services and the UVA Equity Center. _Steppings Stones Supplemental Report: Disaggregated Measures of Well-Being of Children and Families in the Charlottesville/Albemarle Area_. Published July 2023. [https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones-supplement/](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones-supplement/).
+Charlottesville Department of Human Services and the UVA Equity Center. _Stepping Stones Supplemental Report: Disaggregated Measures of Well-Being of Children and Families in the Charlottesville/Albemarle Area_. Published July 2023. [https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones-supplement/](https://virginiaequitycenter.github.io/cville-equity-atlas/reports/stepping-stones-supplement/).
 
 This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
