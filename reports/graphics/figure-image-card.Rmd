@@ -1,0 +1,77 @@
+---
+title: "Untitled"
+author: "Elizabeth Mitchell"
+date: "2024-11-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(scales)
+library(janitor)
+library(ggthemes)
+library(ggrepel)
+library(bslib)
+library(stringr)
+
+str_sort_last <- function(object){
+  last <- str_sort(object)
+  last <- tail(last, 1)
+  last
+}
+
+
+three_category_palette <- c("#E48073", "#2F7E9F", "#83DBD7")
+```
+
+```{r, fig.retina=2, fig.width=12}
+
+sols <- read_csv("data/sol_pass.csv")
+sols <- sols %>% 
+  mutate(division_name = recode(division_name,
+                          "Albemarle County" = "Albemarle",
+                          "Charlottesville City" = "Charlottesville"),
+         school_year = str_replace_all(school_year, "-20", "-"),
+         label = ifelse((!division_name %in% "Virginia") & (school_year %in% str_sort_last(school_year)),
+                         paste0(as.character(round(pass_rate, digits = 0)), "%"), NA))
+
+miss2021 <- data.frame(division_name = c("Albemarle", "Charlottesville", "Virginia"),
+                       school_year = c("2019-20", "2019-20", "2019-20"))
+
+# Grade 8 Plot
+sols %>% 
+  filter(subject == "English:Reading" & test_level == "Grade 8") %>% 
+                        bind_rows(miss2021) %>%
+  ggplot(aes(x = school_year, y = pass_rate, 
+                 color = division_name, group = division_name)) +
+  geom_vline(xintercept = "2019-20", linetype = 2, color = "#333333", size =1) +
+#   annotate("text", x = 15.2, y = 95, size = 3.5, hjust = 0, color = "#333333", 
+#            label = 
+# "SOLs not conducted
+# in 2020 due to the 
+# COVID-19 Pandemic") +
+  geom_vline(xintercept = "2012-13", linetype = 2, color = "#333333", size = 1) +
+#   annotate("text", x = 8.2, y = 25, size = 3.5, hjust = 0, color = "#333333", 
+#            label = 
+# "Implementation of 
+# revised reading standards") +
+  geom_line(size=2) +
+  geom_point(size=5) +
+  # geom_text_repel(aes(label = label),
+  #                 size = 3.5, fontface = "bold", nudge_x = 1.2, show.legend = FALSE, min.segment.length = Inf) +
+  scale_color_manual(values = three_category_palette) +
+  scale_y_continuous(limits = c(50, 100),
+                     labels = label_percent(scale = 1), 
+                     name = "Percent of Students Taking SOL") +
+  scale_x_discrete(name = "School Year") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.line = element_blank(),
+        panel.grid = element_blank(),
+        plot.background = element_rect(fill = "#e1eafc"),
+        legend.position = "none") +
+  labs(color = "")
+```
